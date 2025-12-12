@@ -1,181 +1,352 @@
-/* src/app/globals.css */
+/* src/app/globals.css - VERSIÓN LIMPIA (VERDE AZULADO Y NARANJA) */
 
-/* --- Reset Básico y Variables --- */
+/* ----------------------------------------------------------------- */
+/* --- RESET Y VARIABLES GLOBALES (PALETA MODERNA/INNOVADORA) --- */
+/* ----------------------------------------------------------------- */
 :root {
-  --primary-color: #0070f3; /* Azul de marca */
-  --secondary-color: #28a745; /* Verde para éxito */
-  --text-color: #333;
-  --bg-color: #f8f8f8; /* Fondo claro */
-  --card-bg: #fff; /* Fondo blanco para tarjetas */
-  --border-color: #ddd;
+    /* Paleta Principal (Verde Azulado y Naranja/Coral) */
+    --primary-color: #008080; /* Verde Azulado Oscuro (Teal - Headers, Títulos) */
+    --accent-color: #FF7F50; /* Coral Vibrante (Para Botones, Énfasis, CTA) */
+    --secondary-color: #40B5AD; /* Verde Azulado Claro */
+
+    /* Fondos y Contenedores */
+    --bg-page: #FDFDFD; /* Fondo de la página (Casi blanco) */
+    --bg-card: #FFFFFF; /* Fondo de tarjetas y contenedores */
+    --bg-footer: #E0FFFF; /* Fondo muy claro y suave para el Footer */
+    --bg-dark: #004D4D; /* Fondo Oscuro (Para contraste) */
+
+    /* Texto */
+    --text-color-primary: #212529; /* Texto principal oscuro */
+    --text-color-secondary: #607D8B; /* Texto secundario (descripciones) */
+    --text-color-light: #fff; /* Texto en fondos oscuros */
+    
+    /* Bordes y Sombras */
+    --border-color: #E6EBEB;
+    --radius-large: 12px;
+    --radius-medium: 8px;
+    --shadow-subtle: 0 6px 16px rgba(0, 0, 0, 0.1); /* Sombra para modernidad */
 }
 
+/* --- Base Body --- */
 body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-page);
+    color: var(--text-color-primary);
+    font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
 }
 
-/* --- Estilos Globales de Tipografía y Links --- */
-h1, h2, h3 {
-  color: var(--primary-color);
+/* --- Contenedor Global de la Aplicación --- */
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ----------------------------------------------------------------- */
+/* --- TIPOGRAFÍA Y LINKS --- */
+/* ----------------------------------------------------------------- */
+h1 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+h2 {
+    color: var(--text-color-primary);
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
 a {
-  color: var(--primary-color);
-  text-decoration: none;
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 a:hover {
-  text-decoration: underline;
+    color: var(--primary-color);
+    text-decoration: none;
 }
 
-/* --- Estilos de Formulario Comunes --- */
-input[type="email"],
-input[type="password"],
-input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  box-sizing: border-box; /* Crucial para que el padding no desborde */
+
+/* ----------------------------------------------------------------- */
+/* --- HEADER Y FOOTER (Estructura de la Landing) --- */
+/* ----------------------------------------------------------------- */
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-card);
 }
 
-/* --- Estilos de Botones Comunes --- */
-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
+.footer-main {
+    background-color: var(--bg-footer);
+    padding: 40px 0;
+    margin-top: 50px;
 }
 
-/* Botón Primario (Login) */
-button[type="submit"] {
-  background-color: var(--primary-color);
-  color: white;
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
 }
 
-button[type="submit"]:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-/* Botón de Registro */
-.button-register {
-  background-color: var(--secondary-color);
-  color: white;
-}
-.button-register:hover:not(:disabled) {
-  background-color: #1e7e34;
-}
-
-/* Estado de deshabilitado (Loading) */
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.dashboard-container {
-  max-width: 900px;
-  margin: 50px auto;
-  padding: 30px;
-  background-color: var(--card-bg);
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.info-card {
-  padding: 20px;
-  margin-top: 25px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-}
-
-.credit-card {
-  background-color: #eaf6ff;
-  border-left: 5px solid var(--primary-color);
-}
-
-.api-key-card {
-  background-color: #fcfcfc;
-  border-left: 5px solid #666;
-}
-
-.credit-status {
-  font-size: 1.8em;
-  font-weight: 800;
-  margin: 10px 0;
-}
-
-.status-ok {
-  color: var(--secondary-color); /* Verde */
-}
-
-.status-low {
-  color: #dc3545; /* Rojo */
-}
-
-.api-key-display {
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-}
-
-.api-key-code {
-  flex-grow: 1;
-  padding: 10px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-family: monospace;
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
-.button-buy {
-  background-color: #ff5722;
-  color: white;
-  padding: 12px 25px;
-  margin-top: 15px;
-}
-
-.button-logout {
-  background-color: #6c757d;
-  color: white;
-  margin-top: 30px;
-}
-
-/* Para los contenedores de Login/Registro */
-.card-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    text-align: center;
-}
-
-.form-group {
+.footer-section h4 {
+    color: var(--primary-color);
     margin-bottom: 15px;
-    text-align: left;
+    font-size: 1.1rem;
 }
 
-/* --- Contenedor Principal (Para centrar la card) --- */
+.footer-section a {
+    display: block;
+    color: var(--text-color-secondary);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+/* ----------------------------------------------------------------- */
+/* --- FORMULARIOS Y TARJETAS DE AUTENTICACIÓN (Login/Registro) --- */
+/* ----------------------------------------------------------------- */
+
 .main-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: calc(100vh - 80px);
     padding: 20px;
 }
 
-/* El estilo de .card-container y .credit-card ya deben estar definidos arriba */
+.auth-card {
+    max-width: 400px;
+    width: 100%;
+    padding: 40px;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-subtle);
+    text-align: center;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-medium);
+    box-sizing: border-box; 
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 127, 80, 0.25); /* Sombra Coral */
+}
+
+/* ----------------------------------------------------------------- */
+/* --- BOTONES --- */
+/* ----------------------------------------------------------------- */
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--radius-medium);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Botón Primario (Acción Principal) - CORAL */
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #FF6347; /* Tono más oscuro de Coral */
+    transform: translateY(-1px);
+}
+
+/* Botón Secundario (Registro/Link) - VERDE AZULADO CLARO */
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+.btn-secondary:hover:not(:disabled) {
+    background-color: #38A29A;
+}
+
+.btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+/* ----------------------------------------------------------------- */
+/* --- MÓDULOS DE DASHBOARD Y LANDING PAGE --- */
+/* ----------------------------------------------------------------- */
+
+.dashboard-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-subtle);
+}
+
+.credit-status {
+    font-size: 2.2em;
+    font-weight: 800;
+    margin: 10px 0;
+}
+.status-ok { color: var(--secondary-color); }
+.status-low { color: #dc3545; }
+
+
+/* --- ESTILOS MODULARES PARA LANDING PAGE --- */
+
+.section-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 0;
+    gap: 60px;
+}
+
+.hero-left { max-width: 50%; }
+
+.hero-title {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 30px;
+}
+
+.benefit-list p {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--text-color-primary);
+}
+
+.btn-large {
+    padding: 15px 35px;
+    font-size: 1.1rem;
+}
+
+
+/* --- DROPZONE MOCKUP --- */
+.hero-right {
+    max-width: 500px;
+    width: 100%;
+}
+
+.dropzone-mockup {
+    background-color: var(--bg-card);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-large);
+    padding: 50px 30px;
+    text-align: center;
+    box-shadow: var(--shadow-subtle);
+}
+
+.dropzone-text {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin: 15px 0;
+}
+
+.dropzone-separator {
+    color: var(--text-color-secondary);
+    margin: 20px 0;
+    opacity: 0.6;
+}
+
+/* --- SECCIÓN DE INSTRUCCIONES --- */
+.section-box {
+    padding: 50px 0;
+    margin-top: 50px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 2rem;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.step-item {
+    text-align: center;
+}
+
+.step-number {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--secondary-color); /* Verde azulado */
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+
+/* --- SECCIÓN DE VENTAJAS Y CONFIANZA --- */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.feature-card {
+    background-color: var(--bg-card);
+    padding: 30px;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-subtle);
+    text-align: center;
+}
+
+.icon-wrapper {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+.card-description {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+}
