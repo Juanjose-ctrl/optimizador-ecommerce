@@ -3,6 +3,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'; //
 
 const API_URL = "https://fastapi-image-optimizer-1.onrender.com"; 
 
