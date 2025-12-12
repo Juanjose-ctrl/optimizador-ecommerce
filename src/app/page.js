@@ -1,9 +1,13 @@
 // src/app/page.js - VERSIÓN CON MODAL DE LOGIN
 
+// src/app/page.js
+
 'use client'; 
+// 🚨 CORRECCIÓN CRÍTICA: Añadir useState
+import { useState } from 'react'; 
 import Link from 'next/link';
-// Importa el nuevo componente Modal
 import AuthModal from './components/AuthModal'; 
+// ... (el resto de los imports de íconos, etc.)
 // Importamos los íconos necesarios para el diseño
 import { CloudUpload, CheckCircle, Sun, Leaf, Zap, Shield, TrendingUp, DollarSign } from 'lucide-react'; 
 // Asegúrate de que los imports de iconos sigan funcionando tras la corrección del deploy.
