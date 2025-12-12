@@ -350,3 +350,125 @@ input:focus {
     color: var(--text-color-secondary);
     font-size: 0.95rem;
 }
+
+/* --- ESTILOS PARA EL MODAL DE AUTENTICACIÓN (LOGIN/REGISTRO) --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté por encima de todo */
+}
+
+.auth-modal {
+    background-color: var(--bg-card);
+    padding: 30px;
+    border-radius: var(--radius-large);
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-align: center;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-new-user {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+}
+
+.switch-link {
+    color: var(--primary-color); 
+    font-weight: 600;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-color-secondary);
+    line-height: 1;
+}
+
+.modal-title {
+    font-size: 1.8rem;
+    color: var(--text-color-primary);
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.btn-google {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 12px;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-color-primary);
+    font-weight: 500;
+    margin-bottom: 20px;
+    border-radius: var(--radius-medium);
+    cursor: pointer;
+}
+
+.modal-separator {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color-secondary);
+    position: relative;
+    font-size: 0.9rem;
+}
+
+.modal-separator::before,
+.modal-separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.modal-separator::before {
+    left: 0;
+}
+
+.modal-separator::after {
+    right: 0;
+}
+
+/* Estilos de formulario usados dentro del modal */
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.forgot-password-link {
+    display: block;
+    text-align: right;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
