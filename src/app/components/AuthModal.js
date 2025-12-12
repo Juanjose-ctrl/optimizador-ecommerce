@@ -6,8 +6,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 // Importa los componentes de Login y Registro que ya tienes (los crearemos a continuación)
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 
 // Componente de modal genérico y lógica de navegación entre Login/Registro
 const AuthModal = ({ isOpen, onClose, initialView = 'login' }) => {
