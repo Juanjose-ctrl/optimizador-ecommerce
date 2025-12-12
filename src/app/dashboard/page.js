@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script'; 
 import { UploadCloud, Zap, Code, LogOut } from 'lucide-react'; // Nuevos iconos para diseño
+const VERSION_FINAL = true
 
 const API_URL = "https://fastapi-image-optimizer-1.onrender.com"; 
 const PADDLE_CLIENT_SIDE_TOKEN = "ctm_01kbxtv3hhwg1rhak5rjp83eh7"; 
@@ -245,3 +246,5 @@ const dashboardStyles = `
     margin-right: 10px;
 }
 `;
+
+// prueba
