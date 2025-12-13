@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: fastapi-image-optimizer
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash start.sh
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: optimizador-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FRONTEND_BASE_URL
+        value: https://tu-app.vercel.app
+      # Agrega manualmente en el dashboard de Render:
+      # PADDLE_CLIENT_TOKEN
+      # PADDLE_WEBHOOK_SECRET
+      # PADDLE_BASIC_PRICE_ID
+      # PADDLE_PRO_PRICE_ID
+      # PADDLE_ENTERPRISE_PRICE_ID
+
+databases:
+  - name: optimizador-db
+    databaseName: optimizador
+    plan: free

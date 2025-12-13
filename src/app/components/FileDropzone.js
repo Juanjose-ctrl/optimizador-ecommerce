@@ -1,24 +1,13 @@
-// src/app/components/FileDropzone.js
+// src/app/components/FileDropzone.js - VERSIÓN CORREGIDA
 
 'use client'; 
-// Asegúrate de que este archivo esté en src/app/components/
 
 import { useState, useRef } from 'react';
-import { UploadCloud, FileImage, Trash2, XCircle, Zap } from 'lucide-react'; 
+import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-react'; 
+import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../config/api'; 
 
-// --- Configuración (DEBE SER LA MISMA QUE EN Dashboard) ---
-const MAX_FILE_SIZE_MB = 10;
-const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png'];
-const API_URL = "https://fastapi-image-optimizer-1.onrender.com"; 
-const MAX_FREE_OPTIMIZATIONS = 5; 
-
-// ---------------------------------------------
-// COMPONENTE: FileDropzone (ÚNICO)
-// ---------------------------------------------
-// Nota: Este componente ahora acepta props para manejar ambos casos (público y dashboard)
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
-    // Si no está autenticado, siempre usamos el límite de prueba inicial
     const initialCredits = isAuthenticated ? userCredits : MAX_FREE_OPTIMIZATIONS;
 
     const [isDragActive, setIsDragActive] = useState(false);
@@ -28,7 +17,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     const [creditsRemaining, setCreditsRemaining] = useState(initialCredits);
     const [isOptimizing, setIsOptimizing] = useState(false);
     const [optimizationResults, setOptimizationResults] = useState([]);
-
 
     const validateFile = (file) => {
         if (!ALLOWED_MIME_TYPES.includes(file.type)) {
@@ -52,18 +40,16 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 hasError = true;
                 break; 
             }
-            // Evitar duplicados
             if (!files.some(f => f.name === file.name && f.size === file.size)) {
                 validFiles.push(file);
             }
         }
 
         if (!hasError) {
-            setFiles(prevFiles => [...prevFiles, ...validFiles].slice(0, 10)); // Limitar a 10 archivos en cola
+            setFiles(prevFiles => [...prevFiles, ...validFiles].slice(0, 10));
         }
     };
 
-    // --- Lógica de Drag and Drop (La que causaba el error de ReferenceError) ---
     const handleDrag = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -84,7 +70,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
             e.dataTransfer.clearData();
         }
     };
-    // --------------------------------------------------------------------------
 
     const handleSelectFiles = (e) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -105,7 +90,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
-    // 🚨 LÓGICA DE OPTIMIZACIÓN REAL 🚨
+    // 🚨 LÓGICA DE OPTIMIZACIÓN CORREGIDA
     const handleOptimize = async () => {
         if (files.length === 0 || isOptimizing) return;
         
@@ -114,9 +99,8 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         if (creditsRemaining < filesToOptimize) {
             setFileError(`¡Créditos insuficientes! Necesitas ${filesToOptimize} créditos.`);
             
-            // Si no está autenticado y agota el límite público, disparamos el modal de registro.
             if (!isAuthenticated && onLimitReached) {
-                setTimeout(onLimitReached, 1500); // Dar tiempo para leer el error
+                setTimeout(onLimitReached, 1500);
             }
             return;
         }
@@ -126,23 +110,26 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         setOptimizationResults([]);
         
         try {
-            // Preparamos el formulario de datos para la API
             const formData = new FormData();
             files.forEach(file => {
                 formData.append('files', file);
             });
             
-            // Si está autenticado, añade el token de acceso
             const accessToken = isAuthenticated ? localStorage.getItem('accessToken') : null;
             
-            const response = await fetch(`${API_URL}/optimize-batch${isAuthenticated ? '' : '-free'}`, {
+            // 🚨 CORRECCIÓN: Usar el endpoint correcto
+            const endpoint = isAuthenticated 
+                ? `${API_URL}/optimize-batch` 
+                : `${API_URL}/optimize-batch-free`;
+            
+            const headers = {};
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+            
+            const response = await fetch(endpoint, {
                 method: 'POST',
-                headers: {
-                    // Nota: No se puede adjuntar Content-Type: multipart/form-data
-                    // manualmente con FormData, el navegador lo hace automáticamente.
-                    // Solo adjuntamos la autorización si existe
-                    ...(accessToken && { 'Authorization': `Bearer ${accessToken}` }),
-                },
+                headers: headers,
                 body: formData,
             });
 
@@ -151,19 +138,20 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 setOptimizationResults(data.results);
                 
                 // Actualizar créditos
-                setCreditsRemaining(prev => prev - filesToOptimize);
-                
-                // Si la respuesta incluye los créditos restantes reales (solo en el Dashboard), podrías usarlos:
-                // if (data.credits_remaining) setCreditsRemaining(data.credits_remaining);
+                if (data.credits_remaining !== undefined) {
+                    setCreditsRemaining(data.credits_remaining);
+                } else {
+                    setCreditsRemaining(prev => prev - filesToOptimize);
+                }
 
-            } else if (response.status === 402 && !isAuthenticated) {
-                // Código 402: Límite de pago requerido / Límite de prueba gratuito alcanzado
-                setFileError("¡Límite de prueba gratuito alcanzado! Regístrate para obtener más créditos.");
-                if (onLimitReached) {
+            } else if (response.status === 402) {
+                setFileError("¡Límite alcanzado! Regístrate para obtener más créditos.");
+                if (!isAuthenticated && onLimitReached) {
                     setTimeout(onLimitReached, 1500);
                 }
             } else {
-                setFileError(`Error al optimizar: ${response.statusText}`);
+                const errorData = await response.json();
+                setFileError(`Error: ${errorData.detail || 'Error desconocido'}`);
             }
 
         } catch (error) {
@@ -171,15 +159,23 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
             setFileError('Error de conexión con el servidor. Intenta de nuevo.');
         } finally {
             setIsOptimizing(false);
-            setFiles([]); // Limpiar cola
+            setFiles([]);
         }
     };
 
+    // 🚨 FUNCIÓN PARA DESCARGAR IMÁGENES
+    const downloadImage = (downloadUrl, filename) => {
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const isQueueEmpty = files.length === 0;
     const isOverLimit = creditsRemaining < files.length;
     
-    // Solo mostrar el mensaje de límite si no está autenticado
     const limitMessage = !isAuthenticated && (
         <small className="info-text">
             {creditsRemaining} optimizaciones gratuitas restantes.
@@ -196,7 +192,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 {limitMessage}
             </div>
 
-            {/* DROPZONE */}
             <div 
                 className={`dropzone-area ${isDragActive ? 'drag-active' : ''}`}
                 onDragEnter={handleDrag}
@@ -215,11 +210,10 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 />
                 
                 <UploadCloud size={60} color={isDragActive ? 'var(--accent-color)' : 'var(--text-color-secondary)'} />
-                <p className="dropzone-text">Arrastra y suelta aquí o **haz clic** para seleccionar archivos</p>
+                <p className="dropzone-text">Arrastra y suelta aquí o haz clic para seleccionar archivos</p>
                 <small className="file-info">Soporte: JPEG, PNG | Máx. {MAX_FILE_SIZE_MB}MB</small>
             </div>
             
-            {/* MENSAJES DE ERROR */}
             {fileError && (
                 <div className="file-error-message">
                     <XCircle size={20} style={{ marginRight: '8px' }} />
@@ -227,15 +221,33 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 </div>
             )}
             
-            {/* RESULTADOS DE OPTIMIZACIÓN (Simulados para la landing, aquí deberías mostrar enlaces de descarga) */}
+            {/* RESULTADOS DE OPTIMIZACIÓN */}
             {optimizationResults.length > 0 && (
                 <div className="optimization-results">
                     <h3>✅ Optimización Exitosa ({optimizationResults.length} archivos)</h3>
                     {optimizationResults.map((res, index) => (
                         <div key={index} className="result-item">
-                            <span>{res.original_filename}</span> 
-                            {/* Aquí va el enlace de descarga */}
-                            <a href={res.download_url} download={res.optimized_filename} className="btn-download">Descargar</a>
+                            <div className="result-info">
+                                <span className="result-filename">{res.original_filename}</span>
+                                {res.status === 'success' && (
+                                    <span className="result-savings">
+                                        Ahorro: {res.savings_percent}% 
+                                        ({formatFileSize(res.original_size)} → {formatFileSize(res.optimized_size)})
+                                    </span>
+                                )}
+                                {res.status === 'error' && (
+                                    <span className="result-error">Error: {res.error}</span>
+                                )}
+                            </div>
+                            {res.status === 'success' && (
+                                <button 
+                                    className="btn-download"
+                                    onClick={() => downloadImage(res.download_url, res.optimized_filename)}
+                                >
+                                    <Download size={16} style={{ marginRight: '5px' }} />
+                                    Descargar
+                                </button>
+                            )}
                         </div>
                     ))}
                 </div>

@@ -4,9 +4,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
+import { API_URL } from '../config/api';
 // Asegúrate de que esta URL sea correcta.
-const API_URL = "https://fastapi-image-optimizer-1.onrender.com"; 
+
 
 // Recibe onSuccess como prop del Modal para saber qué hacer después del éxito
 export default function LoginForm({ onSuccess }) {
