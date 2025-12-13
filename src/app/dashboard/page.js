@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'; 
 
 // 🚨 CRÍTICO: Importamos el Wrapper de cliente para cargar el FileDropzone
-import ClientDropzoneWrapper from './components/ClientDropzoneWrapper'; 
+import ClientDropzoneWrapper from '../components/ClientDropzoneWrapper'; 
 
 // --- Configuración de la API y Paddle ---
 const API_URL = "https://fastapi-image-optimizer-1.onrender.com"; 
