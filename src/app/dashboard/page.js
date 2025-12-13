@@ -1,22 +1,67 @@
-// src/app/dashboard/page.js - VERSIÓN CORREGIDA PARA PERSISTENCIA DE SESIÓN
+// src/app/dashboard/page.js - VERSIÓN FINAL PROFESIONAL, CORREGIDA Y CON ESTILO
 
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script'; 
-import { UploadCloud, Zap, Code, LogOut } from 'lucide-react'; // Nuevos iconos para diseño
-const VERSION_FINAL = true
+import { UploadCloud, Zap, Code, LogOut, Copy, RefreshCw, AlertTriangle, Package } from 'lucide-react'; 
 
+// --- Configuración de la API y Paddle ---
 const API_URL = "https://fastapi-image-optimizer-1.onrender.com"; 
 const PADDLE_CLIENT_SIDE_TOKEN = "ctm_01kbxtv3hhwg1rhak5rjp83eh7"; 
+// Plan ID de ejemplo (debe ser el ID real de tu producto en Paddle)
+const DEFAULT_PADDLE_PLAN_ID = 'pri_01h6t465fgq8h4r37t9m0l1u5v'; 
 
+
+// ---------------------------------------------
+// COMPONENTE: DashboardHeader (Barra superior fija y limpia)
+// ---------------------------------------------
+const DashboardHeader = ({ userEmail, onLogout }) => (
+    <header className="dashboard-header">
+        <div className="logo-text">OptiCommerce Panel</div>
+        <div className="user-info">
+            <span className="user-email">{userEmail}</span>
+            <button onClick={onLogout} className="btn-logout" title="Cerrar Sesión">
+                <LogOut size={20} />
+            </button>
+        </div>
+    </header>
+);
+
+// ---------------------------------------------
+// COMPONENTE: Card de Métricas
+// ---------------------------------------------
+const MetricCard = ({ icon: Icon, title, value, statusClass, actionButton }) => (
+    <div className="metric-card">
+        <div className="card-top">
+            <Icon size={32} className={`icon-${statusClass}`} />
+            <span className="card-title">{title}</span>
+        </div>
+        <div className="card-bottom">
+            <p className={`card-value ${statusClass}`}>{value}</p>
+            {actionButton && <div className="card-action">{actionButton}</div>}
+        </div>
+    </div>
+);
+
+
+// ---------------------------------------------
+// COMPONENTE PRINCIPAL: DashboardPage
+// ---------------------------------------------
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const router = useRouter();
 
-    const fetchUserData = async (accessToken) => {
+    // Función para cerrar sesión y redirigir
+    const handleLogout = () => {
+        localStorage.clear(); 
+        router.push('/'); // Redirigimos a la Landing Page principal
+    };
+
+    // Función para obtener los datos del usuario
+    const fetchUserData = useCallback(async (accessToken) => {
         try {
             const response = await fetch(`${API_URL}/users/me`, {
                 method: 'GET',
@@ -29,33 +74,34 @@ export default function DashboardPage() {
                 const userData = await response.json();
                 setUser(userData);
             } else {
+                // Si la API rechaza el token (expirado, inválido)
                 localStorage.clear(); 
-                setError('Sesión expirada. Por favor, inicia sesión de nuevo.');
-                // Forzar la redirección después de limpiar el estado
-                router.push('/login'); 
+                setError('Sesión expirada o no válida. Por favor, inicia sesión.');
+                router.replace('/'); // Usamos replace para evitar el historial
             }
         } catch (err) {
-            setError('Error de conexión con la API.');
+            setError('Error de conexión con la API. Intenta de nuevo.');
         } finally {
             setLoading(false);
         }
-    };
+    }, [router]);
+
 
     useEffect(() => {
-        // 🚨 CORRECCIÓN CLAVE: Asegurarse de que el código se ejecute SOLO en el cliente (Browser)
+        // CORRECCIÓN CLAVE: Verificación de sesión al montar
         if (typeof window !== 'undefined') {
             const token = localStorage.getItem('accessToken');
             if (!token) {
-                // Si no hay token, no necesitamos esperar. Redirigimos inmediatamente.
-                router.push('/login');
-                setLoading(false); // Detener el loading state
+                router.replace('/'); 
+                setLoading(false); 
                 return;
             }
             fetchUserData(token);
         }
-    }, [router]); // Incluimos router en las dependencias
+    }, [router, fetchUserData]); 
 
 
+    // --- Funciones de Utilidad ---
     const copyApiKey = () => {
         const apiKey = localStorage.getItem('apiKey');
         if (apiKey) {
@@ -64,32 +110,37 @@ export default function DashboardPage() {
         }
     };
     
-    const handleLogout = () => {
-        localStorage.clear(); 
-        router.push('/login');
-    };
+    // Función de Compra con Paddle (ACTUALIZADA)
+    const handlePurchase = async (priceId) => {
+        // Esto solo funciona si ya cargaste el script de Paddle.js
+        if (typeof window.Paddle === 'undefined') {
+            alert("Paddle no está inicializado. Recarga la página.");
+            return;
+        }
 
-
-    // --- Función de Compra con Paddle (Sin Cambios) ---
-    const handlePurchase = async (planId) => {
-        const accessToken = localStorage.getItem('accessToken');
-        // ... (Lógica de handlePurchase sigue igual) ...
-        alert("Función de compra activa, pero necesitamos definir Price IDs en el Backend.");
+        // Abrir el Checkout de Paddle
+        window.Paddle.Checkout.open({
+            product: priceId, 
+            customer: {
+                email: user.email, // Pasamos el email del usuario
+                // Paddle identificará a este cliente si ya existía.
+            },
+            passthrough: {
+                user_id: user.id, // ID interno de tu usuario para seguimiento
+                // otros_datos_relevantes: '...'
+            }
+            // Agrega más opciones si es necesario (ej. plan de suscripción)
+        });
     };
     
-    // --- LÓGICA DE PROTECCIÓN DE RENDERIZADO ---
+    // --- LÓGICA DE RENDERIZADO ---
 
-    // 🚨 Mejorar el mensaje de carga y el estilo
     if (loading) {
         return (
-            <div className="main-container">
-                <div className="auth-card" style={{ textAlign: 'center' }}>
-                    <p style={{ color: 'var(--primary-color)', fontSize: '1.2rem', fontWeight: 600 }}>
-                        Cargando Panel...
-                    </p>
-                    <p style={{ color: 'var(--text-color-secondary)' }}>
-                        Verificando credenciales de sesión.
-                    </p>
+            <div className="full-screen-center">
+                <div className="loading-state">
+                    <RefreshCw size={40} className="spinner" />
+                    <p>Verificando sesión. Un momento...</p>
                 </div>
             </div>
         );
@@ -97,26 +148,29 @@ export default function DashboardPage() {
 
     if (error) {
         return (
-            <div className="main-container">
-                <div className="auth-card">
-                    <p className="error-message">Error: {error}</p>
-                    <button onClick={() => router.push('/login')} className="btn btn-primary" style={{ marginTop: '20px' }}>
-                        Ir a Iniciar Sesión
+            <div className="full-screen-center">
+                <div className="error-state">
+                    <AlertTriangle size={40} color="#FF7F50" />
+                    <p className="error-message">{error}</p>
+                    <button onClick={() => router.replace('/')} className="btn btn-primary" style={{ marginTop: '20px' }}>
+                        Ir al Inicio
                     </button>
                 </div>
             </div>
         );
     }
     
-    // Si no hay usuario y ya terminó de cargar (loading=false), redirigir
-    if (!user) {
-        // Esto rara vez debería ocurrir debido a la lógica de token en useEffect
-        router.push('/login');
-        return null;
-    }
+    if (!user) return null; // Debe ser atrapado por loading o error, pero es una seguridad
+
+    // --- RENDERIZADO DEL DASHBOARD ---
+    
+    const planName = user.plan_id === 1 ? "Básico (Gratuito)" : `Pro (ID: ${user.plan_id})`;
+    const creditStatusClass = user.credits_remaining > 50 ? 'ok' : user.credits_remaining > 10 ? 'warning' : 'low';
+
 
     return (
-        <div className="dashboard-wrapper app-container" style={{ paddingTop: '50px' }}> 
+        <>
+            {/* INICIALIZACIÓN DE PADDLE.JS */}
             <Script
                 src="https://cdn.paddle.com/paddle/paddle.js"
                 onLoad={() => {
@@ -127,124 +181,71 @@ export default function DashboardPage() {
                 }}
             />
 
-            <div className="dashboard-container">
-                <h1>👋 ¡Bienvenido, {user.email}!</h1>
-                
-                {/* 1. SECCIÓN DE CRÉDITOS Y PLAN */}
-                <div className="info-card credit-card">
-                    <div className="card-header">
-                         <Zap size={24} color="var(--primary-color)" />
-                         <h2>Estado de tu Cuenta</h2>
-                    </div>
-                    <p><strong>Plan Actual:</strong> {user.plan_id === 1 ? "Básico (Gratuito)" : `Pro (ID: ${user.plan_id})`}</p> 
-                    <p className={`credit-status ${user.credits_remaining > 20 ? 'status-ok' : 'status-low'}`}>
-                        Créditos Restantes: {user.credits_remaining}
-                    </p>
-                    
-                    {/* Botón para la compra */}
-                    <button
-                        onClick={() => handlePurchase(3)}
-                        className="btn btn-primary"
-                        style={{ marginTop: '20px' }}
-                    >
-                        Comprar Más Créditos / Actualizar Plan
-                    </button>
-                </div>
+            <DashboardHeader userEmail={user.email} onLogout={handleLogout} />
 
-                {/* 2. SECCIÓN API KEY */}
-                <div className="info-card api-key-card">
-                    <div className="card-header">
-                        <Code size={24} color="var(--primary-color)" />
-                        <h2>Integración (Para desarrolladores)</h2>
-                    </div>
-                    <p>Esta es tu clave secreta para automatizar la optimización vía API.</p>
-                    <div className="api-key-display">
-                        <code className="api-key-code">
-                            {localStorage.getItem('apiKey')}
-                        </code>
-                        <button 
-                            onClick={copyApiKey}
-                            className="btn btn-secondary" // Usamos el botón secundario del nuevo estilo
-                        >
-                            Copiar Key
-                        </button>
-                    </div>
+            <div className="dashboard-wrapper app-container"> 
+                <h1 className="main-title">Panel de Control</h1>
+
+                {/* FILA DE MÉTRICAS */}
+                <div className="metric-grid">
+                    <MetricCard 
+                        icon={Package}
+                        title="Plan Activo"
+                        value={planName}
+                        statusClass={creditStatusClass}
+                    />
+                    
+                    <MetricCard 
+                        icon={Zap}
+                        title="Créditos Restantes"
+                        value={user.credits_remaining}
+                        statusClass={creditStatusClass}
+                        actionButton={
+                            <button
+                                onClick={() => handlePurchase(DEFAULT_PADDLE_PLAN_ID)}
+                                className="btn btn-primary btn-small"
+                            >
+                                Recargar
+                            </button>
+                        }
+                    />
+                    
+                    <MetricCard 
+                        icon={Code}
+                        title="Tu API Key"
+                        value={user.apiKey ? "Disponible" : "Generar"}
+                        statusClass={user.apiKey ? 'ok' : 'low'}
+                        actionButton={
+                            <button 
+                                onClick={copyApiKey}
+                                className="btn btn-secondary btn-small"
+                            >
+                                <Copy size={16} style={{ marginRight: '5px' }} /> Copiar Key
+                            </button>
+                        }
+                    />
                 </div>
                 
-                {/* 3. Botón de Logout */}
-                <button 
-                    onClick={handleLogout}
-                    className="button-logout"
-                    style={{ background: 'transparent', border: 'none', color: 'var(--text-color-secondary)', cursor: 'pointer', marginTop: '20px' }}
-                >
-                    <LogOut size={20} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-                    Cerrar Sesión
-                </button>
+                {/* SECCIÓN PRINCIPAL DE OPTIMIZACIÓN */}
+                <section className="optimization-section">
+                    <div className="section-header">
+                        <h2><UploadCloud size={24} style={{ marginRight: '10px' }} /> Optimiza tu Imagen</h2>
+                        <span className="info-text">1 archivo = 1 crédito</span>
+                    </div>
+
+                    {/* ZONA DE DROPZONE (Mockup Limpio) */}
+                    <div className="dropzone-area">
+                        <UploadCloud size={60} color="var(--text-color-secondary)" />
+                        <p className="dropzone-text">Arrastra y suelta aquí tu imagen de producto</p>
+                        <button className="btn btn-primary btn-large">Subir y Optimizar</button>
+                        <small className="file-info">Soporte: JPEG, PNG | Máx. 10MB</small>
+                    </div>
+
+                    {/* FUTURAS GRÁFICAS Y ESTADÍSTICAS AQUÍ */}
+                </section>
+
+                <p className="footer-note">¿Necesitas ayuda con la integración? Consulta nuestra documentación.</p>
             </div>
-        </div>
+        </>
     );
 }
-
-// Agregamos algunos estilos simples para el dashboard
-// Nota: Deberías mover estos a globals.css para consistencia
-const dashboardStyles = `
-.dashboard-container {
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: var(--bg-card);
-    border-radius: var(--radius-large);
-    box-shadow: var(--shadow-subtle);
-}
-
-.info-card {
-    border: 1px solid var(--border-color);
-    padding: 25px;
-    border-radius: var(--radius-medium);
-    margin-bottom: 20px;
-}
-
-.card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    color: var(--primary-color);
-}
-
-.card-header h2 {
-    margin: 0 0 0 10px;
-    font-size: 1.5rem;
-}
-
-.credit-status {
-    font-size: 2.2em;
-    font-weight: 800;
-    margin: 10px 0;
-}
-
-.status-ok { color: var(--secondary-color); }
-.status-low { color: var(--accent-color); }
-
-.api-key-display {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--bg-footer);
-    padding: 10px;
-    border-radius: var(--radius-medium);
-    margin-top: 10px;
-}
-
-.api-key-code {
-    font-family: monospace;
-    font-size: 0.9em;
-    color: var(--text-color-primary);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-grow: 1;
-    margin-right: 10px;
-}
-`;
-
-// prueba

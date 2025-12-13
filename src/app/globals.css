@@ -596,3 +596,210 @@ input:focus {
         grid-template-columns: 1fr;
     }
 }
+
+/* =========================================
+   ESTILOS MODERNOS PARA DASHBOARD
+   ========================================= */
+
+/* Estilos de Carga y Error a Pantalla Completa */
+.full-screen-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--background-secondary);
+    color: var(--text-color);
+}
+
+.loading-state, .error-state {
+    text-align: center;
+    padding: 40px;
+    border-radius: 12px;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-subtle);
+}
+
+.spinner {
+    animation: spin 1.5s linear infinite;
+    color: var(--primary-color);
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+/* Header del Dashboard */
+.dashboard-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.dashboard-header .logo-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.dashboard-header .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.dashboard-header .user-email {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    margin-right: 15px;
+}
+
+.dashboard-header .btn-logout {
+    background: none;
+    border: none;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: color 0.2s;
+}
+
+.dashboard-header .btn-logout:hover {
+    color: var(--accent-color);
+}
+
+/* Diseño del Contenido Principal */
+.dashboard-wrapper {
+    padding-top: 40px !important;
+    min-height: calc(100vh - 60px); /* Ajusta por la altura del header */
+}
+
+.main-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* Grid de Métricas (Tarjetas de Info) */
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.metric-card {
+    background-color: var(--bg-card);
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.metric-card .card-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.metric-card .card-title {
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+.metric-card .card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.metric-card .card-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* Clases de Estado para Créditos */
+.metric-card .ok { color: var(--primary-color); } /* Verde azulado */
+.metric-card .warning { color: #f3c740; } /* Amarillo/Naranja */
+.metric-card .low { color: var(--accent-color); } /* Coral */
+
+/* Sección de Optimización (Dropzone) */
+.optimization-section {
+    background-color: var(--bg-card);
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 40px;
+}
+
+.optimization-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 15px;
+}
+
+.optimization-section h2 {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.optimization-section .info-text {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+}
+
+.dropzone-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 60px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.dropzone-area:hover {
+    border-color: var(--accent-color);
+}
+
+.dropzone-area .dropzone-text {
+    color: var(--text-color-secondary);
+    margin: 15px 0 25px;
+}
+
+.dropzone-area .file-info {
+    display: block;
+    margin-top: 15px;
+    color: var(--text-color-secondary);
+    font-size: 0.85rem;
+}
+
+.footer-note {
+    text-align: center;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+}
