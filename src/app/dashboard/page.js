@@ -1,4 +1,4 @@
-// src/app/dashboard/page.js - IMPLEMENTACIÓN DE DROPZONE
+// src/app/dashboard/page.js - VERSIÓN FINAL UNIFICADA Y CORREGIDA
 
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -15,7 +15,7 @@ const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png'];
 
 
 // ---------------------------------------------
-// COMPONENTE: DashboardHeader (Sin cambios, solo añadido al final)
+// COMPONENTE: DashboardHeader (Sin cambios)
 // ---------------------------------------------
 const DashboardHeader = ({ userEmail, onLogout }) => (
     <header className="dashboard-header">
@@ -47,15 +47,13 @@ const MetricCard = ({ icon: Icon, title, value, statusClass, actionButton }) => 
 
 
 // ---------------------------------------------
-// NUEVO COMPONENTE: FileDropzone
+// COMPONENTE: FileDropzone (Sin cambios)
 // ---------------------------------------------
 const FileDropzone = ({ userCredits, onOptimizeStart }) => {
     const [isDragActive, setIsDragActive] = useState(false);
     const [files, setFiles] = useState([]);
     const fileInputRef = useRef(null);
     const [fileError, setFileError] = useState('');
-
-    // --- Lógica de Manejo de Archivos ---
 
     const validateFile = (file) => {
         if (!ALLOWED_MIME_TYPES.includes(file.type)) {
@@ -77,7 +75,7 @@ const FileDropzone = ({ userCredits, onOptimizeStart }) => {
             if (validationError) {
                 setFileError(validationError);
                 hasError = true;
-                break; // Detener en el primer error para feedback inmediato
+                break; 
             }
             if (!files.some(f => f.name === file.name)) {
                 validFiles.push(file);
@@ -85,12 +83,10 @@ const FileDropzone = ({ userCredits, onOptimizeStart }) => {
         }
 
         if (!hasError) {
-            // Limitar la cola a un número razonable si es necesario (ej: 10)
             setFiles(prevFiles => [...prevFiles, ...validFiles].slice(0, 10)); 
         }
     };
 
-    // Handlers para Drag and Drop
     const handleDrag = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -112,14 +108,12 @@ const FileDropzone = ({ userCredits, onOptimizeStart }) => {
         }
     };
 
-    // Handler para la selección de Input
     const handleSelectFiles = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             handleFiles(e.target.files);
         }
     };
 
-    // Utilería
     const removeFile = (fileName) => {
         setFiles(prevFiles => prevFiles.filter(file => file.name !== fileName));
         setFileError('');
@@ -133,7 +127,6 @@ const FileDropzone = ({ userCredits, onOptimizeStart }) => {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
-    // Función de Optimización (Mockup)
     const handleOptimize = () => {
         if (files.length === 0) return;
         if (userCredits < files.length) {
@@ -141,10 +134,12 @@ const FileDropzone = ({ userCredits, onOptimizeStart }) => {
             return;
         }
         
-        // Aquí iría la llamada real a la API con los archivos (onOptimizeStart)
-        alert(`Iniciando optimización de ${files.length} archivos. Esto usaría ${files.length} créditos.`);
+        // Aquí iría la llamada real a la API 
+        console.log(`Iniciando optimización de ${files.length} archivos.`);
+        
+        // Simular el inicio de la optimización y el uso de créditos
+        onOptimizeStart(files.length); 
         setFiles([]); // Limpiar cola tras el 'inicio'
-        onOptimizeStart(files.length); // Notificar al componente padre
     };
 
     return (
@@ -161,7 +156,7 @@ const FileDropzone = ({ userCredits, onOptimizeStart }) => {
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
-                onClick={() => fileInputRef.current.click()} // Abrir selector al clickear
+                onClick={() => fileInputRef.current.click()} 
             >
                 <input
                     ref={fileInputRef}
@@ -222,7 +217,7 @@ const FileDropzone = ({ userCredits, onOptimizeStart }) => {
 }
 
 // ---------------------------------------------
-// COMPONENTE PRINCIPAL: DashboardPage (Modificado para usar Dropzone)
+// COMPONENTE PRINCIPAL: DashboardPage (FUNCIONES REINTEGRADAS)
 // ---------------------------------------------
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
@@ -230,8 +225,56 @@ export default function DashboardPage() {
     const [error, setError] = useState('');
     const router = useRouter();
 
-    // ... (handleLogout, fetchUserData, useEffect y lógica de carga/error sin cambios) ...
-    // ... (copyApiKey, handlePurchase sin cambios) ...
+
+    // === FUNCIONES DE SERVICIO REINTEGRADAS ===
+    
+    // 1. Copiar API Key (FALTA y causa el error)
+    const copyApiKey = () => {
+        if (typeof window !== 'undefined') {
+            const apiKey = localStorage.getItem('apiKey');
+            if (apiKey) {
+                navigator.clipboard.writeText(apiKey)
+                    .then(() => {
+                        // Idealmente, usar un toast o un estado temporal para dar feedback
+                        alert('API Key copiada al portapapeles!');
+                    })
+                    .catch(err => {
+                        console.error('Error al copiar:', err);
+                        alert('No se pudo copiar la API Key.');
+                    });
+            } else {
+                alert('No se encontró ninguna API Key. Por favor, inicia sesión de nuevo.');
+            }
+        }
+    };
+    
+    // 2. Manejar la compra con Paddle (FALTA)
+    const handlePurchase = (planId) => {
+        if (typeof window !== 'undefined' && window.Paddle) {
+            // El email debe obtenerse del estado del usuario si está disponible
+            const userEmail = user ? user.email : '';
+
+            window.Paddle.Checkout.open({
+                product: planId, // Usamos el ID del plan de ejemplo
+                email: userEmail,
+                // Parámetros opcionales para seguimiento o webhooks
+                passthrough: {
+                    user_id: user ? user.id : 'unknown',
+                    plan_name: 'Pro Credits Top-up',
+                },
+                successCallback: (data) => {
+                    // Después de una compra exitosa, debes actualizar los créditos del usuario
+                    alert('¡Compra exitosa! Actualizando tus créditos...');
+                    // Recargar los datos del usuario para reflejar los nuevos créditos
+                    fetchUserData(localStorage.getItem('accessToken')); 
+                }
+            });
+        } else {
+            alert('Paddle no está cargado. Intenta recargar la página.');
+        }
+    };
+    // === FIN FUNCIONES DE SERVICIO ===
+
 
     const handleLogout = () => {
         localStorage.clear(); 
@@ -239,7 +282,6 @@ export default function DashboardPage() {
     };
 
     const fetchUserData = useCallback(async (accessToken) => {
-        // Lógica de fetchUserData sin cambios, usando useCallback
         try {
             const response = await fetch(`${API_URL}/users/me`, {
                 method: 'GET',
@@ -278,19 +320,16 @@ export default function DashboardPage() {
 
     // Función para manejar la finalización de la optimización y actualizar créditos
     const handleOptimizeStart = (creditsUsed) => {
-        // En un entorno real, harías un fetch para actualizar el estado del usuario
-        // Aquí solo hacemos un update de estado Mockup:
         if (user) {
              setUser(prevUser => ({
                 ...prevUser,
                 credits_remaining: prevUser.credits_remaining - creditsUsed
             }));
         }
-        // Además, podrías mostrar una notificación de éxito aquí
+        alert(`Optimización iniciada. ${creditsUsed} créditos usados (simulado).`);
     };
-
-    // ... (Lógica de renderizado de loading/error sin cambios) ...
     
+    // --- Lógica de renderizado de loading/error ---
     if (loading) {
         return (
             <div className="full-screen-center">
@@ -303,7 +342,6 @@ export default function DashboardPage() {
     }
 
     if (error) {
-        // ... (renderizado de error sin cambios) ...
          return (
             <div className="full-screen-center">
                 <div className="error-state">
@@ -357,7 +395,7 @@ export default function DashboardPage() {
                         statusClass={creditStatusClass}
                         actionButton={
                             <button
-                                onClick={() => handlePurchase(DEFAULT_PADDLE_PLAN_ID)}
+                                onClick={() => handlePurchase(DEFAULT_PADDLE_PLAN_ID)} // LLAMADA REINTEGRADA
                                 className="btn btn-primary btn-small"
                             >
                                 Recargar
@@ -372,7 +410,7 @@ export default function DashboardPage() {
                         statusClass={localStorage.getItem('apiKey') ? 'ok' : 'low'}
                         actionButton={
                             <button 
-                                onClick={copyApiKey}
+                                onClick={copyApiKey} // LLAMADA REINTEGRADA
                                 className="btn btn-secondary btn-small"
                             >
                                 <Copy size={16} style={{ marginRight: '5px' }} /> Copiar Key
@@ -381,7 +419,6 @@ export default function DashboardPage() {
                     />
                 </div>
                 
-                {/* INSERCIÓN DEL NUEVO DROPZONE */}
                 <FileDropzone userCredits={user.credits_remaining} onOptimizeStart={handleOptimizeStart} />
 
                 <p className="footer-note">¿Necesitas ayuda con la integración? Consulta nuestra documentación.</p>
