@@ -803,3 +803,117 @@ input:focus {
     color: var(--text-color-secondary);
     font-size: 0.9rem;
 }
+
+/* =========================================
+   ESTILOS ADICIONALES PARA DROPZONE
+   ========================================= */
+
+/* Dropzone en estado de arrastre */
+.dropzone-area.drag-active {
+    border-color: var(--primary-color);
+    background-color: var(--background-secondary);
+    box-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.3);
+}
+
+.dropzone-area .dropzone-text {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Cola de Archivos */
+.file-queue-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.file-queue-container h3 {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-item .file-name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 15px;
+}
+
+.file-item .file-size {
+    color: var(--text-color-secondary);
+    min-width: 80px;
+    text-align: right;
+}
+
+.file-item .btn-remove-file {
+    background: none;
+    border: none;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color 0.2s;
+}
+
+.file-item .btn-remove-file:hover {
+    color: var(--accent-color);
+}
+
+/* Botón de Optimización */
+.optimize-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Mensaje de Error de Archivo */
+.file-error-message {
+    display: flex;
+    align-items: center;
+    background-color: #ffeded; /* Fondo rojo claro */
+    color: var(--accent-color); /* Texto en color coral/acento */
+    border: 1px solid var(--accent-color);
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.credit-alert {
+    display: block;
+    text-align: center;
+    color: var(--accent-color);
+    font-size: 0.85rem;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.optimize-btn:disabled {
+    background-color: var(--text-color-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
