@@ -1,11 +1,11 @@
-// src/components/AuthModal.js
+// src/app/components/AuthModal.js - VERSIÓN LIMPIA
 
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+// ELIMINADO: import Link from 'next/link';
 
-// Importa los componentes de Login y Registro que ya tienes (los crearemos a continuación)
+// Importa los componentes de Login y Registro (ya corregidas las rutas internas)
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 

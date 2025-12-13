@@ -1,9 +1,10 @@
-// src/components/RegisterForm.js
+// src/components/RegisterForm.js - VERSIÓN FINAL
 
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
 
+// Asegúrate de que esta URL sea correcta.
 const API_URL = "https://fastapi-image-optimizer-1.onrender.com"; 
 
 // Recibe onSuccess para notificar al Modal que cambie a la vista de Login
@@ -31,6 +32,7 @@ export default function RegisterForm({ onSuccess }) {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                // Si la API devuelve el error de correo duplicado, se mostrará aquí.
                 throw new Error(errorData.detail || "Error en el registro. Intenta con otro correo.");
             }
 
