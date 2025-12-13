@@ -1,14 +1,14 @@
-// src/app/page.js - VERSIÓN FINAL COMPLETA
+// src/app/page.js - VERSIÓN FINAL UNIFICADA (Estructura completa + Modal funcional)
 
 'use client'; 
-import { useState } from 'react'; // Necesario para el Modal
-import Link from 'next/link'; // Necesario para los enlaces del Footer
-import AuthModal from './components/AuthModal'; 
+import { useState } from 'react'; // NECESARIO para el Modal
+import Link from 'next/link';
+import AuthModal from './components/AuthModal'; // NECESARIO para la funcionalidad
+// Importamos los íconos necesarios para el diseño
 import { CloudUpload, CheckCircle, Sun, Leaf, Zap, Shield, TrendingUp, DollarSign } from 'lucide-react'; 
-// Importar 'lucide-react' fue el primer fix crítico que hicimos.
 
 // ---------------------------------------------
-// COMPONENTE: FeatureCard
+// COMPONENTE: FeatureCard (Tarjeta de Confianza)
 // ---------------------------------------------
 const FeatureCard = ({ icon: Icon, title, description, color }) => (
     <div className="feature-card">
@@ -22,8 +22,9 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
 
 
 // ---------------------------------------------
-// COMPONENTE: Header Minimalista
+// COMPONENTE: Header Minimalista (PUBLICO, adaptado al Modal)
 // ---------------------------------------------
+// Ahora recibe la función para abrir el modal
 const Header = ({ onLoginClick }) => ( 
     <div className="app-container">
         <header className="header-main">
@@ -34,7 +35,8 @@ const Header = ({ onLoginClick }) => (
                 </h2>
             </div>
             <nav>
-                <button className="btn btn-primary" onClick={() => onLoginClick('login')}>
+                {/* BOTÓN que abre el Modal en vista 'login' */}
+                <button className="btn btn-primary" onClick={() => onLoginClick('login')}> 
                     Iniciar Sesión
                 </button>
             </nav>
@@ -44,17 +46,49 @@ const Header = ({ onLoginClick }) => (
 
 
 // ---------------------------------------------
-// COMPONENTE: Footer
+// COMPONENTE: Footer Extendido
 // ---------------------------------------------
 const Footer = () => (
     <footer className="footer-main">
-        <div className="app-container footer-content">
-            <div className="footer-links">
-                <Link href="/politica-privacidad">Política de Privacidad</Link>
-                <Link href="/terminos-servicio">Términos de Servicio</Link>
-                <Link href="/contacto">Contacto</Link>
+        <div className="app-container">
+            <div className="footer-content">
+                
+                <div className="footer-section">
+                    <div className="logo">
+                        <Sun size={24} color="var(--primary-color)" style={{ marginRight: '8px' }} />
+                        <h4 style={{ margin: 0, color: 'var(--primary-color)' }}>OptiCommerce</h4>
+                    </div>
+                    <small style={{ display: 'block', marginTop: '15px', color: 'var(--text-color-secondary)' }}>
+                        © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
+                    </small>
+                    <small style={{ display: 'block', marginTop: '5px', color: 'var(--text-color-secondary)' }}>
+                        Desarrollado por [Tu Nombre/Compañía Legal].
+                    </small>
+                </div>
+                
+                <div className="footer-section">
+                    <h4>Nuestros Servicios</h4>
+                    {/* El uso de Link sin legacyBehavior es el estándar moderno en Next.js App Router */}
+                    <Link href="/" className='footer-link'>Optimización de Imágenes</Link>
+                    <a className='footer-link' style={{ color: 'var(--text-color-secondary)' }}>(Espacio para futuro servicio 2)</a>
+                    <a className='footer-link' style={{ color: 'var(--text-color-secondary)' }}>(Espacio para futuro servicio 3)</a>
+                </div>
+
+                <div className="footer-section">
+                    <h4>Información Legal</h4>
+                    <Link href="/terminos" className='footer-link'>Términos y Condiciones</Link>
+                    <Link href="/privacidad" className='footer-link'>Política de Privacidad</Link>
+                    <Link href="/reembolso" className='footer-link'>Política de Reembolso</Link>
+                    <a className='footer-link'>Política de Cookies</a>
+                </div>
+
+                <div className="footer-section">
+                    <h4>Empresa</h4>
+                    <a className='footer-link'>Sobre Nosotros</a>
+                    <a className='footer-link'>Contacto</a>
+                    <a className='footer-link'>Preguntas Frecuentes (FAQ)</a>
+                </div>
             </div>
-            <p className="footer-copy">© {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.</p>
         </div>
     </footer>
 );
@@ -79,9 +113,7 @@ export default function LandingPage() {
 
             <main className="app-container">
                 
-                {/* ========================================= */}
                 {/* SECCIÓN 1: HERO y ZONA DE ACCIÓN */}
-                {/* ========================================= */}
                 <section className="section-hero">
                     <div className="hero-left">
                         <h1 className="hero-title">
@@ -97,6 +129,7 @@ export default function LandingPage() {
                             <p><CheckCircle size={18} color="var(--primary-color)" style={{ marginRight: '10px' }} /> Uso gratuito hasta 100 créditos.</p>
                         </div>
                         
+                        {/* BOTÓN que abre el Modal en vista 'register' */}
                         <button 
                             className="btn btn-primary btn-large" 
                             style={{ marginTop: '20px' }}
@@ -104,7 +137,6 @@ export default function LandingPage() {
                         >
                             Comenzar a Optimizar Gratis
                         </button>
-
                     </div>
                     
                     {/* Zona de Dropzone (Maqueta visual) */}
@@ -119,56 +151,60 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* ========================================= */}
-                {/* SECCIÓN 2: CARACTERÍSTICAS (Las tarjetas) */}
-                {/* ========================================= */}
-                <section className="section-features">
-                    <h2>¿Por qué elegir OptiCommerce?</h2>
-                    <p className="section-subtitle">Más velocidad, menos huella de carbono y mayor conversión.</p>
-                    <div className="features-grid">
-                        <FeatureCard 
-                            icon={Leaf} 
-                            title="Impacto Ecológico" 
-                            description="Reducimos el peso de tus imágenes, disminuyendo la energía necesaria para la transferencia de datos." 
-                            color="#38A169"
-                        />
-                        <FeatureCard 
-                            icon={Zap} 
-                            title="Velocidad de Carga" 
-                            description="Las imágenes optimizadas hacen que tu tienda cargue hasta 3 veces más rápido, mejorando la experiencia del usuario." 
-                            color="#4299E1"
-                        />
-                        <FeatureCard 
-                            icon={TrendingUp} 
-                            title="Mejor SEO y Conversión" 
-                            description="Google ama las páginas rápidas. Mejora tu posicionamiento y convierte más visitantes en clientes." 
-                            color="#ECC94B"
-                        />
-                        <FeatureCard 
-                            icon={Shield} 
-                            title="Seguridad y Privacidad" 
-                            description="Procesamos tus archivos de forma segura. Tus imágenes y datos nunca son compartidos con terceros." 
-                            color="#9F7AEA"
-                        />
+                {/* SECCIÓN 2: INSTRUCCIONES BÁSICAS (Añadida de tu script) */}
+                <section className="section-box section-instructions">
+                    <h2 className="section-title">¿Cómo funciona OptiCommerce?</h2>
+                    <div className="steps-grid">
+                        <div className="step-item">
+                            <div className="step-number">1</div>
+                            <p><strong>Regístrate y Obtén Créditos.</strong> Accede a tu cuenta y recibe 100 créditos de optimización gratis.</p>
+                        </div>
+                        <div className="step-item">
+                            <div className="step-number">2</div>
+                            <p><strong>Sube tu Imagen.</strong> Arrastra el archivo de tu producto (PNG o JPEG) a la zona de carga.</p>
+                        </div>
+                        <div className="step-item">
+                            <div className="step-number">3</div>
+                            <p><strong>Optimiza y Ahorra.</strong> Nuestro motor de IA comprime y convierte a formatos modernos de forma automática.</p>
+                        </div>
+                        <div className="step-item">
+                            <div className="step-number">4</div>
+                            <p><strong>Descarga Instantánea.</strong> Utiliza inmediatamente la imagen optimizada en tu tienda en línea.</p>
+                        </div>
                     </div>
                 </section>
 
-                {/* ========================================= */}
-                {/* SECCIÓN 3: CTA FINAL */}
-                {/* ========================================= */}
-                <section className="section-cta">
-                    <div className="cta-box">
-                        <DollarSign size={40} color="white" />
-                        <h3>Empieza a ahorrar y a crecer hoy</h3>
-                        <p>Optimiza tus primeras 100 imágenes gratis. No se requiere tarjeta de crédito.</p>
-                        <button 
-                            className="btn btn-primary btn-large"
-                            onClick={() => handleOpenModal('register')}
-                        >
-                            ¡Regístrate y Comienza!
-                        </button>
+                {/* SECCIÓN 3: VENTAJAS Y CONFIANZA (Las tarjetas, añadidas de tu script) */}
+                <section className="section-box section-features">
+                    <h2 className="section-title">¿Por qué OptiCommerce es la mejor opción?</h2>
+                    <div className="features-grid">
+                        <FeatureCard
+                            icon={Shield}
+                            title="Seguridad de Datos"
+                            description="Tus datos y archivos están protegidos con encriptación HTTPS. Total tranquilidad para tu negocio."
+                            color="#008080" // Verde azulado
+                        />
+                        <FeatureCard
+                            icon={TrendingUp}
+                            title="Rendimiento Web Superior"
+                            description="Aumenta tu puntuación de PageSpeed y reduce tu tasa de rebote gracias a la velocidad de carga."
+                            color="#FF7F50" // Coral
+                        />
+                        <FeatureCard
+                            icon={Leaf}
+                            title="Conciencia Ecológica"
+                            description="Archivos más pequeños significan menos consumo de energía en transferencia de datos. Optimización sostenible."
+                            color="#40B5AD" // Verde menta
+                        />
+                        <FeatureCard
+                            icon={DollarSign}
+                            title="Ahorro en Hosting"
+                            description="Menos ancho de banda utilizado por tus visitantes se traduce en menores costos mensuales de alojamiento."
+                            color="#607D8B" // Gris pizarra
+                        />
                     </div>
                 </section>
+                
             </main>
 
             {/* Renderiza el Modal */}
