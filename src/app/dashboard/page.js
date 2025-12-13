@@ -1,21 +1,66 @@
-// src/app/dashboard/page.js - VERSIÓN FINAL UNIFICADA Y CORREGIDA
+// src/app/dashboard/page.js - VERSIÓN CORREGIDA PARA PLANES DINÁMICOS
 
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script'; 
-import { UploadCloud, Zap, Code, LogOut, Copy, RefreshCw, AlertTriangle, Package, XCircle, FileImage, Trash2 } from 'lucide-react'; 
+import { UploadCloud, Zap, Code, LogOut, Copy, RefreshCw, AlertTriangle, Package, XCircle, FileImage, Trash2, DollarSign, PackageCheck, Rocket, Landmark } from 'lucide-react'; 
 
 // --- Configuración de la API y Paddle ---
 const API_URL = "https://fastapi-image-optimizer-1.onrender.com"; 
 const PADDLE_CLIENT_SIDE_TOKEN = "ctm_01kbxtv3hhwg1rhak5rjp83eh7"; 
-const DEFAULT_PADDLE_PLAN_ID = 'pri_01h6t465fgq8h4r37t9m0l1u5v'; 
+// NOTA: DEFAULT_PADDLE_PLAN_ID ya no se usará directamente, se usará el plan.paddle_product_id
 const MAX_FILE_SIZE_MB = 10;
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png'];
 
+// Mapeo de iconos para planes (opcional, si el backend no los provee)
+const PLAN_ICONS = {
+    // Usamos el ID de la base de datos (1=Free, 2=Basic, 3=Pro, 4=Enterprise)
+    1: <Package size={24} style={{ marginRight: '8px' }} />, // Free
+    2: <PackageCheck size={24} style={{ marginRight: '8px' }} />, // Basic
+    3: <Rocket size={24} style={{ marginRight: '8px' }} />, // Pro
+    4: <Landmark size={24} style={{ marginRight: '8px' }} />, // Enterprise
+};
 
 // ---------------------------------------------
-// COMPONENTE: DashboardHeader (Sin cambios)
+// COMPONENTE: PlanCard (NUEVO)
+// ---------------------------------------------
+const PlanCard = ({ plan, onPurchase }) => {
+    // Formatear el precio y la cantidad
+    const priceDisplay = plan.price === 0 ? "Gratis" : `$${plan.price.toFixed(2)}/mes`;
+    const limitDisplay = plan.image_limit === 50000 ? "Ilimitado*" : `${plan.image_limit} créditos`; // Suponiendo 50000 como "ilimitado"
+
+    return (
+        <div className={`plan-card plan-card-${plan.name.toLowerCase()}`}>
+            <div className="plan-header">
+                {PLAN_ICONS[plan.id]}
+                <h3>{plan.name}</h3>
+            </div>
+            <p className="plan-description">{limitDisplay}</p>
+            <div className="plan-price">
+                <span className="price">{priceDisplay}</span>
+            </div>
+            <ul className="plan-features">
+                <li><CheckCircle size={16} /> Optimización de alta velocidad</li>
+                <li><CheckCircle size={16} /> Soporte WebP/JPEG/PNG</li>
+                {plan.id > 1 && <li><CheckCircle size={16} /> Acceso a API Key</li>}
+                {plan.id >= 3 && <li><CheckCircle size={16} /> Optimización por Lotes</li>}
+            </ul>
+            <button 
+                className={`btn btn-primary ${plan.id === 1 ? 'btn-secondary' : ''}`}
+                onClick={() => onPurchase(plan.paddle_product_id)}
+                disabled={plan.id === 1 || !plan.paddle_product_id} // No se compra el plan Free
+            >
+                {plan.id === 1 ? "Tu Plan Actual" : "Comprar Ahora"}
+            </button>
+            {plan.image_limit === 50000 && <small className="plan-note">*{plan.name} tiene un límite técnico de {plan.image_limit} imágenes.</small>}
+        </div>
+    );
+};
+
+
+// ---------------------------------------------
+// COMPONENTES EXISTENTES (Mismos que el usuario proporcionó)
 // ---------------------------------------------
 const DashboardHeader = ({ userEmail, onLogout }) => (
     <header className="dashboard-header">
@@ -29,9 +74,6 @@ const DashboardHeader = ({ userEmail, onLogout }) => (
     </header>
 );
 
-// ---------------------------------------------
-// COMPONENTE: Card de Métricas (Sin cambios)
-// ---------------------------------------------
 const MetricCard = ({ icon: Icon, title, value, statusClass, actionButton }) => (
     <div className="metric-card">
         <div className="card-top">
@@ -45,11 +87,8 @@ const MetricCard = ({ icon: Icon, title, value, statusClass, actionButton }) => 
     </div>
 );
 
-
-// ---------------------------------------------
-// COMPONENTE: FileDropzone (Sin cambios)
-// ---------------------------------------------
 const FileDropzone = ({ userCredits, onOptimizeStart }) => {
+    //... (El contenido de FileDropzone permanece exactamente igual, solo se actualiza en el script FileDropzone.js)
     const [isDragActive, setIsDragActive] = useState(false);
     const [files, setFiles] = useState([]);
     const fileInputRef = useRef(null);
@@ -217,10 +256,11 @@ const FileDropzone = ({ userCredits, onOptimizeStart }) => {
 }
 
 // ---------------------------------------------
-// COMPONENTE PRINCIPAL: DashboardPage (FUNCIONES REINTEGRADAS)
+// COMPONENTE PRINCIPAL: DashboardPage (MODIFICADO)
 // ---------------------------------------------
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
+    const [plans, setPlans] = useState([]); // 🚨 NUEVO ESTADO PARA LOS PLANES
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const router = useRouter();
@@ -228,14 +268,12 @@ export default function DashboardPage() {
 
     // === FUNCIONES DE SERVICIO REINTEGRADAS ===
     
-    // 1. Copiar API Key (FALTA y causa el error)
     const copyApiKey = () => {
         if (typeof window !== 'undefined') {
             const apiKey = localStorage.getItem('apiKey');
             if (apiKey) {
                 navigator.clipboard.writeText(apiKey)
                     .then(() => {
-                        // Idealmente, usar un toast o un estado temporal para dar feedback
                         alert('API Key copiada al portapapeles!');
                     })
                     .catch(err => {
@@ -248,24 +286,28 @@ export default function DashboardPage() {
         }
     };
     
-    // 2. Manejar la compra con Paddle (FALTA)
-    const handlePurchase = (planId) => {
-        if (typeof window !== 'undefined' && window.Paddle) {
-            // El email debe obtenerse del estado del usuario si está disponible
-            const userEmail = user ? user.email : '';
+    // 2. Manejar la compra con Paddle (USANDO EL ID DE PRODUCTO REAL)
+    const handlePurchase = (paddleProductId) => {
+        if (!paddleProductId) {
+            alert("Error: ID de producto de Paddle no definido.");
+            return;
+        }
 
+        if (typeof window !== 'undefined' && window.Paddle) {
+            const userEmail = user ? user.email : '';
+            const planToPurchase = plans.find(p => p.paddle_product_id === paddleProductId);
+            
             window.Paddle.Checkout.open({
-                product: planId, // Usamos el ID del plan de ejemplo
+                product: paddleProductId, 
                 email: userEmail,
-                // Parámetros opcionales para seguimiento o webhooks
+                // Usamos passthrough para identificar al usuario en el webhook de Paddle
                 passthrough: {
                     user_id: user ? user.id : 'unknown',
-                    plan_name: 'Pro Credits Top-up',
+                    plan_name: planToPurchase ? planToPurchase.name : 'Unknown Plan',
                 },
                 successCallback: (data) => {
-                    // Después de una compra exitosa, debes actualizar los créditos del usuario
-                    alert('¡Compra exitosa! Actualizando tus créditos...');
-                    // Recargar los datos del usuario para reflejar los nuevos créditos
+                    alert('¡Compra exitosa! Actualizando tus créditos y plan...');
+                    // Recargar los datos del usuario para reflejar los nuevos créditos/plan
                     fetchUserData(localStorage.getItem('accessToken')); 
                 }
             });
@@ -281,7 +323,29 @@ export default function DashboardPage() {
         router.push('/'); 
     };
 
+    // 🚨 NUEVA FUNCIÓN: Fetch de planes
+    const fetchPlans = useCallback(async () => {
+        try {
+            // Llama al endpoint público /api/plans/ que creamos en el backend
+            const response = await fetch(`${API_URL}/plans/`); 
+            
+            if (response.ok) {
+                const fetchedPlans = await response.json();
+                // Filtramos el plan Free (ID=1) ya que el dashboard solo debe mostrar planes de pago.
+                // Sin embargo, si lo quieres para la sección de precios, podrías dejarlo. 
+                // Para el DASHBOARD, generalmente solo se muestran los planes de mejora. 
+                // Lo incluiremos, pero lo marcaremos como no comprable.
+                setPlans(fetchedPlans);
+            } else {
+                console.error("Error al cargar los planes:", response.status);
+            }
+        } catch (err) {
+            console.error('Error de conexión al cargar planes:', err);
+        }
+    }, []);
+
     const fetchUserData = useCallback(async (accessToken) => {
+        //... (función fetchUserData sin cambios)
         try {
             const response = await fetch(`${API_URL}/users/me`, {
                 method: 'GET',
@@ -315,16 +379,17 @@ export default function DashboardPage() {
                 return;
             }
             fetchUserData(token);
+            fetchPlans(); // 🚨 Llamar al fetch de planes
         }
-    }, [router, fetchUserData]); 
+    }, [router, fetchUserData, fetchPlans]); 
 
-    // Función para manejar la finalización de la optimización y actualizar créditos
+    // Función para manejar la finalización de la optimización y actualizar créditos (simulada)
     const handleOptimizeStart = (creditsUsed) => {
         if (user) {
              setUser(prevUser => ({
-                ...prevUser,
-                credits_remaining: prevUser.credits_remaining - creditsUsed
-            }));
+                 ...prevUser,
+                 credits_remaining: prevUser.credits_remaining - creditsUsed
+             }));
         }
         alert(`Optimización iniciada. ${creditsUsed} créditos usados (simulado).`);
     };
@@ -342,26 +407,28 @@ export default function DashboardPage() {
     }
 
     if (error) {
-         return (
-            <div className="full-screen-center">
-                <div className="error-state">
-                    <AlertTriangle size={40} color="#FF7F50" />
-                    <p className="error-message">{error}</p>
-                    <button onClick={() => router.replace('/')} className="btn btn-primary" style={{ marginTop: '20px' }}>
-                        Ir al Inicio
-                    </button>
-                </div>
-            </div>
-        );
+           return (
+             <div className="full-screen-center">
+                 <div className="error-state">
+                     <AlertTriangle size={40} color="#FF7F50" />
+                     <p className="error-message">{error}</p>
+                     <button onClick={() => router.replace('/')} className="btn btn-primary" style={{ marginTop: '20px' }}>
+                         Ir al Inicio
+                     </button>
+                 </div>
+             </div>
+         );
     }
     
     if (!user) return null; 
 
-    // --- RENDERIZADO DEL DASHBOARD ---
-    
-    const planName = user.plan_id === 1 ? "Básico (Gratuito)" : `Pro (ID: ${user.plan_id})`;
-    const creditStatusClass = user.credits_remaining > 50 ? 'ok' : user.credits_remaining > 10 ? 'warning' : 'low';
+    // Obtener el plan actual del usuario
+    const currentPlan = plans.find(p => p.id === user.plan_id);
+    const planName = currentPlan ? currentPlan.name : "Desconocido";
 
+    const creditStatusClass = user.credits_remaining > 500 ? 'ok' : user.credits_remaining > 50 ? 'warning' : 'low'; // Ajustamos los umbrales
+
+    const isFreePlan = user.plan_id === 1;
 
     return (
         <>
@@ -380,12 +447,13 @@ export default function DashboardPage() {
             <div className="dashboard-wrapper app-container"> 
                 <h1 className="main-title">Panel de Control</h1>
 
+                {/* --- SECCIÓN DE MÉTRICAS --- */}
                 <div className="metric-grid">
                     <MetricCard 
                         icon={Package}
                         title="Plan Activo"
                         value={planName}
-                        statusClass={creditStatusClass}
+                        statusClass={isFreePlan ? 'low' : 'ok'}
                     />
                     
                     <MetricCard 
@@ -394,12 +462,9 @@ export default function DashboardPage() {
                         value={user.credits_remaining}
                         statusClass={creditStatusClass}
                         actionButton={
-                            <button
-                                onClick={() => handlePurchase(DEFAULT_PADDLE_PLAN_ID)} // LLAMADA REINTEGRADA
-                                className="btn btn-primary btn-small"
-                            >
-                                Recargar
-                            </button>
+                            <a href="#plans-section" className="btn btn-primary btn-small"> 
+                                Ver Planes
+                            </a>
                         }
                     />
                     
@@ -407,19 +472,44 @@ export default function DashboardPage() {
                         icon={Code}
                         title="Tu API Key"
                         value={localStorage.getItem('apiKey') ? "Disponible" : "Generar"}
-                        statusClass={localStorage.getItem('apiKey') ? 'ok' : 'low'}
+                        statusClass={!isFreePlan ? 'ok' : 'low'}
                         actionButton={
                             <button 
-                                onClick={copyApiKey} // LLAMADA REINTEGRADA
+                                onClick={copyApiKey} 
                                 className="btn btn-secondary btn-small"
+                                disabled={isFreePlan} // Deshabilitar si está en el plan gratuito
                             >
-                                <Copy size={16} style={{ marginRight: '5px' }} /> Copiar Key
+                                <Copy size={16} style={{ marginRight: '5px' }} /> {isFreePlan ? 'Solo planes de pago' : 'Copiar Key'}
                             </button>
                         }
                     />
                 </div>
                 
+                {/* --- SECCIÓN DE OPTIMIZACIÓN --- */}
                 <FileDropzone userCredits={user.credits_remaining} onOptimizeStart={handleOptimizeStart} />
+
+                {/* --- SECCIÓN DE PLANES --- */}
+                <section id="plans-section" className="section-plans">
+                    <h2 className="section-title"><DollarSign size={28} style={{ marginRight: '10px' }} /> Actualiza tu Plan</h2>
+                    
+                    {plans.length === 0 ? (
+                        <p>Cargando planes...</p>
+                    ) : (
+                        <div className="plans-grid">
+                            {plans
+                                .filter(p => p.id !== user.plan_id) // 🚨 Filtramos el plan actual
+                                .filter(p => p.id !== 1) // 🚨 Filtramos el Plan Free (ID=1)
+                                .sort((a, b) => a.image_limit - b.image_limit) // Ordenar por límite de créditos
+                                .map(plan => (
+                                <PlanCard
+                                    key={plan.id}
+                                    plan={plan}
+                                    onPurchase={handlePurchase}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </section>
 
                 <p className="footer-note">¿Necesitas ayuda con la integración? Consulta nuestra documentación.</p>
             </div>

@@ -1,14 +1,18 @@
-// src/app/page.js - VERSIÓN FINAL UNIFICADA (Estructura completa + Modal funcional)
+// src/app/page.js - VERSIÓN CORREGIDA CON DROPZONE PÚBLICO
 
 'use client'; 
-import { useState } from 'react'; // NECESARIO para el Modal
+import { useState } from 'react'; 
 import Link from 'next/link';
-import AuthModal from './components/AuthModal'; // NECESARIO para la funcionalidad
+
+// 🚨 IMPORTACIONES CLAVE AÑADIDAS 🚨
+import FileDropzone from './components/FileDropzone'; // 👈 Necesitas el componente funcional
+import AuthModal from './components/AuthModal'; 
+
 // Importamos los íconos necesarios para el diseño
 import { CloudUpload, CheckCircle, Sun, Leaf, Zap, Shield, TrendingUp, DollarSign } from 'lucide-react'; 
 
 // ---------------------------------------------
-// COMPONENTE: FeatureCard (Tarjeta de Confianza)
+// COMPONENTE: FeatureCard (SIN CAMBIOS)
 // ---------------------------------------------
 const FeatureCard = ({ icon: Icon, title, description, color }) => (
     <div className="feature-card">
@@ -22,15 +26,8 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
 
 
 // ---------------------------------------------
-// COMPONENTE: Header Minimalista (PUBLICO, adaptado al Modal)
+// COMPONENTE: Header Minimalista (SIN CAMBIOS)
 // ---------------------------------------------
-// Ahora recibe la función para abrir el modal
-// src/app/page.js - SOLO LA SECCIÓN DEL HEADER MODIFICADA
-
-// ---------------------------------------------
-// COMPONENTE: Header Minimalista (PUBLICO, adaptado al Modal)
-// ---------------------------------------------
-// Ahora recibe la función para abrir el modal
 const Header = ({ onLoginClick }) => ( 
     <div className="app-container">
         <header className="header-main">
@@ -41,14 +38,13 @@ const Header = ({ onLoginClick }) => (
                 </h2>
             </div>
             <nav>
-                {/* AÑADIDO: Enlace a la página de precios */}
                 <Link 
                     href="/pricing" 
                     className="nav-link" 
                     style={{ 
                         marginRight: '20px', 
                         fontWeight: 500, 
-                        color: 'var(--text-color)', // Aseguramos el color
+                        color: 'var(--text-color)', 
                         textDecoration: 'none' 
                     }}
                 >
@@ -65,7 +61,7 @@ const Header = ({ onLoginClick }) => (
 );
 
 // ---------------------------------------------
-// COMPONENTE: Footer Extendido
+// COMPONENTE: Footer Extendido (SIN CAMBIOS)
 // ---------------------------------------------
 const Footer = () => (
     <footer className="footer-main">
@@ -87,7 +83,6 @@ const Footer = () => (
                 
                 <div className="footer-section">
                     <h4>Nuestros Servicios</h4>
-                    {/* El uso de Link sin legacyBehavior es el estándar moderno en Next.js App Router */}
                     <Link href="/" className='footer-link'>Optimización de Imágenes</Link>
                     <a className='footer-link' style={{ color: 'var(--text-color-secondary)' }}>(Espacio para futuro servicio 2)</a>
                     <a className='footer-link' style={{ color: 'var(--text-color-secondary)' }}>(Espacio para futuro servicio 3)</a>
@@ -119,11 +114,17 @@ const Footer = () => (
 export default function LandingPage() {
     // Estado para controlar la visibilidad y vista del modal
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalView, setModalView] = useState('login'); // 'login' o 'register'
+    const [modalView, setModalView] = useState('login'); 
 
     const handleOpenModal = (view) => {
         setModalView(view);
         setIsModalOpen(true);
+    };
+
+    // Función que se llama cuando el FileDropzone detecta el error 402 del Backend
+    const handleFreeLimitReached = () => {
+        // Obligamos al modal a abrirse en la vista de REGISTRO, ya que es el siguiente paso lógico.
+        handleOpenModal('register');
     };
 
     return (
@@ -143,9 +144,10 @@ export default function LandingPage() {
                         </p>
                         
                         <div className="benefit-list">
-                            <p><CheckCircle size={18} color="var(--primary-color)" style={{ marginRight: '10px' }} /> Compresión sin pérdida de calidad.</p>
+                            {/* 🚨 CORRECCIÓN: Actualizar el beneficio a 5 créditos (para ser honestos) */}
+                            <p><CheckCircle size={18} color="var(--primary-color)" style={{ marginRight: '10px' }} /> Prueba gratuita de 5 optimizaciones.</p>
                             <p><CheckCircle size={18} color="var(--primary-color)" style={{ marginRight: '10px' }} /> Compatible con WEBP, JPEG y PNG.</p>
-                            <p><CheckCircle size={18} color="var(--primary-color)" style={{ marginRight: '10px' }} /> Uso gratuito hasta 100 créditos.</p>
+                            <p><CheckCircle size={18} color="var(--primary-color)" style={{ marginRight: '10px' }} /> Compresión sin pérdida de calidad.</p>
                         </div>
                         
                         {/* BOTÓN que abre el Modal en vista 'register' */}
@@ -158,25 +160,23 @@ export default function LandingPage() {
                         </button>
                     </div>
                     
-                    {/* Zona de Dropzone (Maqueta visual) */}
+                    {/* 🚨 REEMPLAZO: Usamos el FileDropzone FUNCIONAL 🚨 */}
                     <div className="hero-right">
-                        <div className="dropzone-mockup">
-                            <CloudUpload size={48} color="var(--accent-color)" />
-                            <p className="dropzone-text">Arrastra y suelta tu archivo aquí</p>
-                            <div className="dropzone-separator">O</div>
-                            <button className="btn btn-secondary">Subir Imagen</button>
-                            <small>Máximo 10MB</small>
-                        </div>
+                        <FileDropzone 
+                            isAuthenticated={false} // Siempre falso en la Landing Page
+                            onLimitReached={handleFreeLimitReached} // 👈 NUEVA LÓGICA
+                            initialCredits={5} // Se usa para la UI inicial si quieres mostrar "5 optimizaciones restantes"
+                        />
                     </div>
                 </section>
 
-                {/* SECCIÓN 2: INSTRUCCIONES BÁSICAS (Añadida de tu script) */}
+                {/* SECCIÓN 2: INSTRUCCIONES BÁSICAS (Actualizado para el proceso actual) */}
                 <section className="section-box section-instructions">
                     <h2 className="section-title">¿Cómo funciona OptiCommerce?</h2>
                     <div className="steps-grid">
                         <div className="step-item">
                             <div className="step-number">1</div>
-                            <p><strong>Regístrate y Obtén Créditos.</strong> Accede a tu cuenta y recibe 100 créditos de optimización gratis.</p>
+                            <p><strong>Prueba Gratuita.</strong> Sube tu primera imagen ahora, no requiere registro (Máximo 5).</p>
                         </div>
                         <div className="step-item">
                             <div className="step-number">2</div>
@@ -188,39 +188,19 @@ export default function LandingPage() {
                         </div>
                         <div className="step-item">
                             <div className="step-number">4</div>
-                            <p><strong>Descarga Instantánea.</strong> Utiliza inmediatamente la imagen optimizada en tu tienda en línea.</p>
+                            <p><strong>Regístrate para Continuar.</strong> Al alcanzar el límite, te pediremos registrarte o comprar un plan.</p>
                         </div>
                     </div>
                 </section>
 
-                {/* SECCIÓN 3: VENTAJAS Y CONFIANZA (Las tarjetas, añadidas de tu script) */}
+                {/* SECCIÓN 3: VENTAJAS Y CONFIANZA (SIN CAMBIOS) */}
                 <section className="section-box section-features">
                     <h2 className="section-title">¿Por qué OptiCommerce es la mejor opción?</h2>
                     <div className="features-grid">
-                        <FeatureCard
-                            icon={Shield}
-                            title="Seguridad de Datos"
-                            description="Tus datos y archivos están protegidos con encriptación HTTPS. Total tranquilidad para tu negocio."
-                            color="#008080" // Verde azulado
-                        />
-                        <FeatureCard
-                            icon={TrendingUp}
-                            title="Rendimiento Web Superior"
-                            description="Aumenta tu puntuación de PageSpeed y reduce tu tasa de rebote gracias a la velocidad de carga."
-                            color="#FF7F50" // Coral
-                        />
-                        <FeatureCard
-                            icon={Leaf}
-                            title="Conciencia Ecológica"
-                            description="Archivos más pequeños significan menos consumo de energía en transferencia de datos. Optimización sostenible."
-                            color="#40B5AD" // Verde menta
-                        />
-                        <FeatureCard
-                            icon={DollarSign}
-                            title="Ahorro en Hosting"
-                            description="Menos ancho de banda utilizado por tus visitantes se traduce en menores costos mensuales de alojamiento."
-                            color="#607D8B" // Gris pizarra
-                        />
+                        <FeatureCard icon={Shield} title="Seguridad de Datos" description="Tus datos y archivos están protegidos con encriptación HTTPS. Total tranquilidad para tu negocio." color="#008080" />
+                        <FeatureCard icon={TrendingUp} title="Rendimiento Web Superior" description="Aumenta tu puntuación de PageSpeed y reduce tu tasa de rebote gracias a la velocidad de carga." color="#FF7F50" />
+                        <FeatureCard icon={Leaf} title="Conciencia Ecológica" description="Archivos más pequeños significan menos consumo de energía en transferencia de datos. Optimización sostenible." color="#40B5AD" />
+                        <FeatureCard icon={DollarSign} title="Ahorro en Hosting" description="Menos ancho de banda utilizado por tus visitantes se traduce en menores costos mensuales de alojamiento." color="#607D8B" />
                     </div>
                 </section>
                 
