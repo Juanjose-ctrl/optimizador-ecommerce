@@ -79,7 +79,7 @@ const Footer = () => (
                     <Link href="/terminos" className='footer-link'>Términos y Condiciones</Link>
                     <Link href="/privacidad" className='footer-link'>Política de Privacidad</Link>
                     <Link href="/reembolso" className='footer-link'>Política de Reembolso</Link>
-                    <a className='footer-link'>Política de Cookies</a>
+                    <Link href="/cookies" className='footer-link'>Política de Cookies</Link>
                 </div>
 
                 <div className="footer-section">
