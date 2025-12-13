@@ -472,3 +472,127 @@ input:focus {
     margin-bottom: 20px;
     font-size: 0.9rem;
 }
+
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA LA PÁGINA DE PRECIOS
+   ========================================= */
+
+.section-pricing {
+    text-align: center;
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pricing-card {
+    background-color: var(--background-secondary);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    position: relative;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.featured-plan {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--accent-color-light);
+}
+
+.pricing-card .badge {
+    position: absolute;
+    top: -15px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.pricing-card .card-title {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.pricing-card .price-tag {
+    margin: 15px 0 20px;
+}
+
+.pricing-card .price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    display: block;
+}
+
+.pricing-card .unit {
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    font-weight: 500;
+}
+
+.pricing-card .description {
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+    height: 40px; /* Altura fija para alineación */
+}
+
+.pricing-card .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 25px 0;
+    width: 100%;
+    flex-grow: 1; /* Para empujar el botón al final */
+}
+
+.pricing-card .feature-list li {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.pricing-card .feature-list li:last-child {
+    border-bottom: none;
+}
+
+.pricing-card .feature-list li svg {
+    margin-right: 10px;
+    min-width: 18px;
+}
+
+.pricing-card .feature-list .unavailable {
+    color: var(--text-color-secondary);
+    opacity: 0.7;
+}
+
+.pricing-card .btn-full {
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* Media Query para móvil */
+@media (max-width: 768px) {
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+}
