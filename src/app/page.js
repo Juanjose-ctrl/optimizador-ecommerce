@@ -25,6 +25,12 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
 // COMPONENTE: Header Minimalista (PUBLICO, adaptado al Modal)
 // ---------------------------------------------
 // Ahora recibe la función para abrir el modal
+// src/app/page.js - SOLO LA SECCIÓN DEL HEADER MODIFICADA
+
+// ---------------------------------------------
+// COMPONENTE: Header Minimalista (PUBLICO, adaptado al Modal)
+// ---------------------------------------------
+// Ahora recibe la función para abrir el modal
 const Header = ({ onLoginClick }) => ( 
     <div className="app-container">
         <header className="header-main">
@@ -35,6 +41,20 @@ const Header = ({ onLoginClick }) => (
                 </h2>
             </div>
             <nav>
+                {/* AÑADIDO: Enlace a la página de precios */}
+                <Link 
+                    href="/pricing" 
+                    className="nav-link" 
+                    style={{ 
+                        marginRight: '20px', 
+                        fontWeight: 500, 
+                        color: 'var(--text-color)', // Aseguramos el color
+                        textDecoration: 'none' 
+                    }}
+                >
+                    Precios
+                </Link>
+
                 {/* BOTÓN que abre el Modal en vista 'login' */}
                 <button className="btn btn-primary" onClick={() => onLoginClick('login')}> 
                     Iniciar Sesión
@@ -43,7 +63,6 @@ const Header = ({ onLoginClick }) => (
         </header>
     </div>
 );
-
 
 // ---------------------------------------------
 // COMPONENTE: Footer Extendido
