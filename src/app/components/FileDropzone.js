@@ -1,10 +1,24 @@
-// src/app/components/FileDropzone.js - VERSIÓN CORREGIDA
+// src/app/components/FileDropzone.js - VERSIÓN CORREGIDA Y REFORZADA
 
 'use client'; 
 
 import { useState, useRef } from 'react';
 import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-react'; 
 import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
+
+// Función auxiliar para obtener el token de autenticación
+// NOTA: Si usas un contexto de autenticación (AuthContext), deberías reemplazar esta lógica.
+const getAuthHeaders = () => {
+    if (typeof window !== 'undefined') {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            return {
+                'Authorization': `Bearer ${accessToken}`,
+            };
+        }
+    }
+    return {};
+};
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
@@ -90,7 +104,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
-    // 🚨 LÓGICA DE OPTIMIZACIÓN CORREGIDA
+    // 🚨 LÓGICA DE OPTIMIZACIÓN CORREGIDA CON ENCABEZADOS DE AUTORIZACIÓN
     const handleOptimize = async () => {
         if (files.length === 0 || isOptimizing) return;
         
@@ -115,21 +129,23 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 formData.append('files', file);
             });
             
-            const accessToken = isAuthenticated ? localStorage.getItem('accessToken') : null;
+            // 🚨 1. Obtiene los encabezados de autenticación si el usuario está logueado
+            const authHeaders = isAuthenticated ? getAuthHeaders() : {}; 
             
-            // 🚨 CORRECCIÓN: Usar el endpoint correcto
+            // 🚨 2. Determina el endpoint
             const endpoint = isAuthenticated 
                 ? `${API_URL}/optimize-batch` 
                 : `${API_URL}/optimize-batch-free`;
             
-            const headers = {};
-            if (accessToken) {
-                headers['Authorization'] = `Bearer ${accessToken}`;
+            // Si el usuario está autenticado pero no se encontró token, alertar (debug)
+            if (isAuthenticated && Object.keys(authHeaders).length === 0) {
+                console.error("Autenticado pero no se encontró token en localStorage.");
             }
             
             const response = await fetch(endpoint, {
                 method: 'POST',
-                headers: headers,
+                // 3. Aplica los headers (Authorization solo si existe)
+                headers: authHeaders, 
                 body: formData,
             });
 
@@ -144,14 +160,20 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                     setCreditsRemaining(prev => prev - filesToOptimize);
                 }
 
+            } else if (response.status === 401) {
+                // 4. Manejo específico del 401: puede ser token expirado o no enviado.
+                setFileError("No autorizado. Por favor, vuelve a iniciar sesión.");
+                // Si el token falló, limpia el estado de auth (opcional, pero buena práctica)
+                localStorage.removeItem('accessToken'); 
+
             } else if (response.status === 402) {
-                setFileError("¡Límite alcanzado! Regístrate para obtener más créditos.");
+                setFileError("¡Límite de créditos alcanzado! Regístrate para obtener más.");
                 if (!isAuthenticated && onLimitReached) {
                     setTimeout(onLimitReached, 1500);
                 }
             } else {
-                const errorData = await response.json();
-                setFileError(`Error: ${errorData.detail || 'Error desconocido'}`);
+                const errorText = await response.text();
+                setFileError(`Error: ${response.status} - ${errorText.substring(0, 100) || 'Error desconocido'}`);
             }
 
         } catch (error) {
@@ -163,7 +185,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         }
     };
 
-    // 🚨 FUNCIÓN PARA DESCARGAR IMÁGENES
+    // FUNCIÓN PARA DESCARGAR IMÁGENES (Sin cambios)
     const downloadImage = (downloadUrl, filename) => {
         const link = document.createElement('a');
         link.href = downloadUrl;
@@ -182,6 +204,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         </small>
     );
 
+    // RESTO DEL COMPONENTE RENDER (Sin cambios, solo usa las funciones corregidas)
     return (
         <section className="optimization-section">
             <div className="section-header">
@@ -192,6 +215,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 {limitMessage}
             </div>
 
+            {/* ZONA DE DROPZONE (Sin cambios) */}
             <div 
                 className={`dropzone-area ${isDragActive ? 'drag-active' : ''}`}
                 onDragEnter={handleDrag}
@@ -221,7 +245,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 </div>
             )}
             
-            {/* RESULTADOS DE OPTIMIZACIÓN */}
+            {/* RESULTADOS DE OPTIMIZACIÓN (Sin cambios) */}
             {optimizationResults.length > 0 && (
                 <div className="optimization-results">
                     <h3>✅ Optimización Exitosa ({optimizationResults.length} archivos)</h3>
@@ -253,7 +277,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 </div>
             )}
             
-            {/* COLA DE ARCHIVOS */}
+            {/* COLA DE ARCHIVOS Y BOTÓN DE OPTIMIZACIÓN */}
             {files.length > 0 && (
                 <div className="file-queue-container">
                     <h3>Cola de Optimización ({files.length} archivos)</h3>
