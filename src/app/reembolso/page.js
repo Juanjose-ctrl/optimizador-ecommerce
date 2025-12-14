@@ -66,19 +66,3 @@ export default function RefundPolicyPage() {
     );
 }
 
-// Por ejemplo, en Dashboard.js o Page.js:
-
-<div className="dashboard-layout">
-    <Header />
-    
-    {/* 🛑 ENVOLVER TODO EL CONTENIDO PRINCIPAL AQUÍ 🛑 */}
-    <main className="main-content-wrapper">
-        <FileDropzone />
-        <OptimizationResults />
-        <section className="section-plans">
-            {/* ... Contenido de planes ... */}
-        </section>
-    </main>
-
-    <Footer />
-</div>

@@ -10,7 +10,7 @@ import {
 // Importamos el wrapper para asegurar que el FileDropzone sea client-side
 import ClientDropzoneWrapper from '../components/ClientDropzoneWrapper'; 
 import { API_URL, PADDLE_CLIENT_SIDE_TOKEN } from '../../config/api'; 
-import Header from '@/components/Header';
+// 🚨 CORRECCIÓN: Eliminamos el import 'Header' que fallaba y usamos el componente definido localmente (DashboardHeader)
 
 // CONSTANTE CLAVE
 const FREE_CREDITS_KEY = 'freeCreditsRemaining'; 
@@ -23,13 +23,20 @@ const PLAN_ICONS = {
     4: <Landmark size={24} style={{ marginRight: '8px' }} />,
 };
 
+// --- COMPONENTES AUXILIARES ---
+
 // PlanCard Component
 const PlanCard = ({ plan, onPurchase }) => {
+    // Si el plan es el gratuito, lo marcamos como "Tu Plan Actual"
+    const isCurrentPlan = plan.id === 1;
+    const isRecommended = plan.image_limit === 50000; // Por ejemplo, el ilimitado
+
     const priceDisplay = plan.price === 0 ? "Gratis" : `$${plan.price.toFixed(2)}/mes`;
     const limitDisplay = plan.image_limit === 50000 ? "Ilimitado*" : `${plan.image_limit} créditos`; 
 
     return (
-        <div className={`plan-card plan-card-${plan.name.toLowerCase()}`}>
+        // Aplicamos la clase 'recommended' si cumple la condición
+        <div className={`plan-card ${isRecommended ? 'recommended' : ''}`}>
             <div className="plan-header">
                 {PLAN_ICONS[plan.id]}
                 <h3>{plan.name}</h3>
@@ -39,24 +46,26 @@ const PlanCard = ({ plan, onPurchase }) => {
                 <span className="price">{priceDisplay}</span>
             </div>
             <ul className="plan-features">
-                <li><CheckCircle size={16} style={{ marginRight: '5px' }} /> Optimización de alta velocidad</li>
-                <li><CheckCircle size={16} style={{ marginRight: '5px' }} /> Soporte WebP/JPEG/PNG</li>
-                {plan.id > 1 && <li><CheckCircle size={16} style={{ marginRight: '5px' }} /> Acceso a API Key</li>}
-                {plan.id >= 3 && <li><CheckCircle size={16} style={{ marginRight: '5px' }} /> Optimización por Lotes</li>}
+                {/* 🚨 ÍCONOS DE CHECK AGREGADOS (mejorando la estética) */}
+                <li><CheckCircle size={16} className="feature-icon" /> Optimización de alta velocidad</li>
+                <li><CheckCircle size={16} className="feature-icon" /> Soporte WebP/JPEG/PNG</li>
+                {plan.id > 1 && <li><CheckCircle size={16} className="feature-icon" /> Acceso a API Key</li>}
+                {plan.id >= 3 && <li><CheckCircle size={16} className="feature-icon" /> Optimización por Lotes</li>}
             </ul>
             <button 
-                className={`btn btn-primary ${plan.id === 1 ? 'btn-secondary' : ''}`}
+                className={`btn ${isCurrentPlan ? 'btn-secondary' : 'btn-primary'}`}
                 onClick={() => onPurchase(plan.paddle_product_id)}
-                disabled={plan.id === 1 || !plan.paddle_product_id}
+                disabled={isCurrentPlan || !plan.paddle_product_id}
             >
-                {plan.id === 1 ? "Tu Plan Actual" : "Comprar Ahora"}
+                {isCurrentPlan ? "Tu Plan Actual" : "Comprar Ahora"}
             </button>
+            {isRecommended && <p className="plan-note-recommended">El plan más popular</p>}
             {plan.image_limit === 50000 && <small className="plan-note">*{plan.name} tiene un límite técnico de {plan.image_limit} imágenes.</small>}
         </div>
     );
 };
 
-// Header Component
+// Header Component (Renombrado y usado en lugar del 'Header' que fallaba)
 const DashboardHeader = ({ userEmail, onLogout }) => (
     <header className="dashboard-header">
         <div className="logo-text">OptiCommerce Panel</div>
@@ -83,7 +92,7 @@ const MetricCard = ({ icon: Icon, title, value, statusClass, actionButton }) => 
     </div>
 );
 
-// COMPONENTE PRINCIPAL
+// --- COMPONENTE PRINCIPAL (SOLO UNA DEFINICIÓN) ---
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
     const [plans, setPlans] = useState([]); 
@@ -138,18 +147,15 @@ export default function DashboardPage() {
 
     // 🚨 CORRECCIÓN CLAVE EN EL LOGOUT
     const handleLogout = () => {
-    if (typeof window !== 'undefined') {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('apiKey'); 
-        
-        // 🔥 ESTA LÍNEA DEBE PERMANECER ASÍ:
-        // Eliminar la clave FREE_CREDITS_KEY después del registro/login asegura 
-        // que al cerrar sesión, initializeFreeCredits devuelva 0, 
-        // evitando la regeneración mágica de 5 créditos.
-        localStorage.removeItem(FREE_CREDITS_KEY); 
-    }
-    router.replace('/'); 
-};
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('apiKey'); 
+            
+            // Eliminar la clave FREE_CREDITS_KEY al cerrar sesión
+            localStorage.removeItem(FREE_CREDITS_KEY); 
+        }
+        router.replace('/'); 
+    };
 
     const fetchPlans = useCallback(async () => {
         try {
@@ -266,9 +272,11 @@ export default function DashboardPage() {
                 }}
             />
 
+            {/* Usamos el componente DashboardHeader definido arriba */}
             <DashboardHeader userEmail={user.email} onLogout={handleLogout} />
 
-            <div className="dashboard-wrapper app-container"> 
+            {/* 🛑 APLICACIÓN DEL CONTENEDOR CENTRAL 🛑 */}
+            <main className="main-content-wrapper"> 
                 <h1 className="main-title">Panel de Control</h1>
 
                 {/* SECCIÓN DE MÉTRICAS */}
@@ -314,6 +322,8 @@ export default function DashboardPage() {
                     isAuthenticated={true}
                     userCredits={user.credits_remaining}
                     onLimitReached={handleLimitReached}
+                    // La función de actualizar los datos del usuario se pasa para actualizar los créditos
+                    onOptimizationSuccess={() => fetchUserData(localStorage.getItem('accessToken'))}
                 />
 
                 {/* SECCIÓN DE PLANES */}
@@ -324,9 +334,18 @@ export default function DashboardPage() {
                         <p>Cargando planes...</p>
                     ) : (
                         <div className="plans-grid">
+                            {/* Incluimos el plan actual (gratuito) si corresponde, pero con botón disabled */}
+                            {plans.filter(p => p.id === user.plan_id).map(plan => (
+                                <PlanCard
+                                    key={plan.id}
+                                    plan={plan}
+                                    onPurchase={handlePurchase}
+                                />
+                            ))}
+
+                            {/* Mostramos el resto de los planes disponibles para compra */}
                             {plans
                                 .filter(p => p.id !== user.plan_id) 
-                                .filter(p => p.id !== 1) // Filtra el plan gratuito, ya que el usuario ya está en un plan (incluso si es el gratuito)
                                 .sort((a, b) => a.image_limit - b.image_limit) 
                                 .map(plan => (
                                     <PlanCard
@@ -340,33 +359,9 @@ export default function DashboardPage() {
                 </section>
 
                 <p className="footer-note">¿Necesitas ayuda con la integración? Consulta nuestra documentación.</p>
-            </div>
+            </main>
         </>
     );
 }
 
-// Por ejemplo, en Dashboard.js o Page.js:
-
-<div className="dashboard-layout">
-    <Header />
-    
-    {/* 🛑 ENVOLVER TODO EL CONTENIDO PRINCIPAL AQUÍ 🛑 */}
-    <main className="main-content-wrapper">
-        <FileDropzone />
-        <OptimizationResults />
-        <section className="section-plans">
-            {/* ... Contenido de planes ... */}
-        </section>
-    </main>
-
-    <Footer />
-</div>
-
-export default function DashboardPage() {
-  return (
-    <div>
-      <Header /> // 
-      {/* ... otros componentes ... */}
-    </div>
-  );
-}
+// 🛑 ELIMINAMOS EL CÓDIGO HTML SOBRANTE Y DUPLICADO QUE ESTABA AL FINAL.
