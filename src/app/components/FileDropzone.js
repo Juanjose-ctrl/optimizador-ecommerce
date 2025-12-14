@@ -1,10 +1,11 @@
-// src/app/components/FileDropzone.js - VERSIÓN FINAL Y LIBRE DE ERRORES (FIX Persistencia Créditos Gratis)
+// src/app/components/FileDropzone.js - VERSIÓN CORREGIDA (FIX Hydration Mismatch)
 
 'use client'; 
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react'; // 🚨 IMPORTANTE: Se añade useEffect
 import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-react'; 
 import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
+
 
 // CONSTANTE PARA LOCALSTORAGE
 const FREE_CREDITS_KEY = 'freeCreditsRemaining';
@@ -34,24 +35,41 @@ const initializeFreeCredits = () => {
         // Si existen, los leemos y parseamos
         return parseInt(storedCredits, 10);
     }
-    // Para renderizado del lado del servidor (SSR)
+    // Para renderizado del lado del servidor (SSR): siempre devuelve el valor por defecto/máximo
     return MAX_FREE_OPTIMIZATIONS;
 };
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
-    // 🚨 CAMBIO 1: Inicializa créditos usando la persistencia si no está autenticado
-    const initialCredits = isAuthenticated 
-        ? userCredits 
-        : initializeFreeCredits();
+    // 1. 🛑 CORRECCIÓN DE HYDRATION: Inicializamos el estado de manera segura (SSR-safe)
+    // Inicialmente, usamos solo los props o el valor máximo de créditos.
+    const [creditsRemaining, setCreditsRemaining] = useState(
+        isAuthenticated ? userCredits : MAX_FREE_OPTIMIZATIONS
+    );
+
+    // Estado para saber si ya hemos cargado la versión del cliente
+    const [isClient, setIsClient] = useState(false); 
 
     const [isDragActive, setIsDragActive] = useState(false);
     const [files, setFiles] = useState([]);
     const fileInputRef = useRef(null);
     const [fileError, setFileError] = useState('');
-    const [creditsRemaining, setCreditsRemaining] = useState(initialCredits);
     const [isOptimizing, setIsOptimizing] = useState(false);
     const [optimizationResults, setOptimizationResults] = useState([]);
+
+    // 2. 🚀 Carga de Créditos en el Cliente: Usamos useEffect para acceder a localStorage
+    useEffect(() => {
+        if (!isAuthenticated) {
+            // Este código solo se ejecuta en el cliente (navegador)
+            const persistedCredits = initializeFreeCredits();
+            setCreditsRemaining(persistedCredits);
+        } else {
+            // Aseguramos que si está autenticado, use el prop userCredits
+            setCreditsRemaining(userCredits);
+        }
+        setIsClient(true); // Una vez que se ejecuta, marcamos como cliente
+    }, [isAuthenticated, userCredits]);
+
 
     const validateFile = (file) => {
         if (!ALLOWED_MIME_TYPES.includes(file.type)) {
@@ -134,7 +152,8 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         if (creditsRemaining < filesToOptimize) {
             setFileError(`¡Créditos insuficientes! Necesitas ${filesToOptimize} créditos.`);
             
-            if (!isAuthenticated && onLimitReached) {
+            // Usamos isClient aquí también para asegurar que la función se ejecuta después de la hidratación
+            if (!isAuthenticated && onLimitReached && isClient) { 
                 setTimeout(onLimitReached, 1500);
             }
             return;
@@ -179,20 +198,24 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                         : creditsRemaining - filesToOptimize;
 
                 } else {
-                    // 🚨 CAMBIO 2: Actualiza y persiste los créditos gratuitos en localStorage
+                    // Actualiza y persiste los créditos gratuitos en localStorage (solo si es cliente)
                     newCredits = creditsRemaining - filesToOptimize;
-                    localStorage.setItem(FREE_CREDITS_KEY, newCredits.toString());
+                    if (isClient) { // 🚨 Protección adicional
+                         localStorage.setItem(FREE_CREDITS_KEY, newCredits.toString());
+                    }
                 }
                 
                 setCreditsRemaining(newCredits);
 
             } else if (response.status === 401) {
                 setFileError("No autorizado. Por favor, vuelve a iniciar sesión.");
-                localStorage.removeItem('accessToken'); 
+                if (isClient) { // 🚨 Protección adicional
+                    localStorage.removeItem('accessToken'); 
+                }
 
             } else if (response.status === 402) {
                 setFileError("¡Límite de créditos alcanzado! Regístrate para obtener más.");
-                if (!isAuthenticated && onLimitReached) {
+                if (!isAuthenticated && onLimitReached && isClient) {
                     setTimeout(onLimitReached, 1500);
                 }
             } else {
@@ -221,7 +244,8 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
 
     const isOverLimit = creditsRemaining < files.length;
     
-    const limitMessage = !isAuthenticated && (
+    // 3. 🛡️ Protección de Renderizado: Solo mostramos el mensaje si es cliente y no está autenticado
+    const limitMessage = !isAuthenticated && isClient && (
         <small className="info-text">
             {creditsRemaining} optimizaciones gratuitas restantes.
         </small>
