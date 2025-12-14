@@ -1150,3 +1150,33 @@ a:hover {
         padding: 0 20px; /* Reducir el padding en móviles */
     }
 }
+
+/* Badge de "Recomendado" o "Más Popular" */
+.plan-card.recommended {
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 32px rgba(255, 127, 80, 0.3);
+    position: relative;
+}
+
+.plan-card.recommended::before {
+    content: "MÁS POPULAR";
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--accent-color), #FF6347);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(255, 127, 80, 0.4);
+}
+
+.plan-note-recommended {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-top: 12px;
+    text-align: center;
+}
