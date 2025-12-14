@@ -354,15 +354,12 @@ export default function DashboardPage() {
 
                 {/* SECCIÓN DE PLANES */}
                 <section id="plans-section" className="section-plans">
+    
+    {/* 🚨 VERSIÓN ESTÉTICA DEL TÍTULO 🚨 */}
     <h2 className="section-title title-centered">
-        {/* Usamos el ícono Zap */}
+        {/* Usamos 'Zap' para connotar poder/upgrade, o puedes usar 'ArrowUpCircle' */}
         <Zap size={28} className="icon-main-title" /> 
-        
-        {/* 🚨 CORRECCIÓN FINAL Y DEFINITIVA 🚨 */}
-        {/* Se utilizan cadenas de texto literales ({"..."}) que FUERZAN los espacios. */}
-        {"Mejora tu "} 
-        <strong>Plan</strong> 
-        {" de Optimización"}
+        Mejora tu&nbsp;<strong>Plan</strong> de Optimización
     </h2>
 
                     {plans.length === 0 ? (
