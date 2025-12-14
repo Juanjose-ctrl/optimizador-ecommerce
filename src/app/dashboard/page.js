@@ -28,33 +28,44 @@ const PLAN_ICONS = {
 // PlanCard Component
 const PlanCard = ({ plan, onPurchase }) => {
     const isCurrentPlan = plan.id === 1;
-    const isRecommended = plan.id === 3; // 🚨 PRO es el recomendado
+    const isRecommended = plan.id === 3;
 
-    const priceDisplay = plan.id === 4 
-        ? "Contactar" 
-        : plan.price_usd === 0 
-            ? "Gratis" 
-            : `$${plan.price_usd.toFixed(2)}/mes`;
+    // 🚨 CORRECCIÓN: Usar price_usd en lugar de price
+    const priceDisplay = plan.price_usd === 0 
+        ? "Gratis" 
+        : `$${plan.price_usd.toFixed(2)}/mes`;
     
-    // ... resto
-    
+    const limitDisplay = plan.image_limit === 20000 
+        ? "Ilimitado*" 
+        : `${plan.image_limit} créditos`;
+
     return (
+        // Aplicamos la clase 'recommended' si cumple la condición
         <div className={`plan-card ${isRecommended ? 'recommended' : ''}`}>
-            {/* ... */}
+            <div className="plan-header">
+                {PLAN_ICONS[plan.id]}
+                <h3>{plan.name}</h3>
+            </div>
+            <p className="plan-description">{limitDisplay}</p>
+            <div className="plan-price">
+                <span className="price">{priceDisplay}</span>
+            </div>
+            <ul className="plan-features">
+                {/* 🚨 ÍCONOS DE CHECK AGREGADOS (mejorando la estética) */}
+                <li><CheckCircle size={16} className="feature-icon" /> Optimización de alta velocidad</li>
+                <li><CheckCircle size={16} className="feature-icon" /> Soporte WebP/JPEG/PNG</li>
+                {plan.id > 1 && <li><CheckCircle size={16} className="feature-icon" /> Acceso a API Key</li>}
+                {plan.id >= 3 && <li><CheckCircle size={16} className="feature-icon" /> Optimización por Lotes</li>}
+            </ul>
             <button 
                 className={`btn ${isCurrentPlan ? 'btn-secondary' : 'btn-primary'}`}
-                onClick={() => {
-                    if (plan.id === 4) {
-                        window.location.href = 'mailto:ventas@tuempresa.com?subject=Consulta Plan Enterprise';
-                    } else {
-                        onPurchase(plan.paddle_product_id);
-                    }
-                }}
-                disabled={isCurrentPlan}
+                onClick={() => onPurchase(plan.paddle_product_id)}
+                disabled={isCurrentPlan || !plan.paddle_product_id}
             >
-                {isCurrentPlan ? "Tu Plan Actual" : plan.id === 4 ? "Contactar Ventas" : "Comprar Ahora"}
+                {isCurrentPlan ? "Tu Plan Actual" : "Comprar Ahora"}
             </button>
-            {/* ... */}
+            {isRecommended && <p className="plan-note-recommended">El plan más popular</p>}
+            {plan.image_limit === 50000 && <small className="plan-note">*{plan.name} tiene un límite técnico de {plan.image_limit} imágenes.</small>}
         </div>
     );
 };
