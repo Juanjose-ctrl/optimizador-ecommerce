@@ -27,12 +27,17 @@ const PLAN_ICONS = {
 
 // PlanCard Component
 const PlanCard = ({ plan, onPurchase }) => {
-    // Si el plan es el gratuito, lo marcamos como "Tu Plan Actual"
     const isCurrentPlan = plan.id === 1;
-    const isRecommended = plan.image_limit === 50000; // Por ejemplo, el ilimitado
+    const isRecommended = plan.image_limit === 50000;
 
-    const priceDisplay = plan.price === 0 ? "Gratis" : `$${plan.price.toFixed(2)}/mes`;
-    const limitDisplay = plan.image_limit === 50000 ? "Ilimitado*" : `${plan.image_limit} créditos`; 
+    // 🚨 CORRECCIÓN: Usar price_usd en lugar de price
+    const priceDisplay = plan.price_usd === 0 
+        ? "Gratis" 
+        : `$${plan.price_usd.toFixed(2)}/mes`;
+    
+    const limitDisplay = plan.image_limit === 50000 
+        ? "Ilimitado*" 
+        : `${plan.image_limit} créditos`;
 
     return (
         // Aplicamos la clase 'recommended' si cumple la condición
