@@ -1210,3 +1210,228 @@ a:hover {
     font-weight: 700; /* Destacar la palabra clave */
     color: #1a1a1a;
 }
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Títulos principales de la página de precios */
+.main-pricing-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color); /* Asegúrate de que --primary-color esté definido */
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.main-pricing-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-color-secondary); /* Asegúrate de que --text-color-secondary esté definido */
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* --- Header y Footer (Estilos básicos) --- */
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color); /* Si tienes border-color */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.footer-main {
+    background-color: var(--bg-secondary); /* Si tienes un color de fondo secundario */
+    padding: 40px 0;
+    margin-top: 80px;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.footer-links a {
+    margin: 0 15px;
+    color: var(--text-color-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer-copy {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: var(--text-color-secondary);
+}
+
+
+/* --- Estilos de la Sección de Precios (section-pricing) --- */
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+    justify-content: center; /* Centra el grid si hay menos de 3 columnas */
+}
+
+.pricing-card {
+    background-color: var(--bg-card); /* Color de fondo claro para la tarjeta */
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.featured-plan {
+    border-color: var(--accent-color); /* Borde destacado */
+    position: relative;
+    padding-top: 50px; /* Espacio para el badge */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--accent-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo del Header dentro de la tarjeta (para el ícono) */
+.plan-header-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Estilos de Precio */
+.price-tag {
+    margin: 20px 0;
+    line-height: 1;
+}
+
+.price-tag .price {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.price-tag .unit {
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.description {
+    color: var(--text-color-secondary);
+    margin-bottom: 25px;
+    flex-grow: 1; /* Permite que la descripción empuje la lista y el botón hacia abajo */
+}
+
+/* Lista de Características */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 30px;
+    text-align: left;
+    flex-grow: 1; /* Asegura que todas las listas de características tengan la misma altura si es posible */
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.feature-list li svg {
+    margin-right: 10px;
+    min-width: 18px; /* Asegura que el ícono tenga espacio */
+}
+
+.feature-list .unavailable {
+    color: var(--text-color-secondary);
+    opacity: 0.6;
+}
+
+/* Botones */
+.btn-full {
+    width: 100%;
+    padding: 12px 20px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-top: auto; /* Empuja el botón al final de la tarjeta */
+}
+
+/* Asumiendo que ya tienes estilos para .btn-primary y .btn-secondary */
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+    border: 1px solid var(--accent-color);
+}
+.btn-primary:hover {
+    background-color: var(--accent-dark); /* Color más oscuro al pasar el mouse */
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover {
+    background-color: var(--bg-hover); /* Color de fondo ligero al pasar el mouse */
+}
+
+
+/* --- Sección "¿Qué es un Crédito?" (section-faq) --- */
+
+.section-faq {
+    background-color: var(--bg-faq, #f8f8f8); /* Fondo ligeramente diferente para destacar */
+    padding: 40px 20px;
+    border-radius: 12px;
+}
+
+.section-faq .section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
