@@ -137,34 +137,18 @@ export default function DashboardPage() {
 
     // 🚨 CORRECCIÓN CLAVE EN EL LOGOUT
     const handleLogout = () => {
-        if (typeof window !== 'undefined') {
-            // 1. Eliminar credenciales de la sesión
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('apiKey'); 
-            
-            // 2. 🔥 ELIMINAR EL CONTADOR DE CRÉDITOS GRATUITOS (FIX)
-            // Esto obliga al FileDropzone (en la página de inicio) a re-inicializar
-            // los créditos gratuitos al valor MÁXIMO (MAX_FREE_OPTIMIZATIONS) la próxima vez
-            // que el usuario no autenticado intente usar la función.
-            // Si quieres que el usuario use los créditos que tenía antes de iniciar sesión,
-            // DEBES ELIMINAR ESTA LÍNEA, pero el requerimiento original pide
-            // *NO TOCAR* la variable, lo cual es incorrecto si el usuario agotó los créditos
-            // de autenticado y luego cierra sesión. El código original del fragmento
-            // estaba equivocado si el objetivo es un ciclo de vida correcto.
-            //
-            // Dado que el dashboard se utiliza para usuarios *autenticados* y la corrección
-            // anterior aseguró que el Dropzone use los props del dashboard, al cerrar sesión
-            // debemos asegurar que el usuario no autenticado (al ser redirigido)
-            // vuelva a tener su cuota gratuita o al menos se reevalúe.
-            //
-            // Opción 1 (Elegida): Resetear los créditos gratuitos locales. Es más seguro
-            // para el ciclo de vida de prueba.
-            localStorage.removeItem(FREE_CREDITS_KEY); 
-        }
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('apiKey'); 
         
-        // 3. Redirigir al inicio, forzando la reevaluación de la autenticación
-        router.replace('/'); 
-    };
+        // 🔥 ESTA LÍNEA DEBE PERMANECER ASÍ:
+        // Eliminar la clave FREE_CREDITS_KEY después del registro/login asegura 
+        // que al cerrar sesión, initializeFreeCredits devuelva 0, 
+        // evitando la regeneración mágica de 5 créditos.
+        localStorage.removeItem(FREE_CREDITS_KEY); 
+    }
+    router.replace('/'); 
+};
 
     const fetchPlans = useCallback(async () => {
         try {

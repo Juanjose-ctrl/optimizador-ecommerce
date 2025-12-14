@@ -23,27 +23,36 @@ const getAuthHeaders = () => {
 };
 
 // Función para inicializar o leer los créditos gratuitos desde localStorage (SIMPLIFICADA)
+// src/app/components/FileDropzone.js
+
 const initializeFreeCredits = () => {
-    if (typeof window !== 'undefined') {
-        const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
-        const parsedCredits = parseInt(storedCredits, 10);
+    if (typeof window !== 'undefined') {
+        const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
+        
+        if (storedCredits === null) {
+            // 🚨 CORRECCIÓN CLAVE: Si la clave no existe (null),
+            // asumimos que: 1) o es un usuario que se registró y la borramos, 
+            // 2) o es la primera vez.
+            // Para evitar que el usuario que se registró y cerró sesión recupere 5 créditos,
+            // SIMPLEMENTE DEVOLVEMOS 0. El proceso de optimización la creará si es necesario.
+            return 0; // Evitamos la re-inicialización.
+        }
+        
+        const parsedCredits = parseInt(storedCredits, 10);
         
-        // 🚨 LÓGICA CLAVE SIMPLIFICADA
-        if (storedCredits === null || isNaN(parsedCredits) || parsedCredits < 0) { 
-            // Si no existe, no es un número, o es negativo, lo inicializamos al máximo.
-            // Esto cubre: 
-            // 1. Nuevo visitante. 
-            // 2. Usuario que se registró y borró la clave (simulando un reset).
+        if (isNaN(parsedCredits) || parsedCredits < 0) {
+            // Caso de dato corrupto, lo reseteamos a MAX para un nuevo intento.
             localStorage.setItem(FREE_CREDITS_KEY, MAX_FREE_OPTIMIZATIONS.toString());
             return MAX_FREE_OPTIMIZATIONS;
         }
-        
-        // Si existe y es válido, lo leemos.
-        return parsedCredits;
-    }
-    // Para renderizado del lado del servidor (SSR)
-    return MAX_FREE_OPTIMIZATIONS;
+
+        // Si existe y es válido, lo leemos.
+        return parsedCredits;
+    }
+    // Para renderizado del lado del servidor (SSR)
+    return 0; // Valor seguro.
 };
+
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
@@ -155,13 +164,15 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
+ // ... (dentro de FileDropzone)
+
     // LÓGICA DE OPTIMIZACIÓN
     const handleOptimize = async () => {
         if (files.length === 0 || isOptimizing) return;
         
         const filesToOptimize = files.length;
         
-        // Verificación de créditos (debe usar el estado actualizado del cliente)
+        // 1. Verificación de créditos (Usa el estado que ya fue hidratado en useEffect)
         if (creditsRemaining < filesToOptimize) {
             setFileError(`¡Créditos insuficientes! Necesitas ${filesToOptimize} créditos.`);
             
@@ -205,14 +216,18 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 let newCredits;
 
                 if (isAuthenticated) {
-                    // Obtiene créditos actualizados del backend o calcula la diferencia como fallback
+                    // 2. Lógica Autenticada: Obtiene del backend (prioridad) o calcula (fallback)
                     newCredits = data.credits_remaining !== undefined 
                         ? data.credits_remaining 
                         : creditsRemaining - filesToOptimize;
 
                 } else {
-                    // Actualiza y persiste los créditos gratuitos en localStorage (solo si es cliente)
+                    // 3. Lógica No Autenticada: Calcula y persiste localmente
+                    
+                    // 🚨 CORRECCIÓN: Usamos `creditsRemaining` que ya fue leído del localStorage
+                    // o inicializado a MAX_FREE_OPTIMIZATIONS en el useEffect.
                     newCredits = creditsRemaining - filesToOptimize;
+                    
                     if (isClient) { // Protección para el acceso a localStorage
                         localStorage.setItem(FREE_CREDITS_KEY, newCredits.toString());
                     }
