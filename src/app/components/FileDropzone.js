@@ -1,4 +1,4 @@
-// src/app/components/FileDropzone.js - VERSIÓN CORREGIDA Y REFORZADA
+// src/app/components/FileDropzone.js - VERSIÓN FINAL Y LIBRE DE ERRORES
 
 'use client'; 
 
@@ -7,7 +7,6 @@ import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-r
 import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
 
 // Función auxiliar para obtener el token de autenticación
-// NOTA: Si usas un contexto de autenticación (AuthContext), deberías reemplazar esta lógica.
 const getAuthHeaders = () => {
     if (typeof window !== 'undefined') {
         const accessToken = localStorage.getItem('accessToken');
@@ -104,7 +103,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
-    // 🚨 LÓGICA DE OPTIMIZACIÓN CORREGIDA CON ENCABEZADOS DE AUTORIZACIÓN
+    // LÓGICA DE OPTIMIZACIÓN
     const handleOptimize = async () => {
         if (files.length === 0 || isOptimizing) return;
         
@@ -129,22 +128,18 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 formData.append('files', file);
             });
             
-            // 🚨 1. Obtiene los encabezados de autenticación si el usuario está logueado
             const authHeaders = isAuthenticated ? getAuthHeaders() : {}; 
             
-            // 🚨 2. Determina el endpoint
             const endpoint = isAuthenticated 
                 ? `${API_URL}/optimize-batch` 
                 : `${API_URL}/optimize-batch-free`;
             
-            // Si el usuario está autenticado pero no se encontró token, alertar (debug)
             if (isAuthenticated && Object.keys(authHeaders).length === 0) {
                 console.error("Autenticado pero no se encontró token en localStorage.");
             }
             
             const response = await fetch(endpoint, {
                 method: 'POST',
-                // 3. Aplica los headers (Authorization solo si existe)
                 headers: authHeaders, 
                 body: formData,
             });
@@ -153,7 +148,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 const data = await response.json();
                 setOptimizationResults(data.results);
                 
-                // Actualizar créditos
                 if (data.credits_remaining !== undefined) {
                     setCreditsRemaining(data.credits_remaining);
                 } else {
@@ -161,9 +155,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 }
 
             } else if (response.status === 401) {
-                // 4. Manejo específico del 401: puede ser token expirado o no enviado.
                 setFileError("No autorizado. Por favor, vuelve a iniciar sesión.");
-                // Si el token falló, limpia el estado de auth (opcional, pero buena práctica)
                 localStorage.removeItem('accessToken'); 
 
             } else if (response.status === 402) {
@@ -185,7 +177,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         }
     };
 
-    // FUNCIÓN PARA DESCARGAR IMÁGENES (Sin cambios)
+    // FUNCIÓN PARA DESCARGAR IMÁGENES
     const downloadImage = (downloadUrl, filename) => {
         const link = document.createElement('a');
         link.href = downloadUrl;
@@ -195,7 +187,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         document.body.removeChild(link);
     };
 
-    const isQueueEmpty = files.length === 0;
     const isOverLimit = creditsRemaining < files.length;
     
     const limitMessage = !isAuthenticated && (
@@ -204,7 +195,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         </small>
     );
 
-    // RESTO DEL COMPONENTE RENDER (Sin cambios, solo usa las funciones corregidas)
     return (
         <section className="optimization-section">
             <div className="section-header">
@@ -215,7 +205,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 {limitMessage}
             </div>
 
-            {/* ZONA DE DROPZONE (Sin cambios) */}
+            {/* ZONA DE DROPZONE */}
             <div 
                 className={`dropzone-area ${isDragActive ? 'drag-active' : ''}`}
                 onDragEnter={handleDrag}
@@ -245,7 +235,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 </div>
             )}
             
-            {/* RESULTADOS DE OPTIMIZACIÓN (Sin cambios) */}
+            {/* RESULTADOS DE OPTIMIZACIÓN */}
             {optimizationResults.length > 0 && (
                 <div className="optimization-results">
                     <h3>✅ Optimización Exitosa ({optimizationResults.length} archivos)</h3>
@@ -260,7 +250,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                                     </span>
                                 )}
                                 {res.status === 'error' && (
-                                    <span className="result-error">Error: {res.error}</span>
+                                    <span className="result-error">Error: {String(res.error) || 'Error desconocido'}</span>
                                 )}
                             </div>
                             {res.status === 'success' && (
@@ -283,7 +273,8 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                     <h3>Cola de Optimización ({files.length} archivos)</h3>
                     <ul className="file-list">
                         {files.map((file, index) => (
-                            <li key={index} className="file-item">
+                            // 🚨 CORRECCIÓN: SOLO UN ATRIBUTO 'key'
+                            <li key={file.name} className="file-item"> 
                                 <FileImage size={20} style={{ marginRight: '10px', color: 'var(--primary-color)' }} />
                                 <span className="file-name">{file.name}</span>
                                 <span className="file-size">{formatFileSize(file.size)}</span>
