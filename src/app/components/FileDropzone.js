@@ -4,7 +4,7 @@
 
 import { useState, useRef } from 'react';
 import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-react'; 
-import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../config/api'; 
+import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     

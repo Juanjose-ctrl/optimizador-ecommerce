@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { API_URL } from '../config/api';
+import { API_URL } from '../../config/api';
 // Asegúrate de que esta URL sea correcta.
 
 

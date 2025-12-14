@@ -16,7 +16,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: FRONTEND_BASE_URL
-        value: https://tu-app.vercel.app
+        value: https://optimizador-ecommerce.vercel.app/
       # Agrega manualmente en el dashboard de Render:
       # PADDLE_CLIENT_TOKEN
       # PADDLE_WEBHOOK_SECRET

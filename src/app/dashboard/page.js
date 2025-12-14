@@ -10,7 +10,7 @@ import {
     Rocket, Landmark, CheckCircle
 } from 'lucide-react'; 
 import ClientDropzoneWrapper from '../components/ClientDropzoneWrapper'; 
-import { API_URL, PADDLE_CLIENT_SIDE_TOKEN } from '../config/api'; 
+import { API_URL, PADDLE_CLIENT_SIDE_TOKEN } from '../../config/api'; 
 
 // Mapeo de iconos para planes
 const PLAN_ICONS = {
