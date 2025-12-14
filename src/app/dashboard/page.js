@@ -359,7 +359,7 @@ export default function DashboardPage() {
     <h2 className="section-title title-centered">
         {/* Usamos 'Zap' para connotar poder/upgrade, o puedes usar 'ArrowUpCircle' */}
         <Zap size={28} className="icon-main-title" /> 
-        Mejora tu&nbsp;<strong>Plan</strong> de Optimización
+        Mejora tu&nbsp;<strong>Plan</strong>&nbsp;de Optimización
     </h2>
 
                     {plans.length === 0 ? (
