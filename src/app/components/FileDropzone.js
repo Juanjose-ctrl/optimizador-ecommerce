@@ -1,8 +1,6 @@
-// src/app/components/FileDropzone.js - VERSIÓN CORREGIDA (FIX Hydration Mismatch)
-
 'use client'; 
 
-import { useState, useRef, useEffect } from 'react'; // 🚨 IMPORTANTE: Se añade useEffect
+import { useState, useRef, useEffect } from 'react'; 
 import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-react'; 
 import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
 
@@ -27,12 +25,12 @@ const getAuthHeaders = () => {
 const initializeFreeCredits = () => {
     if (typeof window !== 'undefined') {
         const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
-        if (storedCredits === null) {
-            // Si no existen, los establecemos al máximo (solo la primera vez)
+        if (storedCredits === null || isNaN(parseInt(storedCredits, 10))) { 
+            // Si no existen o no son válidos, los establecemos al máximo
             localStorage.setItem(FREE_CREDITS_KEY, MAX_FREE_OPTIMIZATIONS.toString());
             return MAX_FREE_OPTIMIZATIONS;
         }
-        // Si existen, los leemos y parseamos
+        // Si existen y son válidos, los leemos y parseamos
         return parseInt(storedCredits, 10);
     }
     // Para renderizado del lado del servidor (SSR): siempre devuelve el valor por defecto/máximo
@@ -42,7 +40,9 @@ const initializeFreeCredits = () => {
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
     // 1. 🛑 CORRECCIÓN DE HYDRATION: Inicializamos el estado de manera segura (SSR-safe)
-    // Inicialmente, usamos solo los props o el valor máximo de créditos.
+    // Inicialmente, usamos solo los props (autenticado) o el valor MÁXIMO (no autenticado).
+    // Esto asegura que el renderizado inicial de React (SSR/SSG) coincida con lo que esperamos
+    // antes de que el cliente pueda leer localStorage.
     const [creditsRemaining, setCreditsRemaining] = useState(
         isAuthenticated ? userCredits : MAX_FREE_OPTIMIZATIONS
     );
@@ -59,15 +59,16 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
 
     // 2. 🚀 Carga de Créditos en el Cliente: Usamos useEffect para acceder a localStorage
     useEffect(() => {
-        if (!isAuthenticated) {
-            // Este código solo se ejecuta en el cliente (navegador)
+        // Este código solo se ejecuta una vez en el cliente, después de la hidratación inicial
+        if (isAuthenticated) {
+            // Usuario autenticado: Usa SIEMPRE los créditos del prop (del backend)
+            setCreditsRemaining(userCredits);
+        } else {
+            // Usuario no autenticado: Lee el valor persistente de localStorage
             const persistedCredits = initializeFreeCredits();
             setCreditsRemaining(persistedCredits);
-        } else {
-            // Aseguramos que si está autenticado, use el prop userCredits
-            setCreditsRemaining(userCredits);
         }
-        setIsClient(true); // Una vez que se ejecuta, marcamos como cliente
+        setIsClient(true); // Marcamos que el componente está "hidratado" en el cliente
     }, [isAuthenticated, userCredits]);
 
 
@@ -99,7 +100,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         }
 
         if (!hasError) {
-            setFiles(prevFiles => [...prevFiles, ...validFiles].slice(0, 10));
+            setFiles(prevFiles => [...prevFiles, ...validFiles].slice(0, 10)); // Límite a 10 archivos
         }
     };
 
@@ -143,16 +144,17 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
-    // LÓGICA DE OPTIMIZACIÓN CORREGIDA
+    // LÓGICA DE OPTIMIZACIÓN
     const handleOptimize = async () => {
         if (files.length === 0 || isOptimizing) return;
         
         const filesToOptimize = files.length;
         
+        // Verificación de créditos (debe usar el estado actualizado del cliente)
         if (creditsRemaining < filesToOptimize) {
             setFileError(`¡Créditos insuficientes! Necesitas ${filesToOptimize} créditos.`);
             
-            // Usamos isClient aquí también para asegurar que la función se ejecuta después de la hidratación
+            // Solo llama a onLimitReached si no está autenticado Y ya se ejecutó el useEffect (isClient)
             if (!isAuthenticated && onLimitReached && isClient) { 
                 setTimeout(onLimitReached, 1500);
             }
@@ -176,7 +178,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 : `${API_URL}/optimize-batch-free`;
             
             if (isAuthenticated && Object.keys(authHeaders).length === 0) {
-                console.error("Autenticado pero no se encontró token en localStorage.");
+                console.warn("Usuario autenticado sin token. Intentando endpoint autenticado sin cabecera Auth.");
             }
             
             const response = await fetch(endpoint, {
@@ -192,7 +194,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 let newCredits;
 
                 if (isAuthenticated) {
-                    // Obtiene créditos actualizados del backend
+                    // Obtiene créditos actualizados del backend o calcula la diferencia como fallback
                     newCredits = data.credits_remaining !== undefined 
                         ? data.credits_remaining 
                         : creditsRemaining - filesToOptimize;
@@ -200,7 +202,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 } else {
                     // Actualiza y persiste los créditos gratuitos en localStorage (solo si es cliente)
                     newCredits = creditsRemaining - filesToOptimize;
-                    if (isClient) { // 🚨 Protección adicional
+                    if (isClient) { // Protección para el acceso a localStorage
                          localStorage.setItem(FREE_CREDITS_KEY, newCredits.toString());
                     }
                 }
@@ -209,7 +211,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
 
             } else if (response.status === 401) {
                 setFileError("No autorizado. Por favor, vuelve a iniciar sesión.");
-                if (isClient) { // 🚨 Protección adicional
+                if (isClient) { 
                     localStorage.removeItem('accessToken'); 
                 }
 
@@ -228,7 +230,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
             setFileError('Error de conexión con el servidor. Intenta de nuevo.');
         } finally {
             setIsOptimizing(false);
-            setFiles([]);
+            setFiles([]); // Limpiar la cola de archivos después de la optimización/intento
         }
     };
 
@@ -301,8 +303,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                                 <span className="result-filename">{res.original_filename}</span>
                                 {res.status === 'success' && (
                                     <span className="result-savings">
-                                        Ahorro: {res.savings_percent}% 
-                                        ({formatFileSize(res.original_size)} → {formatFileSize(res.optimized_size)})
+                                        Ahorro: **{res.savings_percent}%** ({formatFileSize(res.original_size)} → {formatFileSize(res.optimized_size)})
                                     </span>
                                 )}
                                 {res.status === 'error' && (
@@ -328,7 +329,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 <div className="file-queue-container">
                     <h3>Cola de Optimización ({files.length} archivos)</h3>
                     <ul className="file-list">
-                        {files.map((file, index) => (
+                        {files.map((file) => (
                             <li key={file.name} className="file-item"> 
                                 <FileImage size={20} style={{ marginRight: '10px', color: 'var(--primary-color)' }} />
                                 <span className="file-name">{file.name}</span>
@@ -354,7 +355,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                         )}
                     </button>
                     {isOverLimit && 
-                        <small className="credit-alert">Necesitas {files.length - creditsRemaining} créditos adicionales.</small>
+                        <small className="credit-alert">Necesitas **{files.length - creditsRemaining}** créditos adicionales.</small>
                     }
                 </div>
             )}
