@@ -133,10 +133,20 @@ export default function DashboardPage() {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.clear(); 
-        router.push('/'); 
-    };
+    const FREE_CREDITS_KEY = 'freeCreditsRemaining'; 
+
+const handleLogout = () => {
+    // 1. Eliminar el token
+    localStorage.removeItem('accessToken');
+    
+    // 🚨 FIX 1: Eliminar el contador de créditos gratuitos
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem(FREE_CREDITS_KEY);
+    }
+    
+    // 2. Redirigir/refrescar
+    // ...
+}
 
     const fetchPlans = useCallback(async () => {
         try {
