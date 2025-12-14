@@ -7,17 +7,16 @@ import {
 } from 'lucide-react'; 
 
 // =================================================================
-// 🚨 Mapeo de iconos para planes (Tomado del Dashboard)
-// Usamos los íconos del dashboard para replicar el estilo de manera
-// consistente en las tarjetas de precios de la landing page.
+// 🚨 Mapeo de iconos para planes (Ajustado para 4 planes)
 // =================================================================
 const PLAN_ICONS = {
-    // Estos IDs son conceptuales para el PricingPage, no los IDs reales del backend.
-    // Usamos '1' para el Básico/Gratis
-    // Usamos '3' para el Pro/Recomendado (asumiendo que es el ID '3' del backend)
-    // Usamos '4' para el Enterprise
-    Basico: <Package size={24} style={{ marginRight: '8px' }} />,
+    // Usamos '1' para el Free/Gratis (Package)
+    Free: <Package size={24} style={{ marginRight: '8px' }} />,
+    // Usamos '2' para el Basic (PackageCheck)
+    Basic: <PackageCheck size={24} style={{ marginRight: '8px' }} />,
+    // Usamos '3' para el Pro/Recomendado (Rocket)
     Pro: <Rocket size={24} style={{ marginRight: '8px' }} />,
+    // Usamos '4' para el Enterprise (Landmark)
     Enterprise: <Landmark size={24} style={{ marginRight: '8px' }} />,
 };
 
@@ -74,7 +73,7 @@ const PricingCard = ({ title, price, description, features, isFeatured, buttonTe
             ) : (
                 <>
                     <span className="price">{price}</span>
-                    {/* Se asume que el precio ya viene con el símbolo '$' */}
+                    {/* El precio ya tiene el símbolo '$' */}
                     <span className="unit">/mes</span>
                 </>
             )}
@@ -92,6 +91,7 @@ const PricingCard = ({ title, price, description, features, isFeatured, buttonTe
             ))}
         </ul>
 
+        {/* El botón redirige a la página de registro o al contacto para Enterprise */}
         <Link 
             href={planKey === 'Enterprise' ? "mailto:contacto@opticomerce.com" : "/registro"} 
             className={`btn ${isFeatured ? 'btn-primary' : 'btn-secondary'} btn-full`}
@@ -107,23 +107,38 @@ export default function PricingPage() {
     // Datos de los planes de precios
     const plans = [
         {
-            title: "Plan Básico",
+            title: "Plan Gratis",
             price: "Gratis",
             description: "Perfecto para probar nuestra API y funcionalidad.",
             features: [
                 { text: "100 Créditos Iniciales", available: true },
                 { text: "Optimización estándar (JPEG/PNG)", available: true },
-                { text: "Acceso a la API", available: true },
+                { text: "Acceso a la API", available: false },
                 { text: "Conversión a WEBP", available: false },
-                { text: "Soporte Prioritario", available: false },
+                { text: "Soporte Estándar", available: true },
             ],
             isFeatured: false,
             buttonText: "Comenzar Gratis",
-            planKey: 'Basico' // Clave para el ícono
+            planKey: 'Free' 
+        },
+        {
+            title: "Plan Basic",
+            price: "$2.99", // 🚨 Precio corregido
+            description: "Para pequeños proyectos que recién comienzan y necesitan más créditos.",
+            features: [
+                { text: "300 Créditos/Mes", available: true },
+                { text: "Optimización avanzada", available: true },
+                { text: "Acceso a la API", available: true },
+                { text: "Conversión a WEBP", available: true },
+                { text: "Soporte Estándar", available: true },
+            ],
+            isFeatured: false,
+            buttonText: "Suscribirse Ahora",
+            planKey: 'Basic'
         },
         {
             title: "Plan Pro (Recomendado)",
-            price: "$19",
+            price: "$12.99", // 🚨 Precio corregido
             description: "Ideal para tiendas en crecimiento que necesitan volumen y formatos modernos.",
             features: [
                 { text: "1000 Créditos/Mes", available: true },
@@ -134,7 +149,7 @@ export default function PricingPage() {
             ],
             isFeatured: true,
             buttonText: "Suscribirse Ahora",
-            planKey: 'Pro' // Clave para el ícono
+            planKey: 'Pro' 
         },
         {
             title: "Enterprise",
@@ -149,7 +164,7 @@ export default function PricingPage() {
             ],
             isFeatured: false,
             buttonText: "Solicitar Demo",
-            planKey: 'Enterprise' // Clave para el ícono
+            planKey: 'Enterprise' 
         },
     ];
 
@@ -158,10 +173,9 @@ export default function PricingPage() {
             <Header />
             <main className="app-container" style={{ padding: '80px 0' }}>
                 
-                {/* 🚨 TÍTULO Y SUBTÍTULO SOLICITADOS */}
+                {/* TÍTULO Y SUBTÍTULO SOLICITADOS */}
                 <h1 className="main-pricing-title">Nuestros Planes de Crédito</h1>
                 <p className="main-pricing-subtitle">Paga solo por lo que optimizas o suscríbete para ahorrar.</p>
-                {/* FIN TÍTULO Y SUBTÍTULO SOLICITADOS */}
 
                 <section className="section-pricing" style={{ marginTop: '50px' }}>
                     <div className="pricing-grid">
@@ -171,7 +185,7 @@ export default function PricingPage() {
                     </div>
                 </section>
                 
-                {/* 🚨 SECCIÓN "¿QUÉ ES UN CRÉDITO?" SOLICITADA */}
+                {/* SECCIÓN "¿QUÉ ES UN CRÉDITO?" SOLICITADA */}
                 <section className="section-faq" style={{ marginTop: '50px', textAlign: 'center' }}>
                     <h2 className="section-title">
                         <DollarSign size={24} style={{ marginRight: '8px' }} color="var(--accent-color)" />
@@ -181,7 +195,6 @@ export default function PricingPage() {
                         Un crédito equivale a una imagen optimizada. No importa el tamaño original del archivo (hasta 10MB), solo cobramos un crédito por cada imagen que procesas y descargas. Los créditos se renuevan mensualmente con la suscripción Pro.
                     </p>
                 </section>
-                {/* FIN SECCIÓN DE CRÉDITOS SOLICITADA */}
 
             </main>
             <Footer />

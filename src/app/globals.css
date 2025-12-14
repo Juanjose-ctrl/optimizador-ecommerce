@@ -1435,3 +1435,213 @@ a:hover {
     align-items: center;
     justify-content: center;
 }
+
+/* Contenedor principal para limitar el ancho */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Títulos principales de la página de precios */
+.main-pricing-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.main-pricing-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-color-secondary);
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* --- Estilos de la Sección de Precios --- */
+
+.pricing-grid {
+    /* 🚨 CLAVE: Define 4 columnas iguales. En móviles se ajustará a una sola. */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 25px; /* Espacio entre las tarjetas */
+    margin-top: 40px;
+}
+
+/* --- Estilos de las Tarjetas de Precios (PlanCard) --- */
+
+.pricing-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo para el plan destacado (Pro) */
+.featured-plan {
+    border-color: var(--accent-color); 
+    position: relative;
+    padding-top: 50px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--accent-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo del Header dentro de la tarjeta (para el ícono) */
+.plan-header-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Estilos de Precio */
+.price-tag {
+    margin: 20px 0;
+    line-height: 1;
+}
+
+.price-tag .price {
+    font-size: 2.8rem; /* Ajustado para que se vea bien en 4 columnas */
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.price-tag .unit {
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.description {
+    color: var(--text-color-secondary);
+    margin-bottom: 25px;
+    flex-grow: 1; /* Esto asegura que todas las tarjetas se vean de la misma altura */
+}
+
+/* Lista de Características */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 30px;
+    text-align: left;
+    flex-grow: 1; /* Importante para la altura uniforme */
+}
+
+.feature-list li {
+    display: flex;
+    align-items: flex-start; /* Alinea el texto con la parte superior del icono */
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.feature-list li svg {
+    margin-right: 10px;
+    min-width: 18px; 
+}
+
+.feature-list .unavailable {
+    color: var(--text-color-secondary);
+    opacity: 0.6;
+}
+
+/* Botones */
+.btn-full {
+    width: 100%;
+    padding: 12px 20px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-top: auto; /* Empuja el botón al final de la tarjeta */
+}
+
+/* Asumiendo que ya tienes estilos base para .btn-primary y .btn-secondary */
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+    border: 1px solid var(--accent-color);
+}
+.btn-primary:hover {
+    background-color: var(--accent-dark);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover {
+    background-color: var(--bg-hover);
+}
+
+
+/* --- Sección "¿Qué es un Crédito?" (section-faq) --- */
+
+.section-faq {
+    background-color: var(--bg-faq); 
+    padding: 40px 20px;
+    border-radius: 12px;
+    margin-top: 50px;
+}
+
+.section-faq .section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* --- Media Queries (Ajuste para móviles y tabletas) --- */
+
+@media (max-width: 1024px) {
+    /* En tabletas, pasar a 2 columnas */
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    /* En móviles, pasar a 1 columna */
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-pricing-title {
+        font-size: 2rem;
+    }
+}
