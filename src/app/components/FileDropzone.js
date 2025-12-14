@@ -7,6 +7,7 @@ import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES }
 
 // CONSTANTE PARA LOCALSTORAGE
 const FREE_CREDITS_KEY = 'freeCreditsRemaining';
+// 🚨 Nota: La clave 'hasRegistered' se elimina de aquí ya que simplificamos la lógica de inicialización.
 
 // Función auxiliar para obtener el token de autenticación
 const getAuthHeaders = () => {
@@ -21,28 +22,32 @@ const getAuthHeaders = () => {
     return {};
 };
 
-// Función para inicializar o leer los créditos gratuitos desde localStorage
+// Función para inicializar o leer los créditos gratuitos desde localStorage (SIMPLIFICADA)
 const initializeFreeCredits = () => {
     if (typeof window !== 'undefined') {
         const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
-        if (storedCredits === null || isNaN(parseInt(storedCredits, 10))) { 
-            // Si no existen o no son válidos, los establecemos al máximo
+        const parsedCredits = parseInt(storedCredits, 10);
+        
+        // 🚨 LÓGICA CLAVE SIMPLIFICADA
+        if (storedCredits === null || isNaN(parsedCredits) || parsedCredits < 0) { 
+            // Si no existe, no es un número, o es negativo, lo inicializamos al máximo.
+            // Esto cubre: 
+            // 1. Nuevo visitante. 
+            // 2. Usuario que se registró y borró la clave (simulando un reset).
             localStorage.setItem(FREE_CREDITS_KEY, MAX_FREE_OPTIMIZATIONS.toString());
             return MAX_FREE_OPTIMIZATIONS;
         }
-        // Si existen y son válidos, los leemos y parseamos
-        return parseInt(storedCredits, 10);
+        
+        // Si existe y es válido, lo leemos.
+        return parsedCredits;
     }
-    // Para renderizado del lado del servidor (SSR): siempre devuelve el valor por defecto/máximo
+    // Para renderizado del lado del servidor (SSR)
     return MAX_FREE_OPTIMIZATIONS;
 };
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
     // 1. 🛑 CORRECCIÓN DE HYDRATION: Inicializamos el estado de manera segura (SSR-safe)
-    // Inicialmente, usamos solo los props (autenticado) o el valor MÁXIMO (no autenticado).
-    // Esto asegura que el renderizado inicial de React (SSR/SSG) coincida con lo que esperamos
-    // antes de que el cliente pueda leer localStorage.
     const [creditsRemaining, setCreditsRemaining] = useState(
         isAuthenticated ? userCredits : MAX_FREE_OPTIMIZATIONS
     );
@@ -63,6 +68,12 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         if (isAuthenticated) {
             // Usuario autenticado: Usa SIEMPRE los créditos del prop (del backend)
             setCreditsRemaining(userCredits);
+            
+            // 🚨 LIMPIEZA ADICIONAL: Aseguramos que la clave de créditos gratuitos se borre
+            // por si el usuario se autenticó sin pasar por el formulario de registro.
+            if (typeof window !== 'undefined') {
+                 localStorage.removeItem(FREE_CREDITS_KEY);
+            }
         } else {
             // Usuario no autenticado: Lee el valor persistente de localStorage
             const persistedCredits = initializeFreeCredits();
@@ -203,7 +214,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                     // Actualiza y persiste los créditos gratuitos en localStorage (solo si es cliente)
                     newCredits = creditsRemaining - filesToOptimize;
                     if (isClient) { // Protección para el acceso a localStorage
-                         localStorage.setItem(FREE_CREDITS_KEY, newCredits.toString());
+                        localStorage.setItem(FREE_CREDITS_KEY, newCredits.toString());
                     }
                 }
                 
