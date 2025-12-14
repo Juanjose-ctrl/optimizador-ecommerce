@@ -1,8 +1,27 @@
-// src/app/pricing/page.js
-
 'use client';
 import Link from 'next/link';
-import { Check, Zap, DollarSign, XCircle, Sun } from 'lucide-react';
+// Importamos los íconos necesarios
+import { 
+    Check, Zap, DollarSign, XCircle, Sun, 
+    Package, PackageCheck, Rocket, Landmark, CheckCircle 
+} from 'lucide-react'; 
+
+// =================================================================
+// 🚨 Mapeo de iconos para planes (Tomado del Dashboard)
+// Usamos los íconos del dashboard para replicar el estilo de manera
+// consistente en las tarjetas de precios de la landing page.
+// =================================================================
+const PLAN_ICONS = {
+    // Estos IDs son conceptuales para el PricingPage, no los IDs reales del backend.
+    // Usamos '1' para el Básico/Gratis
+    // Usamos '3' para el Pro/Recomendado (asumiendo que es el ID '3' del backend)
+    // Usamos '4' para el Enterprise
+    Basico: <Package size={24} style={{ marginRight: '8px' }} />,
+    Pro: <Rocket size={24} style={{ marginRight: '8px' }} />,
+    Enterprise: <Landmark size={24} style={{ marginRight: '8px' }} />,
+};
+
+// --- COMPONENTES AUXILIARES ---
 
 // Replicamos el Header de la Landing Page
 const Header = () => ( 
@@ -37,20 +56,26 @@ const Footer = () => (
     </footer>
 );
 
-// Componente de la Tarjeta de Plan
-const PricingCard = ({ title, price, description, features, isFeatured, buttonText }) => (
+
+// Componente de la Tarjeta de Plan (Ajustado para usar los iconos y estilos del Dashboard)
+const PricingCard = ({ title, price, description, features, isFeatured, buttonText, planKey }) => (
     <div className={`pricing-card ${isFeatured ? 'featured-plan' : ''}`}>
         {isFeatured && <div className="badge">Más Popular</div>}
         
-        <h3 className="card-title">{title}</h3>
+        {/* Usamos el Plan Header similar al Dashboard */}
+        <div className="plan-header-custom"> 
+            {PLAN_ICONS[planKey]}
+            <h3 className="card-title">{title}</h3>
+        </div>
         
         <div className="price-tag">
-            {price === 'Gratis' ? (
+            {price === 'Gratis' || price === 'Contactar' ? (
                 <span className="price">{price}</span>
             ) : (
                 <>
                     <span className="price">{price}</span>
-                    <span className="unit">USD</span>
+                    {/* Se asume que el precio ya viene con el símbolo '$' */}
+                    <span className="unit">/mes</span>
                 </>
             )}
         </div>
@@ -60,19 +85,23 @@ const PricingCard = ({ title, price, description, features, isFeatured, buttonTe
         <ul className="feature-list">
             {features.map((feature, index) => (
                 <li key={index} className={feature.available ? 'available' : 'unavailable'}>
-                    {feature.available ? <Check size={18} color="var(--primary-color)" /> : <XCircle size={18} color="var(--text-color-secondary)" />}
+                    {/* Usamos el ícono CheckCircle del dashboard para las características */}
+                    {feature.available ? <CheckCircle size={18} color="var(--primary-color)" /> : <XCircle size={18} color="var(--text-color-secondary)" />}
                     {feature.text}
                 </li>
             ))}
         </ul>
 
-        {/* El botón redirige a registro para iniciar el proceso de compra/suscripción */}
-        <Link href="/registro" className={`btn ${isFeatured ? 'btn-primary' : 'btn-secondary'} btn-full`}>
+        <Link 
+            href={planKey === 'Enterprise' ? "mailto:contacto@opticomerce.com" : "/registro"} 
+            className={`btn ${isFeatured ? 'btn-primary' : 'btn-secondary'} btn-full`}
+        >
             {buttonText}
         </Link>
     </div>
 );
 
+// --- COMPONENTE PRINCIPAL DE LA PÁGINA ---
 export default function PricingPage() {
     
     // Datos de los planes de precios
@@ -90,6 +119,7 @@ export default function PricingPage() {
             ],
             isFeatured: false,
             buttonText: "Comenzar Gratis",
+            planKey: 'Basico' // Clave para el ícono
         },
         {
             title: "Plan Pro (Recomendado)",
@@ -104,6 +134,7 @@ export default function PricingPage() {
             ],
             isFeatured: true,
             buttonText: "Suscribirse Ahora",
+            planKey: 'Pro' // Clave para el ícono
         },
         {
             title: "Enterprise",
@@ -118,6 +149,7 @@ export default function PricingPage() {
             ],
             isFeatured: false,
             buttonText: "Solicitar Demo",
+            planKey: 'Enterprise' // Clave para el ícono
         },
     ];
 
@@ -125,10 +157,13 @@ export default function PricingPage() {
         <>
             <Header />
             <main className="app-container" style={{ padding: '80px 0' }}>
-                <section className="section-pricing">
-                    <h1 className="section-title">Nuestros Planes de Crédito</h1>
-                    <p className="section-subtitle">Paga solo por lo que optimizas o suscríbete para ahorrar.</p>
+                
+                {/* 🚨 TÍTULO Y SUBTÍTULO SOLICITADOS */}
+                <h1 className="main-pricing-title">Nuestros Planes de Crédito</h1>
+                <p className="main-pricing-subtitle">Paga solo por lo que optimizas o suscríbete para ahorrar.</p>
+                {/* FIN TÍTULO Y SUBTÍTULO SOLICITADOS */}
 
+                <section className="section-pricing" style={{ marginTop: '50px' }}>
                     <div className="pricing-grid">
                         {plans.map((plan, index) => (
                             <PricingCard key={index} {...plan} />
@@ -136,17 +171,20 @@ export default function PricingPage() {
                     </div>
                 </section>
                 
+                {/* 🚨 SECCIÓN "¿QUÉ ES UN CRÉDITO?" SOLICITADA */}
                 <section className="section-faq" style={{ marginTop: '50px', textAlign: 'center' }}>
-                     <h2 className="section-title">¿Qué es un Crédito?</h2>
-                     <p style={{ maxWidth: '800px', margin: '0 auto', color: 'var(--text-color-secondary)' }}>
+                    <h2 className="section-title">
+                        <DollarSign size={24} style={{ marginRight: '8px' }} color="var(--accent-color)" />
+                        ¿Qué es un Crédito?
+                    </h2>
+                    <p style={{ maxWidth: '800px', margin: '0 auto', color: 'var(--text-color-secondary)' }}>
                         Un crédito equivale a una imagen optimizada. No importa el tamaño original del archivo (hasta 10MB), solo cobramos un crédito por cada imagen que procesas y descargas. Los créditos se renuevan mensualmente con la suscripción Pro.
-                     </p>
+                    </p>
                 </section>
+                {/* FIN SECCIÓN DE CRÉDITOS SOLICITADA */}
 
             </main>
             <Footer />
         </>
     );
 }
-
-// Nota: Debes añadir el CSS necesario para .section-pricing, .pricing-grid, .pricing-card, etc., en tu globals.css.
