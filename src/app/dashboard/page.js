@@ -10,6 +10,7 @@ import {
 // Importamos el wrapper para asegurar que el FileDropzone sea client-side
 import ClientDropzoneWrapper from '../components/ClientDropzoneWrapper'; 
 import { API_URL, PADDLE_CLIENT_SIDE_TOKEN } from '../../config/api'; 
+import Header from '@/components/Header';
 
 // CONSTANTE CLAVE
 const FREE_CREDITS_KEY = 'freeCreditsRemaining'; 
@@ -360,3 +361,12 @@ export default function DashboardPage() {
 
     <Footer />
 </div>
+
+export default function DashboardPage() {
+  return (
+    <div>
+      <Header /> // 
+      {/* ... otros componentes ... */}
+    </div>
+  );
+}
