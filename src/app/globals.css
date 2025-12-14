@@ -1134,3 +1134,19 @@ a:hover {
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
 }
+
+/* 🛑 CONTENEDOR PRINCIPAL PARA CENTRAR EL CONTENIDO */
+.main-content-wrapper {
+    width: 100%;
+    max-width: 1280px; /* Ancho máximo estándar para dashboards grandes */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 40px; /* 40px de padding en los lados para que el contenido no toque los bordes */
+}
+
+/* Ajuste para pantallas pequeñas (móviles) */
+@media (max-width: 768px) {
+    .main-content-wrapper {
+        padding: 0 20px; /* Reducir el padding en móviles */
+    }
+}
