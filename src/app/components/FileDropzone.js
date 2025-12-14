@@ -1,10 +1,13 @@
-// src/app/components/FileDropzone.js - VERSIÓN FINAL Y LIBRE DE ERRORES
+// src/app/components/FileDropzone.js - VERSIÓN FINAL Y LIBRE DE ERRORES (FIX Persistencia Créditos Gratis)
 
 'use client'; 
 
 import { useState, useRef } from 'react';
 import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-react'; 
 import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
+
+// CONSTANTE PARA LOCALSTORAGE
+const FREE_CREDITS_KEY = 'freeCreditsRemaining';
 
 // Función auxiliar para obtener el token de autenticación
 const getAuthHeaders = () => {
@@ -19,9 +22,28 @@ const getAuthHeaders = () => {
     return {};
 };
 
+// Función para inicializar o leer los créditos gratuitos desde localStorage
+const initializeFreeCredits = () => {
+    if (typeof window !== 'undefined') {
+        const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
+        if (storedCredits === null) {
+            // Si no existen, los establecemos al máximo (solo la primera vez)
+            localStorage.setItem(FREE_CREDITS_KEY, MAX_FREE_OPTIMIZATIONS.toString());
+            return MAX_FREE_OPTIMIZATIONS;
+        }
+        // Si existen, los leemos y parseamos
+        return parseInt(storedCredits, 10);
+    }
+    // Para renderizado del lado del servidor (SSR)
+    return MAX_FREE_OPTIMIZATIONS;
+};
+
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
-    const initialCredits = isAuthenticated ? userCredits : MAX_FREE_OPTIMIZATIONS;
+    // 🚨 CAMBIO 1: Inicializa créditos usando la persistencia si no está autenticado
+    const initialCredits = isAuthenticated 
+        ? userCredits 
+        : initializeFreeCredits();
 
     const [isDragActive, setIsDragActive] = useState(false);
     const [files, setFiles] = useState([]);
@@ -103,7 +125,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
-    // LÓGICA DE OPTIMIZACIÓN
+    // LÓGICA DE OPTIMIZACIÓN CORREGIDA
     const handleOptimize = async () => {
         if (files.length === 0 || isOptimizing) return;
         
@@ -148,11 +170,21 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 const data = await response.json();
                 setOptimizationResults(data.results);
                 
-                if (data.credits_remaining !== undefined) {
-                    setCreditsRemaining(data.credits_remaining);
+                let newCredits;
+
+                if (isAuthenticated) {
+                    // Obtiene créditos actualizados del backend
+                    newCredits = data.credits_remaining !== undefined 
+                        ? data.credits_remaining 
+                        : creditsRemaining - filesToOptimize;
+
                 } else {
-                    setCreditsRemaining(prev => prev - filesToOptimize);
+                    // 🚨 CAMBIO 2: Actualiza y persiste los créditos gratuitos en localStorage
+                    newCredits = creditsRemaining - filesToOptimize;
+                    localStorage.setItem(FREE_CREDITS_KEY, newCredits.toString());
                 }
+                
+                setCreditsRemaining(newCredits);
 
             } else if (response.status === 401) {
                 setFileError("No autorizado. Por favor, vuelve a iniciar sesión.");
@@ -273,7 +305,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                     <h3>Cola de Optimización ({files.length} archivos)</h3>
                     <ul className="file-list">
                         {files.map((file, index) => (
-                            // 🚨 CORRECCIÓN: SOLO UN ATRIBUTO 'key'
                             <li key={file.name} className="file-item"> 
                                 <FileImage size={20} style={{ marginRight: '10px', color: 'var(--primary-color)' }} />
                                 <span className="file-name">{file.name}</span>
