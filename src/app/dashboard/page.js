@@ -43,7 +43,7 @@ const PlanCard = ({ plan, onPurchase }) => {
 
     const priceDisplay = 
         (plan.id === 4) 
-        ? "Contáctanos para pricing" // Texto personalizado para Enterprise
+        ? "Contáctanos" // Texto personalizado para Enterprise
         : (plan.price_usd === 0) 
             ? "Gratis" 
             : `$${(plan.price_usd ?? 0).toFixed(2)}/mes`;
