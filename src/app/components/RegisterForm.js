@@ -16,8 +16,7 @@ export default function RegisterForm({ onSuccess }) {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     
-    // Agregamos la URL si no está importada (reemplaza con tu ruta correcta)
-    const API_URL = 'http://127.0.0.1:8000'; 
+    // Agregamos la URL si no está importada (reemplaza con tu ruta correcta) 
     const FREE_CREDITS_KEY = 'freeCreditsRemaining'; // Necesario para obtener la clave
 
     // 🚨 FUNCIÓN CORREGIDA Y UNIFICADA
