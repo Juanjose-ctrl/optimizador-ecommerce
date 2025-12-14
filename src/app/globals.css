@@ -1180,3 +1180,33 @@ a:hover {
     margin-top: 12px;
     text-align: center;
 }
+
+/* Asegúrate de que tu título principal esté bien alineado */
+.section-plans {
+    margin-top: 40px; /* Espacio superior */
+    padding-bottom: 60px; /* Espacio inferior */
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrar el título */
+    font-size: 1.8rem;
+    color: #333; /* Color oscuro */
+    margin-bottom: 30px;
+    font-weight: 300; /* Fuente ligera */
+}
+
+/* Estilo para el ícono principal del título */
+.icon-main-title {
+    color: #007bff; /* Color primario de tu marca (ej: azul) */
+    margin-right: 12px;
+    /* Un ligero ajuste de posición para centrar visualmente el ícono */
+    position: relative;
+    top: -1px; 
+}
+
+.section-title strong {
+    font-weight: 700; /* Destacar la palabra clave */
+    color: #1a1a1a;
+}

@@ -43,7 +43,7 @@ const PlanCard = ({ plan, onPurchase }) => {
 
     const priceDisplay = 
         (plan.id === 4) 
-        ? "Contáctanos" // Texto personalizado para Enterprise
+        ? "Contáctanos para pricing" // Texto personalizado para Enterprise
         : (plan.price_usd === 0) 
             ? "Gratis" 
             : `$${(plan.price_usd ?? 0).toFixed(2)}/mes`;
@@ -354,8 +354,14 @@ export default function DashboardPage() {
 
                 {/* SECCIÓN DE PLANES */}
                 <section id="plans-section" className="section-plans">
-                    <h2 className="section-title"><DollarSign size={28} style={{ marginRight: '10px' }} /> Actualiza tu Plan</h2>
-                    
+    
+    {/* 🚨 VERSIÓN ESTÉTICA DEL TÍTULO 🚨 */}
+    <h2 className="section-title title-centered">
+        {/* Usamos 'Zap' para connotar poder/upgrade, o puedes usar 'ArrowUpCircle' */}
+        <Zap size={28} className="icon-main-title" /> 
+        Mejora tu <strong>Plan</strong> de Optimización
+    </h2>
+    
                     {plans.length === 0 ? (
                         <p>Cargando planes...</p>
                     ) : (
