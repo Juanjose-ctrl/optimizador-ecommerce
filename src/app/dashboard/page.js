@@ -28,7 +28,7 @@ const PLAN_ICONS = {
 // PlanCard Component
 const PlanCard = ({ plan, onPurchase }) => {
     const isCurrentPlan = plan.id === 1;
-    const isRecommended = plan.image_limit === 50000;
+    const isRecommended = plan.image_limit === 5000;
 
     // 🚨 CORRECCIÓN: Usar price_usd en lugar de price
     const priceDisplay = plan.price_usd === 0 
