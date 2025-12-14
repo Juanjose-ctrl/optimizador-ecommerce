@@ -32,7 +32,7 @@ const PlanCard = ({ plan, onPurchase }) => {
 
     // 🚨 CORRECCIÓN: Usar price_usd en lugar de price
     const priceDisplay = plan.price_usd === 0 
-        ? "Contáctanos" 
+        ? "Gratis" 
         : `$${plan.price_usd.toFixed(2)}/mes`;
     
     const limitDisplay = plan.image_limit === 20000 
