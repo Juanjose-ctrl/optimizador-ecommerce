@@ -26,16 +26,33 @@ const PLAN_ICONS = {
 // --- COMPONENTES AUXILIARES ---
 
 // PlanCard Component
+// Asumiendo que CheckCircle y PLAN_ICONS están importados correctamente
 const PlanCard = ({ plan, onPurchase }) => {
+    // ID del Plan Free: 1
     const isCurrentPlan = plan.id === 1;
+    // ID del Plan Pro (Recomendado): 3
     const isRecommended = plan.id === 3;
 
-    // 🚨 CORRECCIÓN: Usar price_usd en lugar de price
-    const priceDisplay = plan.price_usd === 0 
-        ? "Gratis" 
-        : `$${plan.price_usd.toFixed(2)}/mes`;
+    // =================================================================
+    // 🚨 CORRECCIÓN CRÍTICA 🚨: Lógica de Visualización del Precio
+    // 1. Chequea si el plan es Enterprise (ID 4) para un texto personalizado.
+    // 2. Si no es Enterprise, chequea si es Free (ID 1) o tiene precio 0.
+    // 3. Si no es ninguno de los anteriores, muestra el precio formateado.
+    // Además, usamos `?? 0` para evitar el error `.toFixed(2)` si el precio fuera null/undefined.
+    // =================================================================
+
+    const priceDisplay = 
+        (plan.id === 4) 
+        ? "Contáctanos para pricing" // Texto personalizado para Enterprise
+        : (plan.price_usd === 0) 
+            ? "Gratis" 
+            : `$${(plan.price_usd ?? 0).toFixed(2)}/mes`;
     
-    const limitDisplay = plan.image_limit === 20000 
+    // =================================================================
+    // 🚨 CORRECCIÓN 🚨: Lógica de Visualización del Límite
+    // Ajustado el límite a 50000 para el Enterprise, según tu backend.
+    // =================================================================
+    const limitDisplay = plan.image_limit === 50000 
         ? "Personalizado a tus necesidades" 
         : `${plan.image_limit} créditos`;
 
@@ -48,10 +65,9 @@ const PlanCard = ({ plan, onPurchase }) => {
             </div>
             <p className="plan-description">{limitDisplay}</p>
             <div className="plan-price">
-                <span className="price">{priceDisplay}</span>
+                <span className="price">{priceDisplay}</span> 
             </div>
             <ul className="plan-features">
-                {/* 🚨 ÍCONOS DE CHECK AGREGADOS (mejorando la estética) */}
                 <li><CheckCircle size={16} className="feature-icon" /> Optimización de alta velocidad</li>
                 <li><CheckCircle size={16} className="feature-icon" /> Soporte WebP/JPEG/PNG</li>
                 {plan.id > 1 && <li><CheckCircle size={16} className="feature-icon" /> Acceso a API Key</li>}
@@ -60,12 +76,17 @@ const PlanCard = ({ plan, onPurchase }) => {
             <button 
                 className={`btn ${isCurrentPlan ? 'btn-secondary' : 'btn-primary'}`}
                 onClick={() => onPurchase(plan.paddle_product_id)}
-                disabled={isCurrentPlan || !plan.paddle_product_id}
+                // Deshabilitar la compra para el Plan Free (ID 1) y el Enterprise (ID 4 - contáctanos)
+                disabled={isCurrentPlan || !plan.paddle_product_id || plan.id === 4}
             >
-                {isCurrentPlan ? "Tu Plan Actual" : "Comprar Ahora"}
+                {isCurrentPlan 
+                    ? "Tu Plan Actual" 
+                    : (plan.id === 4 ? "Contáctanos" : "Comprar Ahora") 
+                }
             </button>
             {isRecommended && <p className="plan-note-recommended">El plan más popular</p>}
-            {plan.image_limit === 50000 && <small className="plan-note">*{plan.name} tiene un límite técnico de {plan.image_limit} imágenes.</small>}
+            {/* Se corrige la condición para 50000, que es el límite real del Enterprise */}
+            {plan.image_limit === 50000 && <small className="plan-note">*{plan.name} tiene un límite técnico de {plan.image_limit} imágenes.</small>} 
         </div>
     );
 };
