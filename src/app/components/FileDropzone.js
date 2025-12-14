@@ -329,7 +329,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                                 <span className="result-filename">{res.original_filename}</span>
                                 {res.status === 'success' && (
                                     <span className="result-savings">
-                                        Ahorro: **{res.savings_percent}%** ({formatFileSize(res.original_size)} → {formatFileSize(res.optimized_size)})
+                                        Ahorro: <strong>{res.savings_percent}%</strong> ({formatFileSize(res.original_size)} → {formatFileSize(res.optimized_size)}
                                     </span>
                                 )}
                                 {res.status === 'error' && (

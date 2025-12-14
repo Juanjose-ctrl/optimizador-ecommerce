@@ -1,15 +1,15 @@
-/* globals.css - VERSIÓN COMPLETA Y CORREGIDA */
+/* globals.css - VERSIÓN COMPLETA Y CORREGIDA con cambios Esmeralda */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-    --primary-color: #008080;
-    --accent-color: #FF7F50;
+    --primary-color: #008080; /* Teal profesional */
+    --accent-color: #10B981; /* NUEVO: Esmeralda moderno para CTAs */
     --secondary-color: #40B5AD;
     
-    --bg-page: #F8FAFB;
+    --bg-page: #F9FAFB; /* Ligeramente más claro */
     --bg-card: #FFFFFF;
-    --bg-footer: #E0FFFF;
+    --bg-footer: #F0F9FF; /* Fondo suave */
     --bg-dark: #004D4D;
     
     --text-color-primary: #1A202C;
@@ -20,9 +20,11 @@
     --radius-large: 16px;
     --radius-medium: 12px;
     --radius-small: 8px;
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    
+    /* SOMBRAS MEJORADAS */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03); 
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 * {
@@ -132,15 +134,54 @@ a:hover {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--accent-color) 0%, #FF6347 100%);
+    /* Fondo Esmeralda con sombra moderna y fuerte */
+    background: linear-gradient(135deg, var(--accent-color) 0%, #059669 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(255, 127, 80, 0.3);
+    /* Sombra profunda y colorida (Usando el nuevo Accent Color) */
+    box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4); 
+    border: none;
 }
 
 .btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 127, 80, 0.4);
+    transform: translateY(-3px); /* Subida más notable */
+    /* Intensificando la sombra en hover */
+    box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.5); 
 }
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(64, 181, 173, 0.2);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #38A29A;
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    background-color: #CBD5E0;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+}
+
+/* Modificadores de tamaño/ancho (manteniendo la base) */
+.btn-large {
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.btn-full {
+    width: 100%;
+}
+
 
 .btn-secondary {
     background: var(--secondary-color);
@@ -337,25 +378,31 @@ a:hover {
 }
 
 .dropzone-area {
-    border: 3px dashed var(--border-color);
+    /* APLICADO: Borde y padding ajustados, fondo de card y sombra sm por defecto */
+    border: 2px dashed #CBD5E0; 
     border-radius: var(--radius-large);
-    padding: 80px 40px;
+    padding: 60px 40px; 
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    background-color: var(--bg-page);
+    background-color: var(--bg-card); 
+    box-shadow: var(--shadow-sm); 
 }
 
 .dropzone-area:hover {
+    /* APLICADO: Nuevo hover */
     border-color: var(--accent-color);
-    background-color: #FFF5F0;
-    transform: scale(1.01);
+    background-color: #F0FFF4; 
+    transform: scale(1.005); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); 
 }
 
 .dropzone-area.drag-active {
-    border-color: var(--primary-color);
-    background-color: #E0FFFF;
-    box-shadow: 0 0 20px rgba(0, 128, 128, 0.2);
+    /* APLICADO: Nuevo drag active con halo */
+    border: 4px solid var(--accent-color); 
+    background-color: #E6FFFA; 
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.2); 
+    transform: scale(1.0);
 }
 
 .dropzone-text {
@@ -401,10 +448,12 @@ a:hover {
 /* RESULTADOS */
 .optimization-results {
     margin-top: 32px;
-    padding: 24px;
-    background: linear-gradient(135deg, #E0FFF4 0%, #D1F5E9 100%);
-    border-radius: var(--radius-medium);
-    border: 2px solid var(--secondary-color);
+    padding: 32px; /* Más espacio interno */
+    /* Fondo de éxito muy suave (relacionado al nuevo Accent Color) */
+    background-color: #F0FFF4; 
+    border-radius: var(--radius-large); 
+    border: 1px solid var(--accent-color); /* Borde sutil del color de éxito */
+    box-shadow: var(--shadow-md);
 }
 
 .optimization-results h3 {
@@ -442,10 +491,24 @@ a:hover {
     color: var(--text-color-primary);
 }
 
+/* MODIFICACIÓN CLAVE: Estilo para el texto de ahorro */
 .result-savings {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color-primary); /* Base para el texto */
+}
+
+/* 🛑 ESTILO DEL BADGE DE AHORRO (Usando la etiqueta <strong>) */
+.result-savings strong {
+    background-color: #D1FAE5; /* Fondo de badge verde claro */
+    color: #065F46; /* Texto de badge verde oscuro */
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
     font-size: 0.9rem;
-    color: var(--secondary-color);
-    font-weight: 500;
+    font-weight: 700;
+    white-space: nowrap;
+    display: inline-block; /* Asegura el correcto padding y alineación */
 }
 
 .result-error {
@@ -475,20 +538,23 @@ a:hover {
 }
 
 /* COLA DE ARCHIVOS */
+
+/* COLA DE ARCHIVOS */
 .file-queue-container {
     margin-top: 32px;
     padding: 24px;
-    background-color: var(--bg-page);
-    border: 2px solid var(--border-color);
+    background-color: var(--bg-card); /* Fondo blanco para la cola */
+    border: 1px solid var(--border-color); /* Borde simple y limpio */
     border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-sm); /* Sombra sutil */
 }
 
 .file-queue-container h3 {
     font-size: 1.2rem;
-    color: var(--primary-color);
+    color: var(--text-color-primary); /* Título de la cola más legible */
     margin-bottom: 20px;
     padding-bottom: 12px;
-    border-bottom: 2px dashed var(--border-color);
+    border-bottom: 1px solid #E5E7EB; /* Divisor más limpio */
 }
 
 .file-list {
@@ -502,8 +568,9 @@ a:hover {
     align-items: center;
     justify-content: space-between;
     padding: 14px 16px;
-    background-color: white;
-    border: 1px solid var(--border-color);
+    background-color: var(--bg-page); /* El item tiene un fondo ligeramente gris */
+    border: none; /* Sin borde */
+    box-shadow: var(--shadow-sm); /* Sombra para profundidad */
     border-radius: var(--radius-small);
     margin-bottom: 10px;
     font-size: 0.95rem;
@@ -511,8 +578,9 @@ a:hover {
 }
 
 .file-item:hover {
-    box-shadow: var(--shadow-sm);
-    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md); /* Se eleva en hover */
+    background-color: #ECECEC;
+    transform: scale(1.00);
 }
 
 .file-name {
@@ -543,8 +611,8 @@ a:hover {
 }
 
 .btn-remove-file:hover {
-    color: var(--accent-color);
-    background-color: #FFE5E5;
+    color: #EF4444; /* Rojo de peligro moderno */
+    background-color: #FEF2F2;
 }
 
 .optimize-btn {
@@ -637,7 +705,6 @@ a:hover {
     margin-bottom: 40px;
     font-weight: 800;
 }
-
 /* MÉTRICAS */
 .metric-grid {
     display: grid;
@@ -647,18 +714,18 @@ a:hover {
 }
 
 .metric-card {
-    background: linear-gradient(135deg, white 0%, var(--bg-page) 100%);
+    background-color: var(--bg-card);
     padding: 28px;
     border-radius: var(--radius-large);
-    border: 2px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
+    border: none; /* Eliminamos el borde duro */
+    box-shadow: var(--shadow-md); /* Sombra para efecto flotante */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .metric-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-color);
+    transform: translateY(-6px); /* Elevación más notable */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); 
+    border-color: transparent;
 }
 
 .metric-card .card-top {
@@ -692,7 +759,7 @@ a:hover {
 
 .metric-card .ok { color: var(--primary-color); }
 .metric-card .warning { color: #F59E0B; }
-.metric-card .low { color: var(--accent-color); }
+.metric-card .low { color: var(--accent-color); } /* Usamos el nuevo Esmeralda */
 
 /* PLANES */
 .section-plans {
@@ -713,9 +780,9 @@ a:hover {
     background-color: var(--bg-card);
     padding: 32px;
     border-radius: var(--radius-large);
-    border: 2px solid var(--border-color);
+    border: 1px solid var(--border-color); /* Borde sutil */
     box-shadow: var(--shadow-md);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
 }
@@ -748,7 +815,7 @@ a:hover {
 }
 
 .plan-price .price {
-    font-size: 2.5rem;
+    font-size: 3rem; /* Precio más grande */
     font-weight: 800;
     color: var(--primary-color);
 }
@@ -765,7 +832,8 @@ a:hover {
     align-items: center;
     padding: 10px 0;
     font-size: 0.95rem;
-    border-bottom: 1px dashed var(--border-color);
+    border-bottom: 1px solid #F3F4F6; /* Línea más suave y sólida */
+    color: var(--text-color-primary);
 }
 
 .plan-features li:last-child {
@@ -778,6 +846,14 @@ a:hover {
     font-size: 0.85rem;
     color: var(--text-color-secondary);
     text-align: center;
+}
+
+/* CLASE PARA DESTACAR EL MEJOR PLAN */
+.plan-card.recommended {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3), var(--shadow-lg); /* Halo de color */
+    transform: scale(1.05) translateY(-8px);
+    z-index: 10;
 }
 
 /* ESTADOS DE CARGA */
