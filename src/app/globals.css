@@ -1737,23 +1737,28 @@ a:hover {
 /* globals.css */
 
 .founder-image-placeholder {
-    width: 300px; 
+    width: 300px;
     height: 300px;
-    border-radius: 50%; /* Define la forma del contenedor */
-    overflow: hidden; /* 🚨 CRUCIAL: Esto recorta la imagen que sobresale */
-    display: flex; /* Asegura el centrado si la imagen es más pequeña */
+    border-radius: 0;      /* ← CLAVE */
+    overflow: hidden;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Aplica a la imagen real dentro del componente <Image> */
 .founder-image {
     width: 100%;
     height: 100%;
-    /* 🚨 CRUCIAL: Ajusta la imagen para que cubra todo el espacio sin distorsionarse, 
-       permitiendo que `overflow: hidden` la recorte. */
-    object-fit: cover; 
-    border-radius: 50%; /* Mantiene la forma circular en la imagen */
+    object-fit: cover;
+    border-radius: 0;      /* ← CLAVE */
+}
+
+.founder-image-placeholder {
+    border-radius: 12px;
+}
+
+.founder-image {
+    border-radius: 12px;
 }
 
 /* 🚨 Corrección del Texto a la Izquierda (Texto sigue hacia un lado) */
@@ -1853,10 +1858,6 @@ a:hover {
         text-align: center; /* Centra el texto en móvil */
     }
 
-    .founder-image-placeholder {
-        margin: 0 auto; /* Centra la imagen apilada */
-    }
-}
 
 /* --- Estilos Específicos para Páginas de Política (Términos, Privacidad, Reembolso) --- */
 
