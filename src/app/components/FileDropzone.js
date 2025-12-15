@@ -7,7 +7,6 @@ import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES }
 
 // CONSTANTE PARA LOCALSTORAGE
 const FREE_CREDITS_KEY = 'freeCreditsRemaining';
-// 🚨 Nota: La clave 'hasRegistered' se elimina de aquí ya que simplificamos la lógica de inicialización.
 
 // Función auxiliar para obtener el token de autenticación
 const getAuthHeaders = () => {
@@ -22,56 +21,59 @@ const getAuthHeaders = () => {
     return {};
 };
 
-// Función para inicializar o leer los créditos gratuitos desde localStorage (SIMPLIFICADA)
-// src/app/components/FileDropzone.js
-
+// Función para inicializar o leer los créditos gratuitos desde localStorage
 const initializeFreeCredits = () => {
-    if (typeof window !== 'undefined') {
-        const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
-        
-        if (storedCredits === null) {
-            // 🚨 CORRECCIÓN CLAVE: Si la clave no existe (null),
-            // asumimos que: 1) o es un usuario que se registró y la borramos, 
-            // 2) o es la primera vez.
-            // Para evitar que el usuario que se registró y cerró sesión recupere 5 créditos,
-            // SIMPLEMENTE DEVOLVEMOS 0. El proceso de optimización la creará si es necesario.
-            return 0; // Evitamos la re-inicialización.
-        }
-        
-        const parsedCredits = parseInt(storedCredits, 10);
+    if (typeof window !== 'undefined') {
+        const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
+        
+        if (storedCredits === null) {
+            // Si la clave no existe, devolvemos 0 para que el servidor decida o
+            // para que se inicie un nuevo conteo. Evita el valor MAX inicial.
+            return 0;
+        }
+        
+        const parsedCredits = parseInt(storedCredits, 10);
         
         if (isNaN(parsedCredits) || parsedCredits < 0) {
-            // Caso de dato corrupto, lo reseteamos a MAX para un nuevo intento.
+            // Si es corrupto, lo reseteamos a MAX para un nuevo intento.
             localStorage.setItem(FREE_CREDITS_KEY, MAX_FREE_OPTIMIZATIONS.toString());
             return MAX_FREE_OPTIMIZATIONS;
         }
 
-        // Si existe y es válido, lo leemos.
-        return parsedCredits;
-    }
-    // Para renderizado del lado del servidor (SSR)
-    return 0; // Valor seguro.
+        return parsedCredits;
+    }
+    return 0; // Valor seguro para SSR
 };
 
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
-    const fetchCreditsFromBackend = () => {
-        // Usamos API_URL que ya tienes importado
-        fetch(`${API_URL}/config/free-credits`)
-            .then(res => res.json())
-            .then(data => {
-                // Actualiza el estado con el valor REAL de la cookie
-                setCreditsRemaining(data.credits_remaining);
-            })
-            .catch(error => {
-                console.error("Error al obtener créditos gratuitos del backend:", error);
-                // Si falla, se mantiene el valor inicial de 5.
-            });
+    
+    // 🚨 CORRECCIÓN 1: Nueva función asíncrona para manejar errores y fallbacks.
+    const fetchCreditsFromBackend = async () => {
+        try {
+            const res = await fetch(`${API_URL}/config/free-credits`);
+            
+            if (!res.ok) {
+                // Si el servidor falla (ej: 404 o 500) pero la red está bien
+                throw new Error(`Server responded with status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            // Actualiza el estado con el valor REAL de la cookie del servidor
+            setCreditsRemaining(data.credits_remaining); 
+
+        } catch (error) {
+            console.error("Error al obtener créditos gratuitos del backend o falla de red.", error);
+            
+            // 🚨 FALLBACK: Si falla, leemos el valor de localStorage.
+            setCreditsRemaining(initializeFreeCredits()); 
+        }
     };
     
-    // 1. 🛑 CORRECCIÓN DE HYDRATION: Inicializamos el estado de manera segura (SSR-safe)
+    // 🛑 CORRECCIÓN 2: Inicializamos a NULL si NO está autenticado. 
+    // Esto evita mostrar el '5' mientras se espera la respuesta del backend.
     const [creditsRemaining, setCreditsRemaining] = useState(
-        isAuthenticated ? userCredits : MAX_FREE_OPTIMIZATIONS
+        isAuthenticated ? userCredits : null
     );
 
     // Estado para saber si ya hemos cargado la versión del cliente
@@ -84,23 +86,21 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     const [isOptimizing, setIsOptimizing] = useState(false);
     const [optimizationResults, setOptimizationResults] = useState([]);
 
-    // 2. 🚀 Carga de Créditos en el Cliente: Usamos useEffect para acceder a localStorage
+    // 3. 🚀 Carga de Créditos en el Cliente (Lógica de sincronización limpia)
     useEffect(() => {
-        // Este código solo se ejecuta una vez en el cliente, después de la hidratación inicial
         if (isAuthenticated) {
             // Usuario autenticado: Usa SIEMPRE los créditos del prop (del backend)
             setCreditsRemaining(userCredits);
             
-            // 🚨 LIMPIEZA ADICIONAL: Aseguramos que la clave de créditos gratuitos se borre
-            // por si el usuario se autenticó sin pasar por el formulario de registro.
+            // LIMPIEZA: Aseguramos que la clave de créditos gratuitos se borre
             if (typeof window !== 'undefined') {
-                 localStorage.removeItem(FREE_CREDITS_KEY);
+                localStorage.removeItem(FREE_CREDITS_KEY);
             }
         } else {
-            // Usuario no autenticado: Lee el valor persistente de localStorage
+            // Usuario no autenticado: Lee el valor REAL del servidor (cookie)
             fetchCreditsFromBackend();
         }
-        setIsClient(true); // Marcamos que el componente está "hidratado" en el cliente
+        setIsClient(true); 
     }, [isAuthenticated, userCredits]);
 
 
@@ -176,11 +176,10 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
- // ... (dentro de FileDropzone)
-
     // LÓGICA DE OPTIMIZACIÓN
     const handleOptimize = async () => {
-        if (files.length === 0 || isOptimizing) return;
+        // Protección adicional: solo procede si creditsRemaining tiene un valor cargado.
+        if (files.length === 0 || isOptimizing || creditsRemaining === null) return; 
         
         const filesToOptimize = files.length;
         
@@ -188,7 +187,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         if (creditsRemaining < filesToOptimize) {
             setFileError(`¡Créditos insuficientes! Necesitas ${filesToOptimize} créditos.`);
             
-            // Solo llama a onLimitReached si no está autenticado Y ya se ejecutó el useEffect (isClient)
             if (!isAuthenticated && onLimitReached && isClient) { 
                 setTimeout(onLimitReached, 1500);
             }
@@ -235,9 +233,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
 
                 } else {
                     // 3. Lógica No Autenticada: Calcula y persiste localmente
-                    
-                    // 🚨 CORRECCIÓN: Usamos `creditsRemaining` que ya fue leído del localStorage
-                    // o inicializado a MAX_FREE_OPTIMIZATIONS en el useEffect.
                     newCredits = creditsRemaining - filesToOptimize;
                     
                     if (isClient) { // Protección para el acceso a localStorage
@@ -282,10 +277,22 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         document.body.removeChild(link);
     };
 
-    const isOverLimit = creditsRemaining < files.length;
+    const isOverLimit = creditsRemaining !== null && creditsRemaining < files.length;
     
-    // 3. 🛡️ Protección de Renderizado: Solo mostramos el mensaje si es cliente y no está autenticado
-    const limitMessage = !isAuthenticated && isClient && (
+    // 4. 🛡️ Protección de Renderizado (Muestra estado de carga si creditsRemaining es null)
+    if (!isClient || creditsRemaining === null) {
+        return (
+            <section className="optimization-section">
+                <div className="dropzone-loading">
+                    <Zap size={40} className="spinner" />
+                    <p>Cargando estado de optimizaciones...</p>
+                </div>
+            </section>
+        );
+    }
+
+    // 5. Renderizado Final
+    const limitMessage = !isAuthenticated && (
         <small className="info-text">
             {creditsRemaining} optimizaciones gratuitas restantes.
         </small>
