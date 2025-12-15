@@ -1754,13 +1754,11 @@ a:hover {
 /* 🚨 Corrección del Texto a la Izquierda (Texto sigue hacia un lado) */
 /* Esto hace que el texto, encabezados y el botón se alineen a la izquierda 
    en la segunda columna del grid. */
-.founder-text {
-    text-align: left;
-}
+
 
 .founder-text h3 {
     margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 }
 
 
