@@ -1,4 +1,4 @@
-// src/app/page.js - VERSIÓN FINAL CON MENÚ DESPLEGABLE PROFESIONAL Y ESTABLE
+// src/app/page.js - VERSIÓN CORREGIDA FINAL: Layout Estable y Menú Desplegable Robusto
 
 'use client'; 
 import { useState } from 'react'; 
@@ -57,36 +57,37 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
 
 
 // ---------------------------------------------
-// 🟢 COMPONENTE: Header con Menú Desplegable (PROFESIONAL Y ESTABLE)
+// 🟢 COMPONENTE: Header con Menú Desplegable (CORREGIDO Y ROBUSTO)
 // ---------------------------------------------
 const Header = ({ onLoginClick }) => {
-    // Estado para controlar la apertura del menú de servicios
     const [isServicesOpen, setIsServicesOpen] = useState(false);
     
-    // Colores para el diseño profesional del menú
-    const accentColor = 'var(--accent-color, #1E90FF)'; // Color de acento
-    const textColor = 'var(--text-color, #333333)';     // Color de texto principal
-    const backgroundColor = 'white';                  // Fondo del menú
+    // Usamos variables de tus colores para estilos inline
+    const accentColor = 'var(--accent-color, #10B981)'; 
+    const primaryColor = 'var(--primary-color, #008080)';
+    const textColorPrimary = 'var(--text-color-primary, #1A202C)';
+    const bgCard = 'var(--bg-card, #FFFFFF)';
+    const borderColor = 'var(--border-color, #E2E8F0)';
+    const textColorSecondary = 'var(--text-color-secondary, #718096)';
+    const radiusMedium = 'var(--radius-medium, 12px)';
 
-    // Usamos padding 0 aquí para que el div interno controle el espaciado
     return (
-        <div style={{ padding: 0 }}>
+        // 🚨 CAMBIO CLAVE: El header ahora está contenido dentro del app-container 🚨
+        <div className="app-container" style={{ padding: 0 }}>
             <header className="header-main" style={{
-                // Usamos app-container para el ancho, pero forzamos el layout con flex
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '15px var(--app-padding, 20px)', // Usamos la variable de padding si existe, sino 20px
-                borderBottom: `1px solid var(--border-color, #EEEEEE)`, 
-                // Aseguramos que el header use el ancho completo si es necesario.
+                padding: '15px 0', // El padding lateral lo da el app-container
+                borderBottom: `1px solid ${borderColor}`, 
                 width: '100%', 
                 boxSizing: 'border-box'
             }}>
                 <div className="logo" style={{ display: 'flex', alignItems: 'center' }}>
                     {/* LOGO LINK A HOME */}
                     <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}> 
-                        <Sun size={24} color={accentColor} style={{ marginRight: '8px' }} />
-                        <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--primary-color)' }}>
+                        <Sun size={24} color={primaryColor} style={{ marginRight: '8px' }} />
+                        <h2 style={{ margin: 0, fontSize: '1.5rem', color: primaryColor }}>
                             OptiCommerce
                         </h2>
                     </Link>
@@ -94,9 +95,10 @@ const Header = ({ onLoginClick }) => {
                 
                 <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     
-                    {/* 1. BOTÓN DESPLEGABLE DE SERVICIOS */}
+                    {/* 1. CONTENEDOR ROBUSTO PARA EL MENÚ DESPLEGABLE */}
                     <div 
                         style={{ position: 'relative' }}
+                        // 🚨 SOLUCIÓN AL CIERRE INESPERADO: Los eventos están en el contenedor padre 🚨
                         onMouseEnter={() => setIsServicesOpen(true)}
                         onMouseLeave={() => setIsServicesOpen(false)}
                     >
@@ -105,7 +107,7 @@ const Header = ({ onLoginClick }) => {
                             border: 'none',
                             cursor: 'pointer',
                             fontSize: '1rem',
-                            color: textColor,
+                            color: textColorPrimary,
                             fontWeight: 500,
                             padding: '10px 15px',
                             display: 'flex',
@@ -114,8 +116,9 @@ const Header = ({ onLoginClick }) => {
                             transition: 'color 0.2s, background-color 0.2s',
                             borderRadius: '4px',
                             // Estilo cuando está abierto
-                            backgroundColor: isServicesOpen ? 'var(--primary-color-light, #F0F8FF)' : 'transparent',
+                            backgroundColor: isServicesOpen ? 'rgba(0, 128, 128, 0.1)' : 'transparent', // Teal más claro
                             outline: 'none',
+                            minWidth: '130px' // Asegura un ancho mínimo para que no salte
                         }}>
                             Servicios {isServicesOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                         </button>
@@ -124,21 +127,18 @@ const Header = ({ onLoginClick }) => {
                         {isServicesOpen && (
                             <div style={{
                                 position: 'absolute',
-                                top: 'calc(100% + 10px)', // Deja un espacio sutil entre el botón y el menú
-                                left: '50%', // Centra el menú bajo el botón
+                                top: 'calc(100% + 5px)', // Reducimos el espacio a 5px
+                                left: '50%', 
                                 transform: 'translateX(-50%)', 
                                 minWidth: '350px',
-                                background: backgroundColor,
-                                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px #E0E0E0', // Sombra profesional con borde sutil
-                                borderRadius: '12px',
+                                background: bgCard,
+                                boxShadow: 'var(--shadow-lg)', 
+                                borderRadius: radiusMedium,
                                 padding: '10px',
                                 zIndex: 1000,
-                                // Animación de entrada
-                                animation: 'fadeInDown 0.3s ease-out' 
+                                // Pequeño margen superior para que el mouse pueda transicionar
+                                marginTop: '5px' 
                             }}>
-                                {/* Estilos para la animación (deberían estar en un CSS global, pero los forzamos aquí si es necesario) 
-                                    @keyframes fadeInDown { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
-                                */}
                                 {SERVICE_LINKS.map((service) => (
                                     <Link 
                                         key={service.href} 
@@ -148,21 +148,20 @@ const Header = ({ onLoginClick }) => {
                                             alignItems: 'center',
                                             padding: '12px 15px',
                                             textDecoration: 'none',
-                                            color: textColor,
+                                            color: textColorPrimary,
                                             borderRadius: '8px',
                                             transition: 'background-color 0.2s',
                                             gap: '15px',
-                                            // Fondo sutil para el servicio principal
-                                            backgroundColor: service.isPrimary ? 'var(--accent-color-light, #E0F7FA)' : 'transparent'
+                                            backgroundColor: service.isPrimary ? 'rgba(16, 185, 129, 0.05)' : 'transparent'
                                         }}
                                         // Efecto hover profesional
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = service.isPrimary ? 'var(--accent-color-light, #CCEEFF)' : 'var(--border-color, #F5F5F5)'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = service.isPrimary ? 'var(--accent-color-light, #E0F7FA)' : 'transparent'}
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-page)'}
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = service.isPrimary ? 'rgba(16, 185, 129, 0.05)' : 'transparent'}
                                     >
-                                        <service.icon size={20} color={accentColor} />
+                                        <service.icon size={20} color={primaryColor} />
                                         <div>
                                             <strong style={{ display: 'block', fontWeight: 600, fontSize: '1rem' }}>{service.name}</strong>
-                                            <p style={{ fontSize: '0.85rem', color: 'var(--text-color-secondary, #777)', margin: 0 }}>{service.description}</p>
+                                            <p style={{ fontSize: '0.85rem', color: textColorSecondary, margin: 0 }}>{service.description}</p>
                                         </div>
                                     </Link>
                                 ))}
@@ -175,9 +174,9 @@ const Header = ({ onLoginClick }) => {
                         className="nav-link" 
                         style={{ 
                             fontWeight: 500, 
-                            color: textColor, 
+                            color: textColorPrimary, 
                             textDecoration: 'none',
-                            padding: '10px 15px' // Añadimos padding para que se alinee con el botón
+                            padding: '10px 15px' 
                         }}
                     >
                         Precios
@@ -187,11 +186,6 @@ const Header = ({ onLoginClick }) => {
                     <button className="btn btn-primary" onClick={() => onLoginClick('login')}> 
                         Iniciar Sesión
                     </button>
-                    
-                    {/* Botón de Menú Móvil (ocultar en desktop) - Mantenido por si acaso */}
-                    <button style={{ display: 'none' }} onClick={() => {}}>
-                        <Menu size={24} />
-                    </button>
                 </nav>
             </header>
         </div>
@@ -199,23 +193,13 @@ const Header = ({ onLoginClick }) => {
 };
 
 // ---------------------------------------------
-// 🟢 COMPONENTE: Footer Extendido (ESTABLE)
+// COMPONENTE: Footer Extendido (ESTABLE)
 // ---------------------------------------------
-const Footer = () => (
-    <footer className="footer-main" style={{
-        backgroundColor: 'var(--footer-bg-color, #F8F8F8)', 
-        padding: '40px 0',
-        marginTop: '60px' // Espacio extra para asegurar que no se "pegue" al contenido
-    }}>
+// (Mantengo la versión del footer que usa tus variables CSS)
+export const Footer = () => (
+    <footer className="footer-main">
         <div className="app-container">
-            <div className="footer-content" style={{
-                // Forzamos el grid de 4 columnas para evitar que se apachurre
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-                gap: '30px',
-                paddingBottom: '30px',
-                borderBottom: '1px solid #E0E0E0'
-            }}>
+            <div className="footer-content">
                 
                 <div className="footer-section">
                     <div className="logo">
@@ -232,11 +216,9 @@ const Footer = () => (
                     </small>
                 </div>
                 
-                {/* SECCIÓN CRÍTICA DE SEO: LISTADO DE SERVICIOS */}
                 <div className="footer-section">
                     <h4>Nuestros Servicios</h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {/* Usamos el array SERVICE_LINKS para la consistencia del SEO */}
                         {SERVICE_LINKS.map((service) => (
                             <Link 
                                 key={service.href} 
@@ -270,7 +252,6 @@ const Footer = () => (
                 </div>
             </div>
 
-            {/* Parte inferior del footer */}
             <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.8rem', color: 'var(--text-color-secondary)' }}>
                 <span>Optimización avanzada para un futuro web más rápido y ecológico.</span>
             </div>
@@ -278,12 +259,11 @@ const Footer = () => (
     </footer>
 );
 
-
 // ---------------------------------------------
 // COMPONENTE PRINCIPAL: Landing Page
 // ---------------------------------------------
 export default function LandingPage() {
-    // Estado para controlar la visibilidad y vista del modal
+    // ... Lógica y estado sin cambios ...
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalView, setModalView] = useState('login'); 
 
@@ -292,9 +272,7 @@ export default function LandingPage() {
         setIsModalOpen(true);
     };
 
-    // Función que se llama cuando el FileDropzone detecta el error 402 del Backend
     const handleFreeLimitReached = () => {
-        // Obligamos al modal a abrirse en la vista de REGISTRO, ya que es el siguiente paso lógico.
         handleOpenModal('register');
     };
 
@@ -302,6 +280,7 @@ export default function LandingPage() {
         <>
             <Header onLoginClick={handleOpenModal} /> 
 
+            {/* 🚨 CONTENIDO CENTRAL: Esto es lo que estaba 'apachurrado'. Al ser un contenedor independiente, recupera su espacio. 🚨 */}
             <main className="app-container">
                 
                 {/* SECCIÓN 1: HERO y ZONA DE ACCIÓN */}
@@ -320,7 +299,6 @@ export default function LandingPage() {
                             <p><CheckCircle size={18} color="var(--primary-color)" style={{ marginRight: '10px' }} /> Compresión sin pérdida de calidad.</p>
                         </div>
                         
-                        {/* BOTÓN que abre el Modal en vista 'register' */}
                         <button 
                             className="btn btn-primary btn-large" 
                             style={{ marginTop: '20px' }}
@@ -330,19 +308,18 @@ export default function LandingPage() {
                         </button>
                     </div>
                     
-                    {/* 🚨 FileDropzone en el lado derecho 🚨 */}
+                    {/* Dropzone */}
                     <div className="hero-right">
                         <FileDropzone 
                             isAuthenticated={false} 
                             onLimitReached={handleFreeLimitReached} 
                             userCredits={5} 
-                            // Aseguramos que el servicio por defecto sea la optimización de imagen (WebP)
                             defaultService='image' 
                         />
                     </div>
                 </section>
 
-                {/* SECCIÓN 2: INSTRUCCIONES BÁSICAS (CÓDIGO CENTRAL SIN ALTERACIONES) */}
+                {/* SECCIÓN 2: INSTRUCCIONES BÁSICAS */}
                 <section className="section-box section-instructions">
                     <h2 className="section-title">¿Cómo funciona OptiCommerce?</h2>
                     <div className="steps-grid">
@@ -365,14 +342,14 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* SECCIÓN 3: VENTAJAS Y CONFIANZA (CÓDIGO CENTRAL SIN ALTERACIONES) */}
+                {/* SECCIÓN 3: VENTAJAS Y CONFIANZA */}
                 <section className="section-box section-features">
                     <h2 className="section-title">¿Por qué OptiCommerce es la mejor opción?</h2>
                     <div className="features-grid">
                         <FeatureCard icon={Shield} title="Seguridad de Datos" description="Tus datos y archivos están protegidos con encriptación HTTPS. Total tranquilidad para tu negocio." color="#008080" />
-                        <FeatureCard icon={TrendingUp} title="Rendimiento Web Superior" description="Aumenta tu puntuación de PageSpeed y reduce tu tasa de rebote gracias a la velocidad de carga." color="#FF7F50" />
+                        <FeatureCard icon={TrendingUp} title="Rendimiento Web Superior" description="Aumenta tu puntuación de PageSpeed y reduce tu tasa de rebote gracias a la velocidad de carga." color="#10B981" />
                         <FeatureCard icon={Leaf} title="Conciencia Ecológica" description="Archivos más pequeños significan menos consumo de energía en transferencia de datos. Optimización sostenible." color="#40B5AD" />
-                        <FeatureCard icon={DollarSign} title="Ahorro en Hosting" description="Menos ancho de banda utilizado por tus visitantes se traduce en menores costos mensuales de alojamiento." color="#607D8B" />
+                        <FeatureCard icon={DollarSign} title="Ahorro en Hosting" description="Menos ancho de banda utilizado por tus visitantes se traduce en menores costos mensuales de alojamiento." color="#1A202C" />
                     </div>
                 </section>
                 
