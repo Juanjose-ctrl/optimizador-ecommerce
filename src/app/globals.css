@@ -1625,15 +1625,7 @@ a:hover {
 /* --- Estilos Globales para Componentes --- */
 
 /* Definición de Variables (Asegúrate de que tus colores principales estén definidos) */
-:root {
-    --primary-color: #1a73e8; /* Azul primario */
-    --accent-color: #ff9800;  /* Naranja de acento */
-    --text-color-primary: #333;
-    --text-color-secondary: #666;
-    --background-light: #f7f9fc;
-    --card-background: #ffffff;
-    --border-color: #ddd;
-}
+
 
 /* Estilos de Títulos y Subtítulos */
 .main-pricing-title, .title-contact, .title-about, .title-faq {
