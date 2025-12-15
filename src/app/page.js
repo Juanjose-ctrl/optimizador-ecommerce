@@ -98,7 +98,7 @@ const Footer = () => (
 
                 <div className="footer-section">
                     <h4>Empresa</h4>
-                    <Link href="/about" className='footer-link'>Sobre Nosotro</Link>
+                    <Link href="/about" className='footer-link'>Sobre Nosotros</Link>
                     <Link href="/contact" className='footer-link'>Contacto</Link>
                     <Link href="/faq" className='footer-link'>Preguntas Frecuentes (FAQ)</Link>
                 </div>
