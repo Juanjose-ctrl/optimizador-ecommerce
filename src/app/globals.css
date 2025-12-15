@@ -328,7 +328,6 @@ a:hover {
     color: #EF4444;
     background-color: #FEF2F2;
 }
-
 /* ========================================================================
    7. SECCION HERO
    ======================================================================== */
@@ -339,8 +338,9 @@ a:hover {
     align-items: start;
     padding: 80px 0;
 }
+
 .hero-left {
-    max-width: 100%;
+    max-width: 600px;
 }
 
 .hero-title {
@@ -361,7 +361,7 @@ a:hover {
 }
 
 .benefit-list {
-    margin-top: 32px;
+    margin-bottom: 20px;
 }
 
 .benefit-list p {
@@ -377,6 +377,7 @@ a:hover {
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
 }
 
 /* ========================================================================
@@ -1551,12 +1552,12 @@ a:hover {
         grid-template-columns: 1fr;
         gap: 40px;
         padding: 80px 0 60px;
-        text-align: center;
     }
 
     .hero-left,
     .hero-right {
         max-width: 100%;
+        text-align: center;
     }
 
     .hero-title {
