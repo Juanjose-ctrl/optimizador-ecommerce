@@ -1739,40 +1739,30 @@ a:hover {
 .founder-image-placeholder {
     width: 300px;
     height: 300px;
-    border-radius: 0;      /* ← CLAVE */
+    border-radius: 16px; /* profesional, no círculo */
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .founder-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0;      /* ← CLAVE */
+    border-radius: 16px;
 }
 
-.founder-image-placeholder {
-    border-radius: 12px;
-}
-
-.founder-image {
-    border-radius: 12px;
-}
 
 /* 🚨 Corrección del Texto a la Izquierda (Texto sigue hacia un lado) */
 /* Esto hace que el texto, encabezados y el botón se alineen a la izquierda 
    en la segunda columna del grid. */
 .founder-text {
-    text-align: left; /* Asegura que el texto comience a la izquierda */
-    padding: 0;
-    margin: 0;
+    text-align: left;
 }
 
 .founder-text h3 {
-    text-align: left;
+    margin-top: 0;
+    margin-bottom: 15px;
 }
+
 
 /* --- Estilos Específicos de FAQ --- */
 .faq-sections-container {
@@ -1849,15 +1839,21 @@ a:hover {
     
     }
     .founder-bio {
-        flex-direction: column; /* Apila imagen arriba, texto abajo */
-        text-align: center;
-        gap: 20px;
-    }
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 50px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
     
     .founder-text {
         text-align: center; /* Centra el texto en móvil */
     }
 
+    
+}
 
 /* --- Estilos Específicos para Páginas de Política (Términos, Privacidad, Reembolso) --- */
 
