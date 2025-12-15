@@ -97,6 +97,56 @@ a:hover {
     z-index: 100;
     backdrop-filter: blur(10px);
     background-color: rgba(255, 255, 255, 0.95);
+
+    /* ===== HEADER ===== */
+.header-main {
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    z-index: 100;
+}
+
+/* Contenedor del dropdown */
+.nav-dropdown {
+    position: relative;
+}
+
+/* Zona de tolerancia invisible */
+.nav-dropdown::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: -20px;
+    right: -20px;
+    height: 20px;
+}
+
+/* Dropdown */
+.nav-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 360px;
+    background: var(--bg-card);
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* Items */
+.nav-dropdown-menu a {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    border-radius: 10px;
+    transition: background .2s ease;
+}
+
+.nav-dropdown-menu a:hover {
+    background: var(--bg-page);
+}
+
 }
 
 .logo {
@@ -1234,13 +1284,7 @@ a:hover {
 }
 
 /* --- Header y Footer (Estilos básicos) --- */
-.header-main {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--border-color); /* Si tienes border-color */
-}
+
 
 .logo {
     display: flex;
@@ -2048,14 +2092,8 @@ h1, h2, h3, h4 {
    3. HEADER Y NAVEGACIÓN
    ========================================================================= */
 
-.header-main {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid var(--border-color); 
-    width: 100%;
-}
+
+
 
 /* Estilos de Link para navegación */
 .nav-link {
@@ -2319,3 +2357,71 @@ h1, h2, h3, h4 {
     }
 }
 
+/* ===== LAYOUT BASE ===== */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Ritmo vertical global */
+main > section {
+    margin-bottom: 120px;
+}
+
+/* ===== HERO ===== */
+.section-hero {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 80px;
+    padding: 120px 0 80px;
+    align-items: center;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 4vw, 3.2rem);
+    line-height: 1.15;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    max-width: 520px;
+    margin-top: 16px;
+}
+
+/* ===== BENEFITS ===== */
+.benefit-list p {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+}
+
+/* ===== SECTIONS ===== */
+.section-box {
+    padding: 80px 60px;
+    border-radius: 24px;
+    background: var(--bg-card);
+}
+
+/* ===== TITLES ===== */
+.section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+/* ===== GRIDS ===== */
+.steps-grid,
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 40px;
+}
+nav a,
+nav button {
+    border-radius: 10px;
+}
+
+nav a:hover {
+    background: var(--bg-page);
+}
