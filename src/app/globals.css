@@ -1919,3 +1919,45 @@ a:hover {
     border-bottom: none; /* Quitamos la línea para diferenciarlo del h2 */
     padding-bottom: 0;
 }
+
+/* --- Estilos para el Selector de Servicio (Pestañas) --- */
+
+.service-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color); /* Separador suave */
+}
+
+.service-tab-button {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap; /* Evita que el texto se rompa */
+}
+
+.service-tab-button:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: var(--bg-color-light); /* Fondo más claro al pasar el ratón */
+}
+
+/* Estilo para la pestaña activa/seleccionada */
+.service-tab-button.active {
+    background-color: var(--primary-color);
+    color: var(--text-color-inverted); /* Texto blanco o claro */
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.2);
+}
+
+.service-tab-button.active:hover {
+    opacity: 0.9; /* Pequeño efecto de hover */
+}
