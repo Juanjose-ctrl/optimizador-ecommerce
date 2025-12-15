@@ -50,7 +50,7 @@ export default function TermsPage() {
                     
                     <h2>1. Acuerdo Vinculante y Definiciones</h2>
                     <p>
-                        OptiCommerce es un servicio propiedad y operado por **OptiCommerce S.A.S.** (en adelante, "la Compañía"). Al acceder o utilizar la plataforma OptiCommerce, usted (el "Usuario") acepta estos Términos, que constituyen un acuerdo legal vinculante.
+                        OptiCommerce es un servicio propiedad y operado por **OptiCommerce S.A.S.** . Al acceder o utilizar la plataforma OptiCommerce, usted (el "Usuario") acepta estos Términos, que constituyen un acuerdo legal vinculante.
                     </p>
                     
                     <h2>2. Descripción del Servicio</h2>
