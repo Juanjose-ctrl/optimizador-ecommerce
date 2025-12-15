@@ -54,7 +54,7 @@ const PlanCard = ({ plan, onPurchase }) => {
     // =================================================================
     const limitDisplay = plan.image_limit === 50000 
         ? "Personalizado a tus necesidades" 
-        : `Personalizado a tus necesidades`;
+        : `${plan.image_limit} créditos`; // correción
 
     return (
         // Aplicamos la clase 'recommended' si cumple la condición
