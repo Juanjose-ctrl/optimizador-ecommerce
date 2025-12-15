@@ -1962,3 +1962,360 @@ a:hover {
     opacity: 0.9; /* Pequeño efecto de hover */
 }
 
+/* =========================================================================
+   1. RESET BÁSICO Y LAYOUT GENERAL
+   ========================================================================= */
+
+/* Reset básico para asegurar la consistencia */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    /* Usando la variable de fondo de la página */
+    background-color: var(--bg-page); 
+    /* Usando la variable de texto principal */
+    color: var(--text-color-primary); 
+    line-height: 1.6;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Puedes definir esto también en :root */
+}
+
+/* Contenedor principal para centrar y limitar el ancho */
+.app-container {
+    max-width: 1200px; /* Define el max-width en :root si lo deseas */
+    margin: 0 auto;
+    padding: 0 30px; /* Define el padding global en :root si lo deseas */
+}
+
+/* Contenedor general de secciones */
+.section-box {
+    margin-top: 80px;
+}
+
+
+/* =========================================================================
+   2. TYPOGRAPHY Y CTA (Call-to-Action)
+   ========================================================================= */
+
+/* Títulos principales */
+h1, h2, h3, h4 {
+    color: var(--text-color-primary);
+    line-height: 1.2;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* Botones (Clave para la estética) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 25px;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+
+.btn-primary {
+    /* Usando tus variables accent y text-light */
+    background-color: var(--accent-color); 
+    color: var(--text-color-light); 
+}
+
+.btn-primary:hover {
+    /* Usando tu sombra grande */
+    opacity: 0.9;
+    box-shadow: var(--shadow-md); 
+}
+
+.btn-large {
+    padding: 15px 35px;
+    font-size: 1.1rem;
+}
+
+/* =========================================================================
+   3. HEADER Y NAVEGACIÓN
+   ========================================================================= */
+
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color); 
+    width: 100%;
+}
+
+/* Estilos de Link para navegación */
+.nav-link {
+    color: var(--text-color-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: var(--accent-color);
+}
+
+/* Aseguramos que el logo link mantenga su estilo */
+.logo a {
+    text-decoration: none;
+}
+
+
+/* =========================================================================
+   4. SECCIÓN HERO (La parte que no debe colapsar)
+   ========================================================================= */
+
+.section-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    padding-top: 60px;
+    padding-bottom: 80px;
+    gap: 60px; 
+}
+
+.hero-left {
+    flex: 1;
+    max-width: 55%; 
+}
+
+.hero-right {
+    flex: 1;
+    max-width: 45%; 
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    /* Usando la variable de texto secundario */
+    font-size: 1.3rem;
+    color: var(--text-color-secondary); 
+    margin-bottom: 30px;
+}
+
+.benefit-list p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 1.05rem;
+}
+
+/* =========================================================================
+   5. SECCIONES DE INSTRUCCIONES Y FEATURES (Grid Layouts)
+   ========================================================================= */
+
+
+/* Estilos de la grilla de pasos (INSTRUCCIONES) */
+.steps-grid {
+    display: grid;
+    /* 4 columnas con mínimo de 250px */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 30px;
+}
+
+.step-item {
+    text-align: center;
+    padding: 25px;
+    /* Usando la variable de fondo de card */
+    background-color: var(--bg-card); 
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+}
+
+.step-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    /* Usando la variable de color principal (Teal) */
+    background-color: var(--primary-color); 
+    color: var(--text-color-light);
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+/* Estilos de la grilla de features (VENTAJAS) */
+.features-grid {
+    display: grid;
+    /* 4 columnas con mínimo de 250px */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 30px;
+}
+
+.feature-card {
+    padding: 30px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-medium);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.3s;
+}
+
+.feature-card:hover {
+    border-color: var(--accent-color);
+}
+
+.icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.card-description {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+}
+
+
+/* =========================================================================
+   6. FOOTER
+   ========================================================================= */
+
+.footer-main {
+    /* Usando tu variable de fondo del footer */
+    background-color: var(--bg-footer); 
+    padding: 40px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+    display: grid;
+    /* Mínimo 200px por columna, se ajusta a 4 columnas */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.footer-section h4 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: var(--text-color-primary);
+}
+
+.footer-link {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
+    color: var(--accent-color);
+}
+
+
+/* =========================================================================
+   7. RESPONSIVIDAD (Media Queries para tablets y móviles)
+   ========================================================================= */
+
+/* Para pantallas más pequeñas (máximo 900px - tablets) */
+@media (max-width: 900px) {
+    .app-container {
+        padding: 0 20px;
+    }
+
+    .section-hero {
+        flex-direction: column; 
+        padding-top: 40px;
+        padding-bottom: 40px;
+        gap: 40px;
+        text-align: center; 
+    }
+
+    .hero-left, .hero-right {
+        max-width: 100%; 
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .benefit-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .benefit-list p {
+        justify-content: center;
+    }
+
+    .steps-grid, .features-grid {
+        /* Pasamos de 4 a 2 columnas en tablets */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .footer-content {
+        /* Aseguramos que el footer se ajuste bien en menos columnas */
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+/* Para móviles (máximo 600px) */
+@media (max-width: 600px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    /* El header solo muestra el logo y los botones principales en móvil */
+    .header-main nav {
+        gap: 10px;
+    }
+
+    .steps-grid, .features-grid {
+        /* Una sola columna en móvil */
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        /* Dos columnas simples para el footer en móvil */
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 20px;
+    }
+}
+
