@@ -28,7 +28,7 @@ const Footer = () => (
             <div className="footer-links">
                 <Link href="/privacidad">Política de Privacidad</Link>
                 <Link href="/terminos">Términos de Servicio</Link>
-                <Link href="/contacto">Contacto</Link>
+                <Link href="/contact">Contacto</Link>
             </div>
             <p className="footer-copy">© {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.</p>
         </div>
@@ -118,7 +118,7 @@ export default function FAQPage() {
                 
                 <div className="faq-cta-bottom">
                     <p>¿No encuentras tu respuesta? ¡Estamos para ayudarte!</p>
-                    <Link href="/contacto" className="btn btn-primary">
+                    <Link href="/contact" className="btn btn-primary">
                         Contáctanos
                     </Link>
                 </div>

@@ -28,7 +28,7 @@ const Footer = () => (
             <div className="footer-links">
                 <Link href="/privacidad">Política de Privacidad</Link>
                 <Link href="/terminos">Términos de Servicio</Link>
-                <Link href="/contacto">Contacto</Link>
+                <Link href="/contact">Contacto</Link>
             </div>
             <p className="footer-copy">© {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.</p>
         </div>
@@ -93,9 +93,9 @@ export default function AboutPage() {
                         <div className="founder-text">
                             <h3>Juan José Guerrero Vásquez</h3>
                             <p>
-                                Como desarrollador principal, Juan José Guerrero creó OptiCommerce con una visión simple: hacer que los sitios web fueran más rápidos. Entendiendo los desafíos de las tiendas en línea con imágenes pesadas, dedicó su experiencia en optimización de backend para construir una solución que fuera potente, fácil de usar y accesible para todos.
+                          Como desarrollador principal, Juan José Guerrero creó OptiCommerce con una visión simple: hacer que los sitios web fueran más rápidos. Entendiendo los desafíos de las tiendas en línea con imágenes pesadas, dedicó su experiencia en optimización de backend para construir una solución que fuera potente, fácil de usar y accesible para todos.
                             </p>
-                            <Link href="/contacto" className="btn btn-primary">
+                            <Link href="/contact" className="btn btn-primary">
                                 Contacta a Juan José
                             </Link>
                         </div>
