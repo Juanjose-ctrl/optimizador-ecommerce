@@ -333,10 +333,12 @@ a:hover {
    ======================================================================== */
 .section-hero {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
     align-items: start;
     padding: 80px 0;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .hero-left {
