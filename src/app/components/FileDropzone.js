@@ -55,6 +55,19 @@ const initializeFreeCredits = () => {
 
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
+    const fetchCreditsFromBackend = () => {
+        // Usamos API_URL que ya tienes importado
+        fetch(`${API_URL}/config/free-credits`)
+            .then(res => res.json())
+            .then(data => {
+                // Actualiza el estado con el valor REAL de la cookie
+                setCreditsRemaining(data.credits_remaining);
+            })
+            .catch(error => {
+                console.error("Error al obtener créditos gratuitos del backend:", error);
+                // Si falla, se mantiene el valor inicial de 5.
+            });
+    };
     
     // 1. 🛑 CORRECCIÓN DE HYDRATION: Inicializamos el estado de manera segura (SSR-safe)
     const [creditsRemaining, setCreditsRemaining] = useState(
@@ -85,8 +98,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
             }
         } else {
             // Usuario no autenticado: Lee el valor persistente de localStorage
-            const persistedCredits = initializeFreeCredits();
-            setCreditsRemaining(persistedCredits);
+            fetchCreditsFromBackend();
         }
         setIsClient(true); // Marcamos que el componente está "hidratado" en el cliente
     }, [isAuthenticated, userCredits]);
