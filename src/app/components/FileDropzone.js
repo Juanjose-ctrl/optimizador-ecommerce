@@ -2,9 +2,21 @@
 
 import { useState, useRef, useEffect } from 'react'; 
 import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-react'; 
-import { API_URL, MAX_FILE_SIZE_MB, ALLOWED_MIME_TYPES } from '../../config/api';
+import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
 
-// Función auxiliar para obtener el token de autenticación
+// 🔧 CLAVE: Usamos un identificador único para el navegador
+const getBrowserId = () => {
+    if (typeof window === 'undefined') return null;
+    
+    let browserId = localStorage.getItem('browser_id');
+    if (!browserId) {
+        // Generar un ID único para este navegador
+        browserId = `browser_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem('browser_id', browserId);
+    }
+    return browserId;
+};
+
 const getAuthHeaders = () => {
     if (typeof window !== 'undefined') {
         const accessToken = localStorage.getItem('accessToken');
@@ -19,29 +31,8 @@ const getAuthHeaders = () => {
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
-    // 🔧 CORRECCIÓN: Función que obtiene créditos REALES del servidor
-    const fetchCreditsFromBackend = async () => {
-        try {
-            const res = await fetch(`${API_URL}/config/free-credits`, {
-                // 🚨 CRÍTICO: Incluir credentials para enviar/recibir cookies
-                credentials: 'include'
-            });
-            
-            if (!res.ok) throw new Error(`Server status: ${res.status}`);
-
-            const data = await res.json();
-            return data.credits_remaining; 
-
-        } catch (error) {
-            console.error("Error al obtener créditos del backend:", error);
-            return 0; // Fallback seguro
-        }
-    };
-    
-    // Estado: null significa "cargando", número significa "valor conocido"
     const [creditsRemaining, setCreditsRemaining] = useState(null);
     const [isClient, setIsClient] = useState(false); 
-
     const [isDragActive, setIsDragActive] = useState(false);
     const [files, setFiles] = useState([]);
     const fileInputRef = useRef(null);
@@ -49,14 +40,28 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     const [isOptimizing, setIsOptimizing] = useState(false);
     const [optimizationResults, setOptimizationResults] = useState([]);
 
-    // 🚀 Lógica de Carga de Créditos (CORREGIDA)
+    // 🔧 NUEVA FUNCIÓN: Obtener créditos con browser_id
+    const fetchCreditsFromBackend = async () => {
+        try {
+            const browserId = getBrowserId();
+            const res = await fetch(`${API_URL}/config/free-credits?browser_id=${browserId}`);
+            
+            if (res.ok) {
+                const data = await res.json();
+                return data.credits_remaining;
+            }
+        } catch (error) {
+            console.error("Error al obtener créditos del backend:", error);
+        }
+        
+        return MAX_FREE_OPTIMIZATIONS; // Fallback
+    };
+
     useEffect(() => {
         const loadCredits = async () => {
             if (isAuthenticated) {
-                // Usuario autenticado: usar créditos desde props
                 setCreditsRemaining(userCredits);
             } else {
-                // Usuario NO autenticado: consultar al servidor
                 const credits = await fetchCreditsFromBackend();
                 setCreditsRemaining(credits);
             }
@@ -65,7 +70,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
 
         loadCredits();
     }, [isAuthenticated, userCredits]);
-
 
     const validateFile = (file) => {
         if (!ALLOWED_MIME_TYPES.includes(file.type)) {
@@ -139,13 +143,11 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     
-    // 🔧 LÓGICA DE OPTIMIZACIÓN (CORREGIDA)
     const handleOptimize = async () => {
         if (files.length === 0 || isOptimizing || creditsRemaining === null) return; 
         
         const filesToOptimize = files.length;
         
-        // Verificación de créditos
         if (creditsRemaining < filesToOptimize) {
             setFileError(`¡Créditos insuficientes! Necesitas ${filesToOptimize} créditos.`);
             
@@ -165,6 +167,11 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 formData.append('files', file);
             });
             
+            // 🔧 Agregar browser_id para usuarios no autenticados
+            if (!isAuthenticated) {
+                formData.append('browser_id', getBrowserId());
+            }
+            
             const authHeaders = isAuthenticated ? getAuthHeaders() : {}; 
             
             const endpoint = isAuthenticated 
@@ -175,19 +182,15 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 method: 'POST',
                 headers: authHeaders,
                 body: formData,
-                // 🚨 CRÍTICO: Incluir credentials para cookies
-                credentials: 'include'
             });
 
             if (response.ok) {
                 const data = await response.json();
                 setOptimizationResults(data.results);
                 
-                // 🔧 CORRECCIÓN: Actualizar créditos desde la respuesta del servidor
                 if (data.credits_remaining !== undefined) {
                     setCreditsRemaining(data.credits_remaining);
                 } else {
-                    // Fallback: restar localmente si el servidor no envía el valor
                     setCreditsRemaining(prev => Math.max(0, prev - filesToOptimize));
                 }
 
@@ -200,7 +203,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
             } else if (response.status === 402) {
                 setFileError("¡Límite de créditos alcanzado! Regístrate para obtener más.");
                 
-                // 🔧 CORRECCIÓN: Re-sincronizar con el servidor después del error 402
                 if (!isAuthenticated) {
                     const updatedCredits = await fetchCreditsFromBackend();
                     setCreditsRemaining(updatedCredits);
@@ -234,7 +236,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
 
     const isOverLimit = creditsRemaining !== null && creditsRemaining < files.length;
     
-    // Mostrar estado de carga mientras se obtienen los créditos
     if (!isClient || creditsRemaining === null) {
         return (
             <section className="optimization-section">
