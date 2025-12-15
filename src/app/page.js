@@ -77,7 +77,7 @@ const Footer = () => (
                         © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
                     </small>
                     <small style={{ display: 'block', marginTop: '5px', color: 'var(--text-color-secondary)' }}>
-                        Desarrollado por [Tu Nombre/Compañía Legal].
+                        Desarrollado por Juan José Guerrero.
                     </small>
                 </div>
                 
@@ -98,9 +98,9 @@ const Footer = () => (
 
                 <div className="footer-section">
                     <h4>Empresa</h4>
-                    <a className='footer-link'>Sobre Nosotros</a>
-                    <a className='footer-link'>Contacto</a>
-                    <a className='footer-link'>Preguntas Frecuentes (FAQ)</a>
+                    <Link href="/about" className='footer-link'>Sobre Nosotro</Link>
+                    <Link href="/contact" className='footer-link'>Contacto</Link>
+                    <Link href="/faq" className='footer-link'>Preguntas Frecuentes (FAQ)</Link>
                 </div>
             </div>
         </div>
