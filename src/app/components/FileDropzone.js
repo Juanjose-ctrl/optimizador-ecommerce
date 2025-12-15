@@ -21,21 +21,15 @@ const getAuthHeaders = () => {
     return {};
 };
 
-// Función para inicializar o leer los créditos gratuitos desde localStorage
+// Se mantiene esta función, pero SÓLO se usa para persistir el valor después de optimizar
 const initializeFreeCredits = () => {
     if (typeof window !== 'undefined') {
         const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
-        
-        if (storedCredits === null) {
-            // Si la clave no existe, devolvemos 0 para que el servidor decida o
-            // para que se inicie un nuevo conteo. Evita el valor MAX inicial.
-            return 0;
-        }
+        if (storedCredits === null) return 0;
         
         const parsedCredits = parseInt(storedCredits, 10);
         
         if (isNaN(parsedCredits) || parsedCredits < 0) {
-            // Si es corrupto, lo reseteamos a MAX para un nuevo intento.
             localStorage.setItem(FREE_CREDITS_KEY, MAX_FREE_OPTIMIZATIONS.toString());
             return MAX_FREE_OPTIMIZATIONS;
         }
@@ -48,30 +42,27 @@ const initializeFreeCredits = () => {
 
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5 }) { 
     
-    // 🚨 CORRECCIÓN 1: Nueva función asíncrona para manejar errores y fallbacks.
+    // 🚨 CORRECCIÓN 1: La función de fetch ahora usa 0 como fallback estricto si falla la API.
     const fetchCreditsFromBackend = async () => {
         try {
             const res = await fetch(`${API_URL}/config/free-credits`);
             
-            if (!res.ok) {
-                // Si el servidor falla (ej: 404 o 500) pero la red está bien
-                throw new Error(`Server responded with status: ${res.status}`);
-            }
+            // Si la respuesta no es OK, lanza un error
+            if (!res.ok) throw new Error(`Server status: ${res.status}`);
 
             const data = await res.json();
-            // Actualiza el estado con el valor REAL de la cookie del servidor
+            // Actualiza el estado con el valor REAL de la cookie
             setCreditsRemaining(data.credits_remaining); 
 
         } catch (error) {
-            console.error("Error al obtener créditos gratuitos del backend o falla de red.", error);
+            console.error("Error al obtener créditos gratuitos del backend. Asumiendo 0 para proteger el límite.", error);
             
-            // 🚨 FALLBACK: Si falla, leemos el valor de localStorage.
-            setCreditsRemaining(initializeFreeCredits()); 
+            // 🚨 FALLBACK DEFINITIVO: Si el backend falla o no hay cookie válida, ASUMIMOS 0.
+            setCreditsRemaining(0); 
         }
     };
     
-    // 🛑 CORRECCIÓN 2: Inicializamos a NULL si NO está autenticado. 
-    // Esto evita mostrar el '5' mientras se espera la respuesta del backend.
+    // 🛑 CORRECCIÓN 2: Inicializamos a NULL si NO está autenticado. Esto previene el '5' mágico.
     const [creditsRemaining, setCreditsRemaining] = useState(
         isAuthenticated ? userCredits : null
     );
@@ -86,18 +77,16 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     const [isOptimizing, setIsOptimizing] = useState(false);
     const [optimizationResults, setOptimizationResults] = useState([]);
 
-    // 3. 🚀 Carga de Créditos en el Cliente (Lógica de sincronización limpia)
+    // 3. 🚀 Lógica de Carga de Créditos en el Cliente
     useEffect(() => {
         if (isAuthenticated) {
-            // Usuario autenticado: Usa SIEMPRE los créditos del prop (del backend)
             setCreditsRemaining(userCredits);
-            
             // LIMPIEZA: Aseguramos que la clave de créditos gratuitos se borre
             if (typeof window !== 'undefined') {
                 localStorage.removeItem(FREE_CREDITS_KEY);
             }
         } else {
-            // Usuario no autenticado: Lee el valor REAL del servidor (cookie)
+            // Usuario no autenticado: Obtener valor REAL del servidor
             fetchCreditsFromBackend();
         }
         setIsClient(true); 
@@ -178,7 +167,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     
     // LÓGICA DE OPTIMIZACIÓN
     const handleOptimize = async () => {
-        // Protección adicional: solo procede si creditsRemaining tiene un valor cargado.
         if (files.length === 0 || isOptimizing || creditsRemaining === null) return; 
         
         const filesToOptimize = files.length;
@@ -226,16 +214,20 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 let newCredits;
 
                 if (isAuthenticated) {
-                    // 2. Lógica Autenticada: Obtiene del backend (prioridad) o calcula (fallback)
+                    // 2. Lógica Autenticada
                     newCredits = data.credits_remaining !== undefined 
                         ? data.credits_remaining 
                         : creditsRemaining - filesToOptimize;
 
                 } else {
-                    // 3. Lógica No Autenticada: Calcula y persiste localmente
-                    newCredits = creditsRemaining - filesToOptimize;
+                    // 3. Lógica No Autenticada
+                    // Obtenemos el nuevo valor del backend si está disponible (lo ideal) o lo calculamos.
+                    newCredits = data.credits_remaining !== undefined 
+                        ? data.credits_remaining 
+                        : creditsRemaining - filesToOptimize;
                     
-                    if (isClient) { // Protección para el acceso a localStorage
+                    // Persistimos el valor correcto en localStorage SOLO si la optimización fue exitosa
+                    if (typeof window !== 'undefined') {
                         localStorage.setItem(FREE_CREDITS_KEY, newCredits.toString());
                     }
                 }
