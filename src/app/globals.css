@@ -1744,17 +1744,6 @@ a:hover {
     border-radius: 12px;
 }
 
-
-.founder-bio {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 40px;
-    align-items: center;
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 30px;
-}
-
 /* globals.css */
 
 .founder-image-placeholder {
@@ -1848,10 +1837,7 @@ a:hover {
     }
     .philosophy-grid {
         grid-template-columns: 1fr;
-    }
-    .founder-bio {
-        grid-template-columns: 1fr;
-        text-align: center;
+    
     }
     .founder-image-placeholder {
         margin: 0 auto 20px auto;
