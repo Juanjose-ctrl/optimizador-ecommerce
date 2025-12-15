@@ -2425,3 +2425,146 @@ nav button {
 nav a:hover {
     background: var(--bg-page);
 }
+
+/* =========================================
+   LANDING PAGE — AISLAMIENTO TOTAL
+   ========================================= */
+.app-container {
+  /* Variables limpias SOLO para esta página */
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+
+  --primary-color: #008080;
+  --accent-color: #10b981;
+
+  --text-color-primary: #1a202c;
+  --text-color-secondary: #718096;
+
+  --border-color: #e2e8f0;
+
+  --radius-small: 8px;
+  --radius-medium: 14px;
+  --radius-large: 24px;
+
+  --shadow-sm: 0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg: 0 20px 40px rgba(0,0,0,.08);
+}
+/* Neutralizar estilos globales dentro de la landing */
+.app-container section {
+  margin: 0;
+  padding: 0;
+}
+
+.app-container h1,
+.app-container h2,
+.app-container h3,
+.app-container p {
+  margin: 0;
+}
+
+/* Layout base */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Espaciado entre secciones */
+.app-container > section {
+  margin-bottom: 120px;
+}
+
+/* Hero */
+.section-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  padding: 120px 0;
+  align-items: center;
+}
+
+/* ======================================================
+   LANDING PAGE – CONTROL TOTAL (NO TOCAR ARRIBA)
+   ====================================================== */
+.app-container {
+  /* Colores */
+  --primary-color: #008080;
+  --accent-color: #10b981;
+
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+
+  --text-color-primary: #1a202c;
+  --text-color-secondary: #718096;
+
+  --border-color: #e2e8f0;
+
+  /* Radios */
+  --radius-small: 8px;
+  --radius-medium: 14px;
+  --radius-large: 24px;
+
+  /* Sombras */
+  --shadow-sm: 0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg: 0 20px 40px rgba(0,0,0,.08);
+}
+
+/* Reset local SOLO para la landing */
+.app-container section,
+.app-container header,
+.app-container footer {
+  margin: 0;
+  padding: 0;
+}
+
+.app-container h1,
+.app-container h2,
+.app-container h3,
+.app-container h4,
+.app-container p {
+  margin: 0;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.app-container > section {
+  margin-bottom: 120px;
+}
+
+.section-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  padding: 120px 0;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 3rem;
+  line-height: 1.15;
+  color: var(--text-color-primary);
+}
+
+.hero-subtitle {
+  margin-top: 16px;
+  max-width: 520px;
+  color: var(--text-color-secondary);
+}
+
+.benefit-list {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-box {
+  background: var(--bg-card);
+  padding: 80px 60px;
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-sm);
+}
