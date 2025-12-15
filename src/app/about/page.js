@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Sun, Target, Zap, TrendingUp, Code } from 'lucide-react'; 
+import Image from 'next/image';
 
 // Componentes replicados (Header y Footer)
 const Header = () => ( 
@@ -80,10 +81,17 @@ export default function AboutPage() {
                     <div className="founder-bio">
                         {/* Podrías reemplazar este div con una etiqueta <img> si tienes una foto */}
                         <div className="founder-image-placeholder">
-                            <Code size={60} color="var(--primary-color)" />
+    <Image
+        // 🚨 2. RUTA ABSOLUTA: /images/ es relativo a la carpeta /public
+        src="/images/juan-jose.jpg" 
+        alt="Foto del fundador, Juan José Guerrero Vásquez"
+        width={300}    // Debe coincidir con el ancho del CSS
+        height={300}   // Debe coincidir con el alto del CSS
+        className="founder-image" // Para aplicar tus estilos (ej: border-radius: 50%)
+    />
                         </div>
                         <div className="founder-text">
-                            <h3>Juan José Guerrero Vz</h3>
+                            <h3>Juan José Guerrero Vásquez</h3>
                             <p>
                                 Como desarrollador principal, Juan José Guerrero creó OptiCommerce con una visión simple: hacer que los sitios web fueran más rápidos. Entendiendo los desafíos de las tiendas en línea con imágenes pesadas, dedicó su experiencia en optimización de backend para construir una solución que fuera potente, fácil de usar y accesible para todos.
                             </p>

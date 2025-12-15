@@ -1,5 +1,9 @@
+// app/layout.js - VERSIÓN CORREGIDA
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+// 🚨 Importar el nuevo componente
+import ScrollToTop from './components/ScrollToTop'; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +24,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        {/* 🚨 INSERTAR AQUÍ: Se ejecuta en cada render y detecta el cambio de ruta */}
+        <ScrollToTop />
+        
         {children}
       </body>
     </html>

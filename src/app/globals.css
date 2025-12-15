@@ -1744,7 +1744,13 @@ a:hover {
     align-items: center;
     justify-content: center;
 }
-
+/* Añade esto a tu globals.css */
+.founder-image {
+    /* Asegura que la imagen cubra el contenedor y no se estire */
+    object-fit: cover; 
+    /* Esto es lo que hace que la imagen sea circular */
+    border-radius: 50%; 
+}
 /* --- Estilos Específicos de FAQ --- */
 .faq-sections-container {
     max-width: 900px;
