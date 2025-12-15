@@ -1730,19 +1730,7 @@ a:hover {
     /* Aseguramos que la sección entera ocupe el ancho */
 }
 
-.founder-bio {
-    display: grid; 
-    
-    /* 🚨 CLAVE: 300px para la imagen, 1fr para el texto. */
-    grid-template-columns: 300px 1fr; 
-    
-    align-items: center; /* Centra la imagen y el texto verticalmente */
-    gap: 40px; /* Espacio entre los dos elementos */
-    
-    max-width: 1000px;
-    margin: 40px auto; /* Centrar el bloque entero */
-    padding: 30px;
-}
+
 
 /* globals.css */
 
@@ -1855,8 +1843,18 @@ a:hover {
         grid-template-columns: 1fr;
     
     }
+    .founder-bio {
+        flex-direction: column; /* Apila imagen arriba, texto abajo */
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .founder-text {
+        text-align: center; /* Centra el texto en móvil */
+    }
+
     .founder-image-placeholder {
-        margin: 0 auto 20px auto;
+        margin: 0 auto; /* Centra la imagen apilada */
     }
 }
 
