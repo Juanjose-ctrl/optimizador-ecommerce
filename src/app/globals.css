@@ -1062,6 +1062,48 @@ a:hover {
     text-decoration: underline;
 }
 
+/* FOOTER */
+.footer-main {
+    background-color: var(--bg-footer);
+    padding: 48px 0;
+    margin-top: 80px;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+}
+
+.footer-section h4 {
+    color: var(--primary-color);
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+}
+
+.footer-section a,
+.footer-link {
+    display: block;
+    color: var(--text-color-secondary);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.footer-section a:hover,
+.footer-link:hover {
+    color: var(--primary-color);
+    transform: translateX(4px);
+}
+
+.footer-note {
+    text-align: center;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    margin-top: 48px;
+}
+
 /* PRICING PAGE */
 .section-pricing {
     text-align: center;
@@ -1205,31 +1247,7 @@ a:hover {
     align-items: center;
 }
 
-.footer-main {
-    background-color: var(--bg-secondary); /* Si tienes un color de fondo secundario */
-    padding: 40px 0;
-    margin-top: 80px;
-}
 
-.footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.footer-links a {
-    margin: 0 15px;
-    color: var(--text-color-secondary);
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.footer-copy {
-    margin-top: 20px;
-    font-size: 0.8rem;
-    color: var(--text-color-secondary);
-}
 
 
 /* --- Estilos de la Sección de Precios (section-pricing) --- */
