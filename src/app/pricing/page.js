@@ -111,10 +111,10 @@ export default function PricingPage() {
             price: "Gratis",
             description: "Perfecto para probar nuestra API y funcionalidad.",
             features: [
-                { text: "100 Créditos Iniciales", available: true },
+                { text: "5 créditos Iniciales", available: true },
                 { text: "Optimización estándar (JPEG/PNG)", available: true },
                 { text: "Acceso a la API", available: false },
-                { text: "Conversión a WEBP", available: false },
+                { text: "Conversión a WEBP", available: true },
                 { text: "Soporte Estándar", available: true },
             ],
             isFeatured: false,
@@ -124,9 +124,9 @@ export default function PricingPage() {
         {
             title: "Plan Basic",
             price: "$2.99", // 🚨 Precio corregido
-            description: "Para pequeños proyectos que recién comienzan y necesitan más créditos.",
+            description: "Para pequeños proyectos que recién comienzan y necesitan más créditos, o para usuarios ocasionales",
             features: [
-                { text: "300 Créditos/Mes", available: true },
+                { text: "250 Créditos/Mes", available: true },
                 { text: "Optimización avanzada", available: true },
                 { text: "Acceso a la API", available: true },
                 { text: "Conversión a WEBP", available: true },
@@ -137,11 +137,11 @@ export default function PricingPage() {
             planKey: 'Basic'
         },
         {
-            title: "Plan Pro (Recomendado)",
+            title: "Plan Pro",
             price: "$12.99", // 🚨 Precio corregido
-            description: "Ideal para tiendas en crecimiento que necesitan volumen y formatos modernos.",
+            description: "Ideal para negocios en crecimiento que necesitan volumen y formatos modernos.",
             features: [
-                { text: "1000 Créditos/Mes", available: true },
+                { text: "5000 Créditos/Mes", available: true },
                 { text: "Optimización avanzada", available: true },
                 { text: "Acceso a la API", available: true },
                 { text: "Conversión a WEBP de alta eficiencia", available: true },
@@ -156,7 +156,7 @@ export default function PricingPage() {
             price: "Contactar",
             description: "Solución a medida para grandes volúmenes y necesidades específicas.",
             features: [
-                { text: "Créditos ilimitados", available: true },
+                { text: "Créditos a tu medida", available: true },
                 { text: "Optimización avanzada", available: true },
                 { text: "Integración personalizada", available: true },
                 { text: "Conversión a WEBP de alta eficiencia", available: true },
@@ -192,7 +192,7 @@ export default function PricingPage() {
                         ¿Qué es un Crédito?
                     </h2>
                     <p style={{ maxWidth: '800px', margin: '0 auto', color: 'var(--text-color-secondary)' }}>
-                        Un crédito equivale a una imagen optimizada. No importa el tamaño original del archivo (hasta 10MB), solo cobramos un crédito por cada imagen que procesas y descargas. Los créditos se renuevan mensualmente con la suscripción Pro.
+                        Un crédito equivale a una imagen optimizada. No importa el tamaño original del archivo (hasta 10MB), solo cobramos un crédito por cada imagen que procesas y descargas. Los créditos se renuevan mensualmente con tu suscripción.
                     </p>
                 </section>
 
