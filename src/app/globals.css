@@ -1731,40 +1731,56 @@ a:hover {
 }
 
 .founder-bio {
-    display: grid;
-    /* 🚨 Esta es la clave: 300px para la imagen, el resto (1fr) para el texto */
-    grid-template-columns: 300px 1fr; 
-    gap: 40px; /* Espacio entre la imagen y el texto */
-    align-items: center; /* 🚨 Centra verticalmente el contenido de ambas columnas */
+    display: grid; 
     
-    max-width: 1000px; /* Limita el ancho total para centrarlo */
-    margin: 40px auto; /* 🚨 Centrar el bloque en la página */
+    /* 🚨 CLAVE: 300px para la imagen, 1fr para el texto. */
+    grid-template-columns: 300px 1fr; 
+    
+    align-items: center; /* Centra la imagen y el texto verticalmente */
+    gap: 40px; /* Espacio entre los dos elementos */
+    
+    max-width: 1000px;
+    margin: 40px auto; /* Centrar el bloque entero */
     padding: 30px;
-    background-color: var(--background-color-light); /* Opcional: para ver los límites */
-    border-radius: 12px;
 }
+
+/* globals.css */
 
 /* globals.css */
 
 .founder-image-placeholder {
     width: 300px; 
-    height: 300px; 
-    background: var(--background-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
+    height: 300px;
+    border-radius: 50%; /* Define la forma del contenedor */
+    overflow: hidden; /* 🚨 CRUCIAL: Esto recorta la imagen que sobresale */
+    display: flex; /* Asegura el centrado si la imagen es más pequeña */
     justify-content: center;
-    /* 🚨 OJO: Si usas la etiqueta <img> (componente Next/Image) */
-    overflow: hidden; 
+    align-items: center;
 }
 
-/* 🚨 Clase aplicada al componente <Image> en el JSX */
+/* Aplica a la imagen real dentro del componente <Image> */
 .founder-image {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Esto es crucial para que la imagen no se distorsione */
-    border-radius: 50%; /* Asegura que la imagen mantenga la forma circular */
+    /* 🚨 CRUCIAL: Ajusta la imagen para que cubra todo el espacio sin distorsionarse, 
+       permitiendo que `overflow: hidden` la recorte. */
+    object-fit: cover; 
+    border-radius: 50%; /* Mantiene la forma circular en la imagen */
 }
+
+/* 🚨 Corrección del Texto a la Izquierda (Texto sigue hacia un lado) */
+/* Esto hace que el texto, encabezados y el botón se alineen a la izquierda 
+   en la segunda columna del grid. */
+.founder-text {
+    text-align: left; /* Asegura que el texto comience a la izquierda */
+    padding: 0;
+    margin: 0;
+}
+
+.founder-text h3 {
+    text-align: left;
+}
+
 /* --- Estilos Específicos de FAQ --- */
 .faq-sections-container {
     max-width: 900px;
