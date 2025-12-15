@@ -65,16 +65,16 @@ export default function ContactPage() {
                         <h2 className="section-title">Información de Soporte</h2>
                         <p className="contact-detail">
                             <Mail size={20} color="var(--accent-color)" /> 
-                            **Correo Electrónico Principal:** { ' ' }
+                            Correo Electrónico Principal: { ' ' }
                             <a href="mailto:jj.guerrerovz@gmail.com">jj.guerrerovz@gmail.com</a>
                         </p>
                         <p className="contact-detail">
                             <Phone size={20} color="var(--accent-color)" /> 
-                            **Teléfono (Soporte Técnico):** +57 310 123 4567
+                            Teléfono (Soporte Técnico): +57 316 422 7055
                         </p>
                         <p className="contact-detail">
                             <MapPin size={20} color="var(--accent-color)" /> 
-                            **Oficinas:** Cali, Valle del Cauca, Colombia
+                            Oficinas: Cali, Valle del Cauca, Colombia
                         </p>
                         
                         <div className="support-cta">
