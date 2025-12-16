@@ -20,7 +20,7 @@ const SERVICE_CONFIG = {
         endpoint: '/optimize-batch',
         endpoint_free: '/optimize-batch-free',
         accept: ALLOWED_MIME_TYPES, // ['image/jpeg', 'image/png']
-        name: 'Optimizador WebP', 
+        name: 'Optimizador WebP (Compresor)', 
     },
     // Servicio 2: Minificación de Código (CSS/JS)
     minify: {
@@ -407,7 +407,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 
                 <UploadCloud size={60} color={isDragActive ? 'var(--accent-color)' : 'var(--text-color-secondary)'} />
                 <p className="dropzone-text">Arrastra y suelta aquí o haz clic para seleccionar archivos</p>
-                <small className="file-info">Servicio: **{currentServiceConfig.name}** | Máx. {MAX_FILE_SIZE_MB}MB</small>
+                <small className="file-info">Servicio: {currentServiceConfig.name} | Máx. {MAX_FILE_SIZE_MB}MB</small>
             </div>
             
             {fileError && (
