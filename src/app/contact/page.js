@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Sun, ArrowLeft, Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-export const revalidate = 0;
+export const revalidate = 0; //cambio
 export default function ContactPage() {
   const formRef = useRef();
   const [formData, setFormData] = useState({
