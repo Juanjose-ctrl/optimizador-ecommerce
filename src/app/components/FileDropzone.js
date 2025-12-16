@@ -20,7 +20,7 @@ const SERVICE_CONFIG = {
         endpoint: '/optimize-batch',
         endpoint_free: '/optimize-batch-free',
         accept: ALLOWED_MIME_TYPES, // ['image/jpeg', 'image/png']
-        name: 'Optimizador WebP (Compresor)', 
+        name: 'Optimizador WebP  (Compresor)', 
     },
     // Servicio 2: Minificación de Código (CSS/JS)
     minify: {
