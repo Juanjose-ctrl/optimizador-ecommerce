@@ -17,6 +17,47 @@ const SERVICE_LINKS = [
   { name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios y comentarios.", isPrimary: false },
   { name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", isPrimary: false },
 ];
+const SERVICE_CATEGORIES = [
+    {
+        category: "Optimización de Archivos",
+        icon: Zap,
+        color: "#10B981", // Verde Esmeralda (accent)
+        services: [
+            { 
+                name: "Optimizador WebP/Imágenes", 
+                href: "/", 
+                icon: Image, 
+                description: "Comprime imágenes de producto para Core Web Vitals (WebP, JPEG, PNG).",
+                isPrimary: true
+            },
+            { 
+                name: "Minificador CSS/JS", 
+                href: "/minificador-css-js", 
+                icon: Code, 
+                description: "Acelera tu código eliminando espacios, comentarios y bytes innecesarios.",
+                isPrimary: false
+            },
+        ]
+    },
+    {
+        category: "Seguridad y Privacidad",
+        icon: Shield,
+        color: "#008080", // Teal (primary)
+        services: [
+            { 
+                name: "Limpiador de Metadatos", 
+                href: "/limpiar-metadatos-imagen", 
+                icon: FileText, 
+                description: "Protege tu privacidad y reduce el peso al eliminar datos EXIF y ocultos.",
+                isPrimary: false
+            },
+            // Aquí irían futuros servicios de seguridad o auditoría
+        ]
+    },
+    // Aquí irían futuras categorías (ej. 'Auditoría SEO', 'Herramientas de Diseño')
+];
+
+// ... (El resto de componentes FeatureCard, Footer siguen iguales) ...
 
 const FeatureCard = ({ icon: Icon, title, description, color }) => (
   <div className="feature-card">
@@ -136,6 +177,7 @@ export const Footer = () => (
     </div>
   </footer>
 );
+
 
 // LANDING PAGE
 export default function LandingPage() {

@@ -1638,3 +1638,116 @@ a:hover {
     font-size: 3rem !important;
     line-height: 1.2;
 }
+
+/* =========================================================================
+   8. ESTILOS PARA MEGA MENÚ (Agregados por la solicitud)
+   ========================================================================= */
+
+/* 1. Contenedor del Mega Menú - Es el área de activación */
+.services-mega-menu-container {
+    position: relative;
+    height: 100%; /* Ocupa la altura del header */
+    display: flex;
+    align-items: center;
+}
+
+/* 2. Caja Fija (El elemento visible "Nuestros Servicios") */
+.services-fixed-box {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-color-primary);
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.services-mega-menu-container:hover .services-fixed-box {
+    background-color: var(--bg-hover, #F3F4F6); /* Usando tu variable o un gris claro */
+    border-color: var(--accent-color);
+}
+
+/* 3. Dropdown del Mega Menú */
+.mega-menu-dropdown {
+    position: absolute;
+    top: 100%; /* Justo debajo del header */
+    left: 0;
+    width: 100vw; /* Ancho completo */
+    left: 50%; /* Centrar el menú */
+    transform: translateX(-50%);
+    
+    background-color: var(--bg-card);
+    border-top: 2px solid var(--accent-color);
+    box-shadow: var(--shadow-lg); 
+    z-index: 999; /* Alto z-index para que esté sobre todo */
+    
+    /* Estado inicial: oculto */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transform: translateY(-10px) translateX(-50%); /* Ligera animación de entrada */
+}
+
+.mega-menu-dropdown.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) translateX(-50%);
+}
+
+/* 4. Grilla de Categorías */
+.mega-menu-grid {
+    max-width: 1200px; /* Limitar el contenido interno al ancho máximo */
+    margin: 0 auto;
+    padding: 30px 40px;
+    
+    /* Configuración de la grilla: Mínimo 2 columnas de 300px, máx 4 */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.mega-menu-category {
+    padding: 10px;
+}
+
+.category-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* 5. Estilos de Links Internos */
+.category-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mega-menu-link {
+    text-decoration: none;
+    color: var(--text-color-primary);
+    padding: 10px;
+    border-radius: var(--radius-small);
+    transition: background-color 0.2s;
+}
+
+.mega-menu-link:hover {
+    background-color: var(--bg-hover, #F3F4F6);
+}
+
+/* 6. Corrección para Layout (Asegura que el contenedor principal respete el ancho) */
+.header-main {
+    /* Mantenemos el justify-content: space-between para separar el logo/menu del login/precios */
+    /* Aseguramos que la izquierda y la derecha tengan espacio */
+    width: 100%;
+}
