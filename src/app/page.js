@@ -1,20 +1,27 @@
+// src/app/page.js
+
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
 
-// 🚨 IMPORTACIÓN DE COMPONENTES COMPARTIDOS Y ENLACES (Header, Footer, FeatureCard, SERVICE_LINKS)
-import { Header, Footer, FeatureCard, SERVICE_LINKS } from './components/SharedComponents';
+// 🚨 1. IMPORTAR COMPONENTES COMPARTIDOS Y ENLACES DESDE LA NUEVA UBICACIÓN
+import { 
+  Header, 
+  Footer, 
+  FeatureCard, 
+  SERVICE_LINKS 
+} from './components/SharedComponents'; 
 
 import FileDropzone from './components/FileDropzone';
 import AuthModal from './components/AuthModal';
 
-// 🚨 Solo importamos los iconos que SÍ se usan EXCLUSIVAMENTE AQUÍ
-import { 
-  CheckCircle, 
-  Shield, TrendingUp, Leaf, DollarSign 
-} from 'lucide-react'; // Los iconos de FeatureCard se usan aquí
+// 🚨 2. SOLO MANTENER LOS ICONOS QUE SE USAN FUERA DE LOS COMPONENTES COMPARTIDOS
+import {
+  CheckCircle, Shield, TrendingUp, Leaf, DollarSign
+} from 'lucide-react'; 
+// Los iconos de Header y Footer (Sun, Code, etc.) se movieron a SharedComponents.js
 
-// 🚨 Las definiciones de SERVICE_LINKS, FeatureCard, Header y Footer han sido ELIMINADAS.
+// 🚨 3. SE ELIMINARON LAS DEFINICIONES DE SERVICE_LINKS, FeatureCard, Header, y Footer.
 
 // LANDING PAGE (Esta sigue siendo la exportación default)
 export default function LandingPage() {
@@ -32,19 +39,62 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="app-container">
-        {/* Header usa el prop onLoginClick que definimos aquí */}
-        <Header onLoginClick={handleOpenModal} /> 
+      {/* 🚨 Header y Footer se llaman fuera del div.app-container para que su fondo sea de ancho completo */}
+      <Header onLoginClick={handleOpenModal} /> 
 
+      <div className="app-container">
         <main>
-          {/* ... (El resto de tu main, que permanece igual) ... */}
           <section className="section-hero">
-            {/* ... */}
+            <div className="hero-left">
+              <h1 className="hero-title">
+                Optimización de Imágenes para eCommerce Ecológica y Eficiente
+              </h1>
+              <p className="hero-subtitle">
+                Reduce el peso de tus imágenes de producto hasta un 70% sin perder calidad.
+              </p>
+
+              <div className="benefit-list">
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Prueba gratuita de 5 optimizaciones.</p>
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Compatible con WEBP, JPEG y PNG.</p>
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Compresión sin pérdida de calidad.</p>
+              </div>
+
+              <button className="btn btn-primary btn-large mt-8" onClick={() => handleOpenModal('register')}>
+                Comenzar a Optimizar Gratis
+              </button>
+            </div>
+
+            <div className="hero-right">
+              <FileDropzone
+                isAuthenticated={false}
+                onLimitReached={handleFreeLimitReached}
+                userCredits={5}
+                defaultService="image"
+              />
+            </div>
           </section>
 
           {/* SECCIÓN PASOS */}
           <section className="section-box">
-            {/* ... */}
+            <h2 className="section-title">¿Cómo funciona OptiCommerce?</h2>
+            <div className="steps-grid">
+              <div className="step-item">
+                <div className="step-number">1</div>
+                <p><strong>Prueba Gratuita.</strong> Sube tu primera imagen ahora, no requiere registro (Máximo 5).</p>
+              </div>
+              <div className="step-item">
+                <div className="step-number">2</div>
+                <p><strong>Sube tu Imagen.</strong> Arrastra el archivo de tu producto (PNG o JPEG) a la zona de carga.</p>
+              </div>
+              <div className="step-item">
+                <div className="step-number">3</div>
+                <p><strong>Optimiza y Ahorra.</strong> Nuestro motor de IA comprime y convierte a formatos modernos de forma automática.</p>
+              </div>
+              <div className="step-item">
+                <div className="step-number">4</div>
+                <p><strong>Regístrate para Continuar.</strong> Al alcanzar el límite, te pediremos registrarte o comprar un plan.</p>
+              </div>
+            </div>
           </section>
 
           {/* SECCIÓN FEATURES */}
@@ -58,9 +108,9 @@ export default function LandingPage() {
             </div>
           </section>
         </main>
-
-        <Footer />
       </div>
+
+      <Footer /> {/* Footer se llama aquí, y maneja su propio app-container interno */}
 
       <AuthModal
         isOpen={isModalOpen}
