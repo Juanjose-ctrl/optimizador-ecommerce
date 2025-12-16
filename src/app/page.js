@@ -20,7 +20,7 @@ export const SERVICE_LINKS = [
 ];
 
 // 🚨 CORRECCIÓN: Agregar 'export' para FeatureCard
-export const FeatureCard = ({ icon: Icon, title, description, color }) => (
+const FeatureCard = ({ icon: Icon, title, description, color }) => (
   <div className="feature-card">
     <div className="icon-wrapper" style={{ backgroundColor: color }}>
       <Icon size={32} color="white" />
@@ -31,7 +31,7 @@ export const FeatureCard = ({ icon: Icon, title, description, color }) => (
 );
 
 // 🚨 CORRECCIÓN: Agregar 'export' para Header
-export const Header = ({ onLoginClick }) => {
+const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
