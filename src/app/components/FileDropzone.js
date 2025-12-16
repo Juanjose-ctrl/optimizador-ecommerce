@@ -7,7 +7,7 @@ import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download, ChevronDown, Ch
 import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
 
 // 🚨 IMPORTAMOS LOS LINKS DE SERVICIO EXPORTADOS DE page.js
-import { SERVICE_LINKS } from './SharedComponents';
+import { SERVICE_CATEGORIES } from './SharedComponents';
 
 
 // CONSTANTE PARA LOCALSTORAGE
@@ -122,7 +122,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     // 🚨 LÓGICA DE DROPDOWN Y NAVEGACIÓN
     const currentServiceLink = useMemo(() => {
         // Busca el objeto completo del link para usar su icono y descripción
-        return SERVICE_LINKS.find(s => s.key === selectedService) || SERVICE_LINKS[0];
+        return SERVICE_CATEGORIES.find(s => s.key === selectedService) || SERVICE_CATEGORIES[0];
     }, [selectedService]);
 
     const handleServiceChange = (key, href) => {
@@ -363,7 +363,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                     {isServiceDropdownOpen && (
                         // Menú Desplegable
                         <div className="service-dropdown-menu">
-                            {SERVICE_LINKS.map(service => {
+                            {SERVICE_CATEGORIES.map(service => {
                                 const isActive = service.key === selectedService;
                                 return (
                                     <button 
