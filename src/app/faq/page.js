@@ -3,7 +3,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Sun, ArrowLeft, HelpCircle, Image, DollarSign, Zap } from 'lucide-react';
+import { Sun, ArrowLeft, HelpCircle, Image, DollarSign, Zap, ChevronDown } from 'lucide-react';
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState(null);
