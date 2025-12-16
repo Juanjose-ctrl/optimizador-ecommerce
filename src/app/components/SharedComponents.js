@@ -47,7 +47,7 @@ export const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// --- 3. Header (CORREGIDO) ---
+// --- 3. Header (CORREGIDO - SIN HOVER EN TODO EL HEADER) ---
 export const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
@@ -55,8 +55,8 @@ export const Header = ({ onLoginClick }) => {
     <header className="header-main">
       <div className="app-container">
         <div className="logo">
-          <Link href="/" className="flex items-center gap-3">
-            <Sun size={36} className="text-[var(--primary-color)]" />
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Sun size={36} style={{ color: 'var(--primary-color)' }} />
             <span className="logo-text">OptiCommerce</span>
           </Link>
         </div>
@@ -66,8 +66,12 @@ export const Header = ({ onLoginClick }) => {
             className="nav-dropdown"
             onMouseEnter={() => setIsServicesOpen(true)}
             onMouseLeave={() => setIsServicesOpen(false)}
+            style={{ position: 'relative' }}
           >
-            <button className="nav-link flex items-center gap-2">
+            <button 
+              className="nav-link" 
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            >
               Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
 
@@ -77,12 +81,16 @@ export const Header = ({ onLoginClick }) => {
                   <Link
                     key={service.href}
                     href={service.href}
-                    className="flex items-center gap-5"
+                    style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
                   >
-                    <service.icon size={28} className="text-[var(--primary-color)]" />
+                    <service.icon size={28} style={{ color: 'var(--primary-color)' }} />
                     <div>
-                      <strong className="block font-semibold text-lg">{service.name}</strong>
-                      <p className="text-sm text-[var(--text-color-secondary)] m-0">{service.description}</p>
+                      <strong style={{ display: 'block', fontWeight: 600, fontSize: '1.05rem' }}>
+                        {service.name}
+                      </strong>
+                      <p style={{ fontSize: '0.9rem', color: 'var(--text-color-secondary)', margin: 0 }}>
+                        {service.description}
+                      </p>
                     </div>
                   </Link>
                 ))}
