@@ -42,8 +42,9 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// HEADER: full-width + botón mega menú bonito y estable
-const Header = ({ onLoginClick }) => {const Header = ({ onLoginClick }) => {
+// REEMPLAZA SOLO EL COMPONENTE Header EN TU page.js
+
+const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
@@ -150,7 +151,6 @@ const Header = ({ onLoginClick }) => {const Header = ({ onLoginClick }) => {
       </div>
     </header>
   );
-};
 };
 
 // FOOTER (sin cambios, ya estaba bien)
