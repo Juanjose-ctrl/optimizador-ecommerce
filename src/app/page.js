@@ -43,9 +43,7 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
 );
 
 // HEADER: full-width + botón mega menú bonito y estable
-const Header = ({ onLoginClick }) => {// REEMPLAZA SOLO EL COMPONENTE Header EN TU page.js
-
-const Header = ({ onLoginClick }) => {
+const Header = ({ onLoginClick }) => {const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
