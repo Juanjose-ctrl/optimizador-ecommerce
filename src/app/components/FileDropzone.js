@@ -7,7 +7,7 @@ import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download, ChevronDown, Ch
 import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
 
 // 🚨 IMPORTAMOS LOS LINKS DE SERVICIO EXPORTADOS DE page.js
-import { SERVICE_LINKS } from '../page';
+import { SERVICE_LINKS } from './SharedComponents';
 
 
 // CONSTANTE PARA LOCALSTORAGE
