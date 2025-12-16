@@ -1,6 +1,4 @@
-// src/app/page.js - VERSIÓN DEFINITIVA: Todo bonito usando tu CSS original
-
-// src/app/page.js - VERSIÓN DEFINITIVA: Todo bonito usando tu CSS original
+// src/app/page.js - VERSIÓN DEFINITIVA Y CORREGIDA
 
 'use client';
 import { useState } from 'react';
@@ -14,14 +12,15 @@ import {
   ChevronDown, ChevronUp, Image, Code, FileText
 } from 'lucide-react';
 
-// CORRECCIÓN: Agregar 'export' para que pueda ser importada en FileDropzone.js
+// CORRECCIÓN ANTERIOR: Agregar 'export' para SERVICE_LINKS
 export const SERVICE_LINKS = [
   { name: "Optimizador WebP", href: "/", icon: Image, description: "Comprime imágenes para Core Web Vitals.", isPrimary: true },
   { name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios y comentarios.", isPrimary: false },
   { name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", isPrimary: false },
 ];
 
-const FeatureCard = ({ icon: Icon, title, description, color }) => (
+// 🚨 CORRECCIÓN: Agregar 'export' para FeatureCard
+export const FeatureCard = ({ icon: Icon, title, description, color }) => (
   <div className="feature-card">
     <div className="icon-wrapper" style={{ backgroundColor: color }}>
       <Icon size={32} color="white" />
@@ -31,8 +30,8 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// HEADER: usando clases originales para logo y menú desplegable bonito
-const Header = ({ onLoginClick }) => {
+// 🚨 CORRECCIÓN: Agregar 'export' para Header
+export const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
@@ -40,13 +39,13 @@ const Header = ({ onLoginClick }) => {
       <div className="logo">
         <Link href="/" className="flex items-center gap-3">
           <Sun size={36} className="text-[var(--primary-color)]" />
-          <span className="logo-text">OptiCommerce</span>  {/* ← Usa tu clase logo-text con gradiente perfecto */}
+          <span className="logo-text">OptiCommerce</span>
         </Link>
       </div>
 
       <nav className="flex items-center gap-10">
         {/* Menú desplegable usando tus clases originales */}
-        <div 
+        <div
           className="nav-dropdown"
           onMouseEnter={() => setIsServicesOpen(true)}
           onMouseLeave={() => setIsServicesOpen(false)}
@@ -56,7 +55,7 @@ const Header = ({ onLoginClick }) => {
           </button>
 
           {isServicesOpen && (
-            <div className="nav-dropdown-menu">  {/* ← Usa tu clase original: sombra, radio, hover todo bonito */}
+            <div className="nav-dropdown-menu">
               {SERVICE_LINKS.map((service) => (
                 <Link
                   key={service.href}
@@ -86,7 +85,7 @@ const Header = ({ onLoginClick }) => {
   );
 };
 
-// FOOTER: líneas separadas correctamente
+// FOOTER: Ya estaba correctamente exportado
 export const Footer = () => (
   <footer className="footer-main">
     <div className="app-container">
@@ -140,7 +139,7 @@ export const Footer = () => (
   </footer>
 );
 
-// LANDING PAGE
+// LANDING PAGE (Esta sigue siendo la exportación default)
 export default function LandingPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalView, setModalView] = useState('login');
