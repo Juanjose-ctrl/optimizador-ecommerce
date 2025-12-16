@@ -654,61 +654,40 @@ nav {
    11. DROPZONE Y OPTIMIZACION - CORREGIDO
    ======================================================================== */
 .optimization-section {
-    background: linear-gradient(135deg, 
-                var(--primary-color) 0%,     /* #008080 teal fuerte al inicio */
-                var(--secondary-color) 70%,  /* #40B5AD teal más claro */
-                #E0F2F1 100%);               /* Transición a teal muy claro */
-    
+    background-color: var(--bg-card); /* Blanco puro como antes */
     padding: 40px;
     border-radius: var(--radius-large);
-    box-shadow: var(--shadow-lg);  /* Sombra más fuerte */
     margin-bottom: 48px;
     
-    /* Borde teal para más definición */
-    border: 2px solid var(--primary-color);
-    
-    /* Texto interno en blanco para alto contraste */
-    color: white;
+    /* CONTRASTE NOTORIO: Borde teal sólido + sombra fuerte */
+    border: 3px solid var(--primary-color); /* #008080 - se ve claramente */
+    box-shadow: 
+        var(--shadow-lg), /* Sombra externa más intensa */
+        inset 0 4px 20px rgba(0, 128, 128, 0.08); /* Profundidad interna */
 }
 
-/* Ajustes internos para que resalten sobre el fondo teal fuerte */
-.section-header h2,
-.service-name-title,
-.info-text,
-.dropzone-text,
-.file-info {
-    color: var(--text-color-primary) !important;  /* Texto oscuro para legibilidad */
-}
-
-.service-dropdown-btn {
-    background: white !important;
-    color: var(--text-color-primary) !important;
-    box-shadow: var(--shadow-md);
-}
-
-.info-text {
-    background: rgba(255, 255, 255, 0.95) !important;
-    color: var(--primary-color) !important;
-    border: 1px solid var(--primary-color);
-}
-
+/* Mejora el dropzone interno para que resalte más dentro del bloque */
 .dropzone-area {
-    background: white !important;
-    border: 4px dashed var(--primary-color);
-    box-shadow: var(--shadow-lg);
-    color: var(--text-color-primary);
+    border: 4px dashed var(--primary-color); /* Dashed más grueso y en color primario */
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(240, 249, 255, 0.6); /* Muy leve tinte teal claro (como --bg-footer) */
+    box-shadow: inset 0 6px 24px rgba(0, 128, 128, 0.1);
+    margin: 1.5rem 0;
 }
 
 .dropzone-area:hover,
 .dropzone-area.drag-active {
+    border-style: solid; /* Al hover/drag: borde sólido para feedback */
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.3);
+    background: rgba(240, 249, 255, 0.9);
+    box-shadow: 
+        inset 0 8px 32px rgba(0, 128, 128, 0.15),
+        0 0 0 6px rgba(16, 185, 129, 0.2);
     transform: scale(1.02);
-}
-
-.dropzone-text {
-    color: var(--primary-color) !important;
-    font-weight: 700;
 }
 /* Dropdown de servicios dentro del dropzone */
 .service-dropdown-container {
