@@ -1,5 +1,7 @@
 // src/app/page.js - VERSIÓN DEFINITIVA: Todo bonito usando tu CSS original
 
+// src/app/page.js - VERSIÓN DEFINITIVA: Todo bonito usando tu CSS original
+
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -12,14 +14,14 @@ import {
   ChevronDown, ChevronUp, Image, Code, FileText
 } from 'lucide-react';
 
-const SERVICE_LINKS = [
+// CORRECCIÓN: Agregar 'export' para que pueda ser importada en FileDropzone.js
+export const SERVICE_LINKS = [
   { name: "Optimizador WebP", href: "/", icon: Image, description: "Comprime imágenes para Core Web Vitals.", isPrimary: true },
   { name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios y comentarios.", isPrimary: false },
   { name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", isPrimary: false },
 ];
 
-// Se agregó 'export const' para que pueda ser importado desde otros archivos (e.g. /limpiar-metadatos-imagen/page.js)
-export const FeatureCard = ({ icon: Icon, title, description, color }) => (
+const FeatureCard = ({ icon: Icon, title, description, color }) => (
   <div className="feature-card">
     <div className="icon-wrapper" style={{ backgroundColor: color }}>
       <Icon size={32} color="white" />
@@ -30,8 +32,7 @@ export const FeatureCard = ({ icon: Icon, title, description, color }) => (
 );
 
 // HEADER: usando clases originales para logo y menú desplegable bonito
-// Se agregó 'export const' para que pueda ser importado desde otros archivos
-export const Header = ({ onLoginClick }) => {
+const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
