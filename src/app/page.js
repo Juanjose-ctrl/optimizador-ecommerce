@@ -6,8 +6,7 @@ import Link from 'next/link';
 
 import FileDropzone from './components/FileDropzone';
 import AuthModal from './components/AuthModal';
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
+
 
 import {
   CheckCircle, Sun, Shield, TrendingUp, Leaf, DollarSign,
