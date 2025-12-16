@@ -28,10 +28,10 @@ export default function ContactForm() {
 
     emailjs
       .send(
-        'TU_SERVICE_ID',     // Reemplaza
-        'TU_TEMPLATE_ID',    // Reemplaza
+        'service_kinzdb4',     // Reemplaza
+        'template_0camczb',    // Reemplaza
         formData,
-        'TU_PUBLIC_KEY'      // Reemplaza
+        '3vU0gA2f5031TwiDJ'      // Reemplaza
       )
       .then(() => {
         setSubmitStatus('success');
