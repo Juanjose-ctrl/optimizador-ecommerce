@@ -1,109 +1,210 @@
+// src/app/page.js - VERSIÓN FINAL PULIDA Y BONITA
+
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
-import { Sun, Target, Zap, TrendingUp, Code } from 'lucide-react'; 
-import Image from 'next/image';
 
-// Componentes replicados (Header y Footer)
-const Header = () => ( 
-    <div className="app-container">
-        <header className="header-main">
-            <div className="logo">
-                <Sun size={24} color="var(--accent-color)" style={{ marginRight: '8px' }} />
-                <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--primary-color)' }}>
-                    OptiCommerce
-                </h2>
-            </div>
-            <nav>
-                <Link href="/" className="btn btn-secondary">
-                    Volver a Inicio
-                </Link>
-            </nav>
-        </header>
-    </div>
-);
+import FileDropzone from './components/FileDropzone';
+import AuthModal from './components/AuthModal';
 
-const Footer = () => (
-    <footer className="footer-main">
-        <div className="app-container footer-content">
-            <div className="footer-links">
-                <Link href="/privacidad">Política de Privacidad</Link>
-                <Link href="/terminos">Términos de Servicio</Link>
-                <Link href="/contact">Contacto</Link>
-            </div>
-            <p className="footer-copy">© {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-);
+import {
+  CloudUpload, CheckCircle, Sun, Leaf, Zap, Shield, TrendingUp, DollarSign,
+  ChevronDown, ChevronUp, Image, Code, FileText
+} from 'lucide-react';
 
-// Componente de Misión/Visión
-const PhilosophyCard = ({ icon: Icon, title, content }) => (
-    <div className="philosophy-card">
-        <Icon size={40} color="var(--accent-color)" style={{ marginBottom: '15px' }} />
-        <h3 className="card-title">{title}</h3>
-        <p className="card-content">{content}</p>
+const SERVICE_LINKS = [
+  { name: "Optimizador WebP", href: "/", icon: Image, description: "Comprime imágenes para Core Web Vitals.", isPrimary: true },
+  { name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios y comentarios.", isPrimary: false },
+  { name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", isPrimary: false },
+];
+
+const FeatureCard = ({ icon: Icon, title, description, color }) => (
+  <div className="feature-card">
+    <div className="icon-wrapper" style={{ backgroundColor: color }}>
+      <Icon size={32} color="white" />
     </div>
+    <h3 className="card-title">{title}</h3>
+    <p className="card-description">{description}</p>
+  </div>
 );
 
-export default function AboutPage() {
-    return (
-        <>
-            <Header />
-            <main className="app-container" style={{ padding: '80px 0' }}>
-                
-                <h1 className="main-pricing-title title-about">Sobre OptiCommerce</h1>
-                <p className="main-pricing-subtitle subtitle-about">Nuestra misión es potenciar tu negocio con imágenes más rápidas y de mayor calidad.</p>
+// HEADER: con menú desplegable bonito y logo elegante
+const Header = ({ onLoginClick }) => {
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
 
-                {/* SECCIÓN 1: Misión y Visión */}
-                <section className="section-philosophy">
-                    <h2 className="section-title title-centered">Nuestra Filosofía</h2>
-                    <div className="philosophy-grid">
-                        <PhilosophyCard 
-                            icon={Target} 
-                            title="Misión" 
-                            content="Ofrecer la herramienta de optimización de imágenes más eficiente y rentable del mercado para el e-commerce hispano." 
-                        />
-                        <PhilosophyCard 
-                            icon={TrendingUp} 
-                            title="Visión" 
-                            content="Convertirnos en el estándar para la mejora del rendimiento web, expandiendo nuestros servicios a compresión de video y más." 
-                        />
-                        <PhilosophyCard 
-                            icon={Zap} 
-                            title="Velocidad" 
-                            content="Creemos que cada milisegundo cuenta. Nuestra tecnología de optimización está diseñada para la máxima rapidez." 
-                        />
-                    </div>
-                </section>
+  return (
+    <header className="header-main">
+      <div className="logo">
+        <Link href="/" className="flex items-center gap-3">
+          <Sun size={32} className="text-[var(--primary-color)]" />
+          <span className="text-3xl font-black bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] bg-clip-text text-transparent">
+            OptiCommerce
+          </span>
+        </Link>
+      </div>
 
-                {/* SECCIÓN 2: El Fundador */}
-                <section className="section-founder">
-                    <h2 className="section-title title-centered">Conoce al Fundador</h2>
-                    <div className="founder-bio">
-                        {/* Podrías reemplazar este div con una etiqueta <img> si tienes una foto */}
-                        <div className="founder-image-placeholder">
-    <Image
-        // 🚨 2. RUTA ABSOLUTA: /images/ es relativo a la carpeta /public
-        src="/images/juan-jose.jpg" 
-        alt="Foto del fundador, Juan José Guerrero Vásquez"
-        width={300}    // Debe coincidir con el ancho del CSS
-        height={300}   // Debe coincidir con el alto del CSS
-        className="founder-image" // Para aplicar tus estilos (ej: border-radius: 50%)
-    />
-                        </div>
-                        <div className="founder-text">
-                            <h3>Juan José Guerrero Vásquez</h3>
-                            <p>
-                          Como desarrollador principal, Juan José Guerrero creó OptiCommerce con una visión simple: hacer que los sitios web fueran más rápidos. Entendiendo los desafíos de las tiendas en línea con imágenes pesadas, dedicó su experiencia en optimización de backend para construir una solución que fuera potente, fácil de usar y accesible para todos.
-                            </p>
-                            <Link href="/contact" className="btn btn-primary">
-                                Contacta a Juan José
-                            </Link>
-                        </div>
-                    </div>
-                </section>
+      <nav className="flex items-center gap-8">
+        <div
+          className="relative"
+          onMouseEnter={() => setIsServicesOpen(true)}
+          onMouseLeave={() => setIsServicesOpen(false)}
+        >
+          <button className="flex items-center gap-2 px-5 py-3 text-lg font-medium text-[var(--text-color-primary)] rounded-lg hover:bg-[var(--bg-hover)] transition">
+            Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
 
-            </main>
-            <Footer />
-        </>
-    );
+          {isServicesOpen && (
+            <div 
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-96 bg-[var(--bg-card)] rounded-2xl shadow-2xl py-4 z-50 border border-[var(--border-color)]"
+              style={{ boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
+            >
+              {SERVICE_LINKS.map((service) => (
+                <Link
+                  key={service.href}
+                  href={service.href}
+                  className="flex items-center gap-5 px-6 py-4 text-[var(--text-color-primary)] rounded-xl hover:bg-[var(--bg-page)] transition mx-2"
+                >
+                  <service.icon size={28} className="text-[var(--primary-color)]" />
+                  <div>
+                    <div className="font-bold text-lg">{service.name}</div>
+                    <div className="text-sm text-[var(--text-color-secondary)] mt-1">{service.description}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <Link href="/pricing" className="nav-link text-lg">
+          Precios
+        </Link>
+
+        <button className="btn btn-primary text-lg" onClick={() => onLoginClick('login')}>
+          Iniciar Sesión
+        </button>
+      </nav>
+    </header>
+  );
+};
+
+// FOOTER: sin el texto extra que no querías
+export const Footer = () => (
+  <footer className="footer-main">
+    <div className="app-container">
+      <div className="footer-content">
+        <div className="footer-section">
+          <div className="logo">
+            <Link href="/" className="flex items-center gap-3">
+              <Sun size={28} className="text-[var(--primary-color)]" />
+              <h4 className="m-0 text-2xl font-bold text-[var(--primary-color)]">OptiCommerce</h4>
+            </Link>
+          </div>
+          <small className="block mt-6 text-[var(--text-color-secondary)]">
+            © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
+          </small>
+          <small className="block mt-2 text-[var(--text-color-secondary)]">
+            Desarrollado por Juan José Guerrero.
+          </small>
+        </div>
+
+        <div className="footer-section">
+          <h4 className="text-lg font-bold mb-4">Nuestros Servicios</h4>
+          <div className="flex flex-col gap-3">
+            {SERVICE_LINKS.map((service) => (
+              <Link key={service.href} href={service.href} className="footer-link text-base">
+                {service.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="footer-section">
+          <h4 className="text-lg font-bold mb-4">Información Legal</h4>
+          <div className="flex flex-col gap-3">
+            <Link href="/terminos" className="footer-link text-base">Términos y Condiciones</Link>
+            <Link href="/privacidad" className="footer-link text-base">Política de Privacidad</Link>
+            <Link href="/reembolso" className="footer-link text-base">Política de Reembolso</Link>
+            <Link href="/cookies" className="footer-link text-base">Política de Cookies</Link>
+          </div>
+        </div>
+
+        <div className="footer-section">
+          <h4 className="text-lg font-bold mb-4">Empresa</h4>
+          <div className="flex flex-col gap-3">
+            <Link href="/about" className="footer-link text-base">Sobre Nosotros</Link>
+            <Link href="/contact" className="footer-link text-base">Contacto</Link>
+            <Link href="/faq" className="footer-link text-base">Preguntas Frecuentes (FAQ)</Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
+// LANDING PAGE
+export default function LandingPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalView, setModalView] = useState('login');
+
+  const handleOpenModal = (view) => {
+    setModalView(view);
+    setIsModalOpen(true);
+  };
+
+  const handleFreeLimitReached = () => {
+    handleOpenModal('register');
+  };
+
+  return (
+    <>
+      <div className="app-container">
+        <Header onLoginClick={handleOpenModal} />
+
+        <main>
+          <section className="section-hero">
+            <div className="hero-left">
+              {/* Título más moderado */}
+              <h1 className="hero-title" style={{ fontSize: '3.2rem' }}>
+                Optimización de Imágenes <br /> para eCommerce Ecológica y Eficiente
+              </h1>
+              <p className="hero-subtitle">
+                Reduce el peso de tus imágenes de producto hasta un 70% sin perder calidad.
+              </p>
+
+              <div className="benefit-list">
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Prueba gratuita de 5 optimizaciones.</p>
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Compatible con WEBP, JPEG y PNG.</p>
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Compresión sin pérdida de calidad.</p>
+              </div>
+
+              <button className="btn btn-primary btn-large mt-10" onClick={() => handleOpenModal('register')}>
+                Comenzar a Optimizar Gratis
+              </button>
+            </div>
+
+            <div className="hero-right">
+              <FileDropzone
+                isAuthenticated={false}
+                onLimitReached={handleFreeLimitReached}
+                userCredits={5}
+                defaultService="image"
+              />
+            </div>
+          </section>
+
+          {/* Tus otras secciones (pasos y features) van aquí igual que antes */}
+          {/* ... (copia las secciones de pasos y features que tenías) ... */}
+
+        </main>
+
+        <Footer />
+      </div>
+
+      <AuthModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialView={modalView}
+      />
+    </>
+  );
 }
