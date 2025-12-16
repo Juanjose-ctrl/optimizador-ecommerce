@@ -62,63 +62,37 @@ export const Header = ({ onLoginClick }) => {
         </div>
 
         <nav>
-          {/* === DROPDOWN DE SERVICIOS CON ZONA AMPLIA PARA MOUSE === */}
-          <div className="nav-dropdown" style={{ position: 'relative' }}>
-            <div
-              onMouseEnter={() => setIsServicesOpen(true)}
-              onMouseLeave={() => setIsServicesOpen(false)}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                paddingBottom: '320px', // Cubre todo el alto del menú + margen extra
-              }}
-              className="pointer-events-none" // No bloquea clics
-            >
-              {/* Botón */}
-              <button
-                className="nav-link pointer-events-auto"
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 10 }}
-              >
-                Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-              </button>
+          <div 
+  className="nav-dropdown"
+  onMouseEnter={() => setIsServicesOpen(true)}
+  onMouseLeave={() => setIsServicesOpen(false)}
+>
+  <button className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+  </button>
 
-              {/* Menú desplegable */}
-              {isServicesOpen && (
-                <div
-                  className="nav-dropdown-menu pointer-events-auto"
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    marginTop: '0.8rem',
-                    width: 'max-content',
-                  }}
-                >
-                  {SERVICE_LINKS.map((service) => (
-                    <Link
-                      key={service.href}
-                      href={service.href}
-                      style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
-                    >
-                      <service.icon size={28} style={{ color: 'var(--primary-color)' }} />
-                      <div>
-                        <strong style={{ display: 'block', fontWeight: 600, fontSize: '1.05rem' }}>
-                          {service.name}
-                        </strong>
-                        <p style={{ fontSize: '0.9rem', color: 'var(--text-color-secondary)', margin: 0 }}>
-                          {service.description}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+            {isServicesOpen && (
+              <div className="nav-dropdown-menu">
+                {SERVICE_LINKS.map((service) => (
+                  <Link
+                    key={service.href}
+                    href={service.href}
+                    style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
+                  >
+                    <service.icon size={28} style={{ color: 'var(--primary-color)' }} />
+                    <div>
+                      <strong style={{ display: 'block', fontWeight: 600, fontSize: '1.05rem' }}>
+                        {service.name}
+                      </strong>
+                      <p style={{ fontSize: '0.9rem', color: 'var(--text-color-secondary)', margin: 0 }}>
+                        {service.description}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
-          {/* === FIN DROPDOWN === */}
 
           <Link href="/pricing" className="nav-link">
             Precios
