@@ -2130,3 +2130,43 @@ nav {
     transform: rotate(-5deg) scale(1.05);
     box-shadow: var(--shadow-md);
 }
+
+/* ========================================================================
+   24. CORRECCIÓN DE ÍCONOS FALTANTES (ABOUT PAGE - FILOSOFÍA)
+   ======================================================================== */
+
+/* 1. Asegura que el contenedor del título esté en modo columna para separar el ícono del texto */
+.philosophy-card h3 {
+    display: flex; 
+    flex-direction: column; /* Coloca el ícono arriba y el texto abajo */
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    text-align: center; /* Centra el texto del título */
+}
+
+/* 2. Crea y estiliza el ícono/emoji a partir del data-icon */
+.philosophy-card h3::before {
+    content: attr(data-icon); /* Usa el emoji del atributo (🎯, 📈, ⚡) */
+    
+    /* Estilos visuales del ícono */
+    font-size: 3rem; /* ¡Lo hacemos más grande! */
+    line-height: 1; 
+    font-weight: normal; /* Asegura que el emoji no herede negritas del h3 */
+    color: var(--accent-color); 
+    margin-bottom: 10px; /* Separación del título */
+    
+    /* Efecto sutil para que resalte */
+    filter: drop-shadow(0 0 5px rgba(0, 128, 128, 0.3));
+    
+    /* Esto es clave: hacemos que sea un elemento de bloque para que ocupe su propio espacio */
+    display: block; 
+}
+
+/* Aseguramos que el texto dentro del h3 no tenga margen superior */
+.philosophy-card h3 > * {
+    margin-top: 0;
+}
