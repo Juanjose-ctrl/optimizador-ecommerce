@@ -1633,3 +1633,8 @@ a:hover {
         justify-content: center;
     }
 }
+
+.hero-title {
+    font-size: 3rem !important;
+    line-height: 1.2;
+}

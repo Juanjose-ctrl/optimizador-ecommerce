@@ -1,4 +1,4 @@
-// src/app/page.js - VERSIÓN FINAL PROFESIONAL Y PULIDA
+// src/app/page.js - VERSIÓN DEFINITIVA: Todo bonito usando tu CSS original
 
 'use client';
 import { useState } from 'react';
@@ -28,46 +28,42 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// HEADER: logo con gradiente + menú desplegable hermoso
+// HEADER: usando clases originales para logo y menú desplegable bonito
 const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
     <header className="header-main">
       <div className="logo">
-        <Link href="/" className="flex items-center gap-4">
+        <Link href="/" className="flex items-center gap-3">
           <Sun size={36} className="text-[var(--primary-color)]" />
-          <span className="text-4xl font-black bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] bg-clip-text text-transparent">
-            OptiCommerce
-          </span>
+          <span className="logo-text">OptiCommerce</span>  {/* ← Usa tu clase logo-text con gradiente perfecto */}
         </Link>
       </div>
 
       <nav className="flex items-center gap-10">
-        <div
-          className="relative"
+        {/* Menú desplegable usando tus clases originales */}
+        <div 
+          className="nav-dropdown"
           onMouseEnter={() => setIsServicesOpen(true)}
           onMouseLeave={() => setIsServicesOpen(false)}
         >
-          <button className="flex items-center gap-2 px-6 py-3 text-lg font-semibold text-[var(--text-color-primary)] rounded-xl hover:bg-[var(--bg-hover)] transition">
-            Servicios {isServicesOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          <button className="nav-link flex items-center gap-2">
+            Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
 
           {isServicesOpen && (
-            <div 
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[420px] bg-[var(--bg-card)] rounded-3xl shadow-2xl py-6 px-4 z-50 border border-[var(--border-color)]"
-              style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
-            >
+            <div className="nav-dropdown-menu">  {/* ← Usa tu clase original: sombra, radio, hover todo bonito */}
               {SERVICE_LINKS.map((service) => (
                 <Link
                   key={service.href}
                   href={service.href}
-                  className="flex items-center gap-6 px-6 py-5 mb-3 rounded-2xl hover:bg-[var(--bg-hover)] transition-all duration-200 last:mb-0"
+                  className="flex items-center gap-5"
                 >
-                  <service.icon size={32} className="text-[var(--primary-color)] flex-shrink-0" />
+                  <service.icon size={28} className="text-[var(--primary-color)]" />
                   <div>
-                    <div className="font-bold text-lg text-[var(--text-color-primary)]">{service.name}</div>
-                    <div className="text-sm text-[var(--text-color-secondary)] mt-1">{service.description}</div>
+                    <strong className="block font-semibold text-lg">{service.name}</strong>
+                    <p className="text-sm text-[var(--text-color-secondary)] m-0">{service.description}</p>
                   </div>
                 </Link>
               ))}
@@ -75,11 +71,11 @@ const Header = ({ onLoginClick }) => {
           )}
         </div>
 
-        <Link href="/pricing" className="nav-link text-lg font-medium">
+        <Link href="/pricing" className="nav-link">
           Precios
         </Link>
 
-        <button className="btn btn-primary text-lg px-8 py-3" onClick={() => onLoginClick('login')}>
+        <button className="btn btn-primary" onClick={() => onLoginClick('login')}>
           Iniciar Sesión
         </button>
       </nav>
@@ -87,31 +83,31 @@ const Header = ({ onLoginClick }) => {
   );
 };
 
-// FOOTER: frases separadas con espacio correcto
+// FOOTER: líneas separadas correctamente
 export const Footer = () => (
   <footer className="footer-main">
     <div className="app-container">
       <div className="footer-content">
         <div className="footer-section">
           <div className="logo">
-            <Link href="/" className="flex items-center gap-4">
-              <Sun size={30} className="text-[var(--primary-color)]" />
-              <h4 className="m-0 text-3xl font-bold text-[var(--primary-color)]">OptiCommerce</h4>
+            <Link href="/" className="flex items-center gap-3">
+              <Sun size={28} className="text-[var(--primary-color)]" />
+              <span className="logo-text text-3xl">OptiCommerce</span>
             </Link>
           </div>
-          <small className="block mt-8 text-[var(--text-color-secondary)] text-base">
+          <small className="block mt-8 text-[var(--text-color-secondary)]">
             © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
           </small>
-          <small className="block mt-4 text-[var(--text-color-secondary)] text-base">
+          <small className="block mt-4 text-[var(--text-color-secondary)]">
             Desarrollado por Juan José Guerrero.
           </small>
         </div>
 
         <div className="footer-section">
-          <h4 className="text-xl font-bold mb-6">Nuestros Servicios</h4>
-          <div className="flex flex-col gap-4">
+          <h4>Nuestros Servicios</h4>
+          <div className="flex flex-col gap-3 mt-4">
             {SERVICE_LINKS.map((service) => (
-              <Link key={service.href} href={service.href} className="footer-link text-base hover:text-[var(--primary-color)] transition">
+              <Link key={service.href} href={service.href} className="footer-link">
                 {service.name}
               </Link>
             ))}
@@ -119,21 +115,21 @@ export const Footer = () => (
         </div>
 
         <div className="footer-section">
-          <h4 className="text-xl font-bold mb-6">Información Legal</h4>
-          <div className="flex flex-col gap-4">
-            <Link href="/terminos" className="footer-link text-base hover:text-[var(--primary-color)] transition">Términos y Condiciones</Link>
-            <Link href="/privacidad" className="footer-link text-base hover:text-[var(--primary-color)] transition">Política de Privacidad</Link>
-            <Link href="/reembolso" className="footer-link text-base hover:text-[var(--primary-color)] transition">Política de Reembolso</Link>
-            <Link href="/cookies" className="footer-link text-base hover:text-[var(--primary-color)] transition">Política de Cookies</Link>
+          <h4>Información Legal</h4>
+          <div className="flex flex-col gap-3 mt-4">
+            <Link href="/terminos" className="footer-link">Términos y Condiciones</Link>
+            <Link href="/privacidad" className="footer-link">Política de Privacidad</Link>
+            <Link href="/reembolso" className="footer-link">Política de Reembolso</Link>
+            <Link href="/cookies" className="footer-link">Política de Cookies</Link>
           </div>
         </div>
 
         <div className="footer-section">
-          <h4 className="text-xl font-bold mb-6">Empresa</h4>
-          <div className="flex flex-col gap-4">
-            <Link href="/about" className="footer-link text-base hover:text-[var(--primary-color)] transition">Sobre Nosotros</Link>
-            <Link href="/contact" className="footer-link text-base hover:text-[var(--primary-color)] transition">Contacto</Link>
-            <Link href="/faq" className="footer-link text-base hover:text-[var(--primary-color)] transition">Preguntas Frecuentes (FAQ)</Link>
+          <h4>Empresa</h4>
+          <div className="flex flex-col gap-3 mt-4">
+            <Link href="/about" className="footer-link">Sobre Nosotros</Link>
+            <Link href="/contact" className="footer-link">Contacto</Link>
+            <Link href="/faq" className="footer-link">Preguntas Frecuentes (FAQ)</Link>
           </div>
         </div>
       </div>
@@ -171,12 +167,12 @@ export default function LandingPage() {
               </p>
 
               <div className="benefit-list">
-                <p><CheckCircle size={22} className="inline mr-3 text-[var(--primary-color)]" /> Prueba gratuita de 5 optimizaciones.</p>
-                <p><CheckCircle size={22} className="inline mr-3 text-[var(--primary-color)]" /> Compatible con WEBP, JPEG y PNG.</p>
-                <p><CheckCircle size={22} className="inline mr-3 text-[var(--primary-color)]" /> Compresión sin pérdida de calidad.</p>
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Prueba gratuita de 5 optimizaciones.</p>
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Compatible con WEBP, JPEG y PNG.</p>
+                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Compresión sin pérdida de calidad.</p>
               </div>
 
-              <button className="btn btn-primary btn-large mt-10" onClick={() => handleOpenModal('register')}>
+              <button className="btn btn-primary btn-large mt-8" onClick={() => handleOpenModal('register')}>
                 Comenzar a Optimizar Gratis
               </button>
             </div>
@@ -191,7 +187,7 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* === SECCIÓN DE PASOS === */}
+          {/* SECCIÓN PASOS */}
           <section className="section-box">
             <h2 className="section-title">¿Cómo funciona OptiCommerce?</h2>
             <div className="steps-grid">
@@ -214,7 +210,7 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* === SECCIÓN DE FEATURES === */}
+          {/* SECCIÓN FEATURES */}
           <section className="section-box">
             <h2 className="section-title">¿Por qué OptiCommerce es la mejor opción?</h2>
             <div className="features-grid">
