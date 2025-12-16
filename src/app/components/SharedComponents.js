@@ -1,21 +1,39 @@
 // src/app/components/SharedComponents.js
 
 'use client'; 
-// Si estos componentes usan 'useState' o eventos de ratón, necesitan esta directiva
-// aunque se llamen desde un Server Component (page.js en este caso).
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { 
-  Sun, Shield, TrendingUp, Leaf, DollarSign,
-  ChevronDown, ChevronUp, Image, Code, FileText 
+  Sun, ChevronDown, ChevronUp, Image, Code, FileText 
 } from 'lucide-react';
 
-// --- 1. SERVICE_LINKS ---
+// --- 1. SERVICE_LINKS (AGREGAMOS LA PROPIEDAD 'key' PARA EL DROPDOWN) ---
 export const SERVICE_LINKS = [
-  { name: "Optimizador WebP", href: "/", icon: Image, description: "Comprime imágenes para Core Web Vitals.", isPrimary: true },
-  { name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios y comentarios.", isPrimary: false },
-  { name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", isPrimary: false },
+  { 
+    key: "image",
+    name: "Optimizador WebP", 
+    href: "/", 
+    icon: Image, 
+    description: "Comprime imágenes para Core Web Vitals.", 
+    isPrimary: true 
+  },
+  { 
+    key: "minify",
+    name: "Minificador CSS/JS", 
+    href: "/minificador-css-js", 
+    icon: Code, 
+    description: "Acelera tu código eliminando espacios y comentarios.", 
+    isPrimary: false 
+  },
+  { 
+    key: "metadata",
+    name: "Limpiador de Metadatos", 
+    href: "/limpiar-metadatos-imagen", 
+    icon: FileText, 
+    description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", 
+    isPrimary: false 
+  },
 ];
 
 // --- 2. FeatureCard ---
@@ -29,14 +47,13 @@ export const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// --- 3. Header (CON CORRECCIÓN DE DISEÑO APLICADA) ---
+// --- 3. Header (CORREGIDO) ---
 export const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
     <header className="header-main">
-      {/* 🚨 CORRECCIÓN CLAVE: El flexbox y el centrado (app-container) deben ir DENTRO del header. */}
-      <div className="app-container flex justify-between items-center"> 
+      <div className="app-container">
         <div className="logo">
           <Link href="/" className="flex items-center gap-3">
             <Sun size={36} className="text-[var(--primary-color)]" />
@@ -44,7 +61,7 @@ export const Header = ({ onLoginClick }) => {
           </Link>
         </div>
 
-        <nav className="flex items-center gap-10">
+        <nav>
           <div
             className="nav-dropdown"
             onMouseEnter={() => setIsServicesOpen(true)}
@@ -81,7 +98,7 @@ export const Header = ({ onLoginClick }) => {
             Iniciar Sesión
           </button>
         </nav>
-      </div> 
+      </div>
     </header>
   );
 };
