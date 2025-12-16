@@ -43,12 +43,15 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
 );
 
 // HEADER: full-width + botón mega menú bonito y estable
+const Header = ({ onLoginClick }) => {// REEMPLAZA SOLO EL COMPONENTE Header EN TU page.js
+
 const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
-    <header className="header-main">  {/* CSS ya hace full-width */}
-      <div className="flex items-center gap-10">  {/* Logo + botón a la izquierda */}
+    <header className="header-main">
+      <div className="flex items-center gap-10">
+        {/* LOGO */}
         <div className="logo">
           <Link href="/" className="flex items-center gap-4">
             <Sun size={36} className="text-[var(--primary-color)]" />
@@ -56,6 +59,7 @@ const Header = ({ onLoginClick }) => {
           </Link>
         </div>
 
+        {/* MENÚ DESPLEGABLE (NO TOCADO) */}
         <div 
           className="services-mega-menu-container relative"
           onMouseEnter={() => setIsServicesOpen(true)}
@@ -101,7 +105,43 @@ const Header = ({ onLoginClick }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-10">  {/* Precios e Iniciar Sesión a la derecha */}
+      {/* ========== CENTRO: NAVEGACIÓN + BADGE ========== */}
+      <div className="flex items-center gap-8 flex-1 justify-center">
+        {/* Navegación de links */}
+        <nav className="hidden xl:flex items-center gap-6">
+          <Link 
+            href="/about" 
+            className="text-[var(--text-color-primary)] hover:text-[var(--primary-color)] font-medium transition-colors duration-200 text-base"
+          >
+            Nosotros
+          </Link>
+          <Link 
+            href="/faq" 
+            className="text-[var(--text-color-primary)] hover:text-[var(--primary-color)] font-medium transition-colors duration-200 text-base"
+          >
+            FAQ
+          </Link>
+          <Link 
+            href="/contact" 
+            className="text-[var(--text-color-primary)] hover:text-[var(--primary-color)] font-medium transition-colors duration-200 text-base"
+          >
+            Contacto
+          </Link>
+        </nav>
+
+        {/* Badge Promocional */}
+        <div className="hidden lg:flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--accent-color)]/10 rounded-full border border-[var(--primary-color)]/20 transition-all duration-300 hover:shadow-lg hover:scale-105">
+          <span className="text-xs font-bold text-[var(--primary-color)] uppercase tracking-wide">
+            🚀 Nuevo
+          </span>
+          <span className="text-sm text-[var(--text-color-primary)] font-medium">
+            50% OFF - Primeros 100 usuarios
+          </span>
+        </div>
+      </div>
+
+      {/* DERECHA: Precios + Login (NO TOCADO) */}
+      <div className="flex items-center gap-10">
         <Link href="/pricing" className="nav-link text-lg font-medium">
           Precios
         </Link>
@@ -112,6 +152,7 @@ const Header = ({ onLoginClick }) => {
       </div>
     </header>
   );
+};
 };
 
 // FOOTER (sin cambios, ya estaba bien)
