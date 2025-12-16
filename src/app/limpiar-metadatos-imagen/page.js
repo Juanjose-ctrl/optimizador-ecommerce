@@ -4,7 +4,7 @@
 'use client';
 import { useState } from 'react';
 // Importamos Header, Footer y FeatureCard (ahora con export en ../page)
-import { Header, Footer, FeatureCard } from '../page'; 
+import { Header, Footer, FeatureCard } from '../components/SharedComponents';
 import Link from 'next/link';
 
 // Componentes y íconos
