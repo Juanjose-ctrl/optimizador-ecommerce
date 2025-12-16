@@ -5,38 +5,59 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { 
-  Sun, ChevronDown, ChevronUp, Image, Code, FileText 
+  Sun, ChevronDown, ChevronUp, Image, Code, FileText, 
+  Zap, Shield, Palette, TrendingUp, Leaf, DollarSign // Añadimos iconos necesarios para categorías y FeatureCard
 } from 'lucide-react';
 
-// --- 1. SERVICE_LINKS (AGREGAMOS LA PROPIEDAD 'key' PARA EL DROPDOWN) ---
-export const SERVICE_LINKS = [
-  { 
-    key: "image",
-    name: "Optimizador WebP", 
-    href: "/", 
-    icon: Image, 
-    description: "Comprime imágenes para Core Web Vitals.", 
-    isPrimary: true 
+// --- 1. SERVICE_CATEGORIES (Nueva estructura de Mega Menú) ---
+export const SERVICE_CATEGORIES = [
+  {
+    title: "Optimización de Archivos",
+    icon: Zap, 
+    services: [
+      { 
+        name: "Optimizador WebP/Imágenes", 
+        href: "/", 
+        icon: Image, 
+        description: "Comprime imágenes de producto para Core Web Vitals (WebP, JPEG, PNG)."
+      },
+      { 
+        name: "Minificador CSS/JS", 
+        href: "/minificador-css-js", 
+        icon: Code, 
+        description: "Acelera tu código eliminando espacios, comentarios y bytes innecesarios."
+      },
+    ]
   },
-  { 
-    key: "minify",
-    name: "Minificador CSS/JS", 
-    href: "/minificador-css-js", 
-    icon: Code, 
-    description: "Acelera tu código eliminando espacios y comentarios.", 
-    isPrimary: false 
+  {
+    title: "Seguridad y Privacidad",
+    icon: Shield, 
+    services: [
+      { 
+        name: "Limpiador de Metadatos", 
+        href: "/limpiar-metadatos-imagen", 
+        icon: FileText, 
+        description: "Protege tu privacidad y reduce el peso al eliminar datos EXIF y ocultos."
+      },
+    ]
   },
-  { 
-    key: "metadata",
-    name: "Limpiador de Metadatos", 
-    href: "/limpiar-metadatos-imagen", 
-    icon: FileText, 
-    description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", 
-    isPrimary: false 
+  {
+    title: "Marca y Utilidades",
+    icon: Palette, 
+    services: [
+      { 
+        name: "Herramientas de Diseño", 
+        href: "/design", 
+        icon: Palette, 
+        description: "Favicon, Paleta de colores y utilidades de marca."
+      },
+      // Puedes añadir más utilidades aquí más adelante
+    ]
   },
 ];
 
-// --- 2. FeatureCard ---
+
+// --- 2. FeatureCard (Se mantiene igual, solo se asegura la exportación) ---
 export const FeatureCard = ({ icon: Icon, title, description, color }) => (
   <div className="feature-card">
     <div className="icon-wrapper" style={{ backgroundColor: color }}>
@@ -47,13 +68,16 @@ export const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// --- 3. Header (CORREGIDO - SIN HOVER EN TODO EL HEADER) ---
+// --- 3. Header (CORREGIDO: Alineación Flex y Mega Menú restaurado) ---
 export const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
     <header className="header-main">
-      <div className="app-container">
+      {/* 🚨 CORRECCIÓN CLAVE: app-container con Flexbox para alinear logo y nav */}
+      <div className="app-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        
+        {/* Lado Izquierdo: Logo */}
         <div className="logo">
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Sun size={36} style={{ color: 'var(--primary-color)' }} />
@@ -61,34 +85,74 @@ export const Header = ({ onLoginClick }) => {
           </Link>
         </div>
 
-        <nav>
+        {/* Lado Derecho: Navegación y Botón */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+          
+          {/* Menú Desplegable (Mega Menú) */}
           <div 
-  className="nav-dropdown"
-  onMouseEnter={() => setIsServicesOpen(true)}
-  onMouseLeave={() => setIsServicesOpen(false)}
->
-  <button className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-  </button>
+            className="nav-dropdown"
+            onMouseEnter={() => setIsServicesOpen(true)}
+            onMouseLeave={() => setIsServicesOpen(false)}
+          >
+            <button className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </button>
 
             {isServicesOpen && (
-              <div className="nav-dropdown-menu">
-                {SERVICE_LINKS.map((service) => (
-                  <Link
-                    key={service.href}
-                    href={service.href}
-                    style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
-                  >
-                    <service.icon size={28} style={{ color: 'var(--primary-color)' }} />
-                    <div>
-                      <strong style={{ display: 'block', fontWeight: 600, fontSize: '1.05rem' }}>
-                        {service.name}
-                      </strong>
-                      <p style={{ fontSize: '0.9rem', color: 'var(--text-color-secondary)', margin: 0 }}>
-                        {service.description}
-                      </p>
+              <div className="nav-dropdown-menu" style={{ 
+                display: 'grid', 
+                gridTemplateColumns: `repeat(${SERVICE_CATEGORIES.length}, 1fr)`,
+                gap: '24px', 
+                minWidth: '700px'
+              }}>
+                
+                {/* ITERAR SOBRE CATEGORÍAS */}
+                {SERVICE_CATEGORIES.map((category) => (
+                  <div key={category.title} className="category-column">
+                    {/* Título de la Categoría */}
+                    <h5 style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      fontWeight: 700, 
+                      color: 'var(--primary-color)',
+                      padding: '8px 0',
+                      borderBottom: '1px solid var(--border-color)',
+                      marginBottom: '10px'
+                    }}>
+                      <category.icon size={20} />
+                      {category.title}
+                    </h5>
+                    
+                    {/* Iterar sobre los Servicios de la Categoría */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {category.services.map((service) => (
+                        <Link
+                          key={service.href}
+                          href={service.href}
+                          className="mega-menu-item" 
+                          style={{ 
+                            display: 'flex', 
+                            alignItems: 'flex-start', 
+                            gap: '16px', 
+                            padding: '10px', 
+                            borderRadius: '4px',
+                            transition: 'background-color 0.2s'
+                          }}
+                        >
+                          <service.icon size={24} style={{ color: 'var(--primary-color)', flexShrink: 0 }} />
+                          <div>
+                            <strong style={{ display: 'block', fontWeight: 600, fontSize: '1rem' }}>
+                              {service.name}
+                            </strong>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-color-secondary)', margin: 0 }}>
+                              {service.description}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}
@@ -107,7 +171,7 @@ export const Header = ({ onLoginClick }) => {
   );
 };
 
-// --- 4. Footer ---
+// --- 4. Footer (Corregido para iterar sobre Categorías) ---
 export const Footer = () => (
   <footer className="footer-main">
     <div className="app-container">
@@ -127,13 +191,19 @@ export const Footer = () => (
           </small>
         </div>
 
+        {/* 🚨 Corrección aquí: Iterar sobre SERVICE_CATEGORIES */}
         <div className="footer-section">
           <h4>Nuestros Servicios</h4>
           <div className="flex flex-col gap-3 mt-4">
-            {SERVICE_LINKS.map((service) => (
-              <Link key={service.href} href={service.href} className="footer-link">
-                {service.name}
-              </Link>
+            {SERVICE_CATEGORIES.map((category) => ( 
+              <div key={category.title}>
+                <p className="font-semibold text-white mt-2 mb-1">{category.title}</p>
+                {category.services.map((service) => (
+                  <Link key={service.href} href={service.href} className="footer-link">
+                    {service.name}
+                  </Link>
+                ))}
+              </div>
             ))}
           </div>
         </div>
