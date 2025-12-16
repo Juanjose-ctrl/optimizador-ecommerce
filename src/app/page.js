@@ -1,4 +1,4 @@
-// src/app/page.js - VERSIÓN FINAL: Header full-width + Botón mega menú perfecto
+// src/app/page.js - VERSIÓN FINAL Y COMPILABLE
 
 'use client';
 import { useState } from 'react';
@@ -6,18 +6,24 @@ import Link from 'next/link';
 
 import FileDropzone from './components/FileDropzone';
 import AuthModal from './components/AuthModal';
+// Asumiendo que estos componentes existen
+// Nota: Si Header y Footer son internos a page.js, no necesitan importación,
+// pero si están en archivos separados, deben ser importados aquí.
+// Asumimos que los tienes definidos más abajo o importados de otro archivo.
 
 import {
-  CheckCircle, Sun, Shield, TrendingUp, Leaf, DollarSign,
-  Image, Code, FileText, Menu, Zap
+  CheckCircle, Sun, Shield, TrendingUp, Leaf, DollarSign, Zap,
+  ChevronDown, ChevronUp, Image, Code, FileText // Asegúrate de importar Zap
 } from 'lucide-react';
 
+// 🚨 EXPORTAMOS LA LISTA DE SERVICIOS (Con la propiedad 'key' restaurada)
 export const SERVICE_LINKS = [
-  { key: "image", name: "Optimizador WebP/Imágenes", href: "/", icon: Image, description: "Comprime imágenes para Core Web Vitals.", isPrimary: true },
+  { key: "image", name: "Optimizador WebP", href: "/", icon: Image, description: "Comprime imágenes para Core Web Vitals.", isPrimary: true },
   { key: "minify", name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios y comentarios.", isPrimary: false },
   { key: "metadata", name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", isPrimary: false },
 ];
 
+// 🚨 DEFINICIÓN AÑADIDA PARA SOLUCIONAR EL ERROR DE REFERENCIA EN VERCEL
 export const SERVICE_CATEGORIES = [
   {
     name: "Herramientas de Optimización Web",
@@ -26,237 +32,222 @@ export const SERVICE_CATEGORIES = [
 ];
 
 
-export const FeatureCard = ({ icon: Icon, title, description, color }) => (
-  <div className="feature-card">
-    <div className="icon-wrapper" style={{ backgroundColor: color }}>
-      <Icon size={32} color="white" />
+const FeatureCard = ({ icon: Icon, title, description, color }) => (
+    <div className="feature-card">
+        <div className="icon-wrapper" style={{ backgroundColor: color }}>
+        <Icon size={32} color="white" />
+        </div>
+        <h3 className="card-title">{title}</h3>
+        <p className="card-description">{description}</p>
     </div>
-    <h3 className="card-title">{title}</h3>
-    <p className="card-description">{description}</p>
-  </div>
 );
 
-// HEADER: full-width + botón mega menú bonito y estable
-export const Header = ({ onLoginClick }) => {
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
+// HEADER (Con chequeo de nulidad para evitar el TypeError en Vercel)
+const Header = ({ onLoginClick }) => {
+    const [isServicesOpen, setIsServicesOpen] = useState(false);
+    
+    const toggleServicesMenu = () => setIsServicesOpen(!isServicesOpen);
+    const CloseIcon = isServicesOpen ? ChevronUp : ChevronDown;
 
-  return (
-    <header className="header-main">  {/* CSS ya hace full-width */}
-      <div className="flex items-center gap-10">  {/* Logo + botón a la izquierda */}
-        <div className="logo">
-          <Link href="/" className="flex items-center gap-4">
-            <Sun size={36} className="text-[var(--primary-color)]" />
-            <span className="logo-text text-4xl">OptiCommerce</span>
-          </Link>
-        </div>
+    return (
+        <header className="header-main">
+            <div className="app-container">
+                <nav className="header-nav">
+                    <Link href="/" className="logo">
+                        OptiCommerce <Zap size={24} color="#008080" />
+                    </Link>
 
-        <div 
-          className="services-mega-menu-container relative"
-          onMouseEnter={() => setIsServicesOpen(true)}
-          onMouseLeave={() => setIsServicesOpen(false)}
-        >
-          <div className="services-fixed-box cursor-pointer">
-            <Menu size={20} className="mr-3" />
-            <span className="font-semibold text-lg">Nuestros Servicios</span>
-          </div>
-
-          {isServicesOpen && (
-            <div className="mega-menu-dropdown is-open">
-              <div className="mega-menu-grid">
-                {SERVICE_CATEGORIES.map((categoryData, index) => (
-                  <div key={index} className="mega-menu-category">
-                    <h4 className="category-title flex items-center gap-3 font-bold text-lg mb-5 pb-3 border-b-2" style={{ color: categoryData.color }}>
-                      <categoryData.icon size={24} />
-                      {categoryData.category}
-                    </h4>
-                    <div className="category-links">
-                      {categoryData.services.map((service) => (
-                        <Link 
-                          key={service.href} 
-                          href={service.href} 
-                          className="mega-menu-link block"
-                          onClick={() => setIsServicesOpen(false)}
-                        >
-                          <div className="flex items-start gap-4">
-                            <service.icon size={22} className="text-[var(--primary-color)] mt-1 flex-shrink-0" />
-                            <div>
-                              <strong className="block font-semibold text-base">{service.name}</strong>
-                              <span className="text-sm text-[var(--text-color-secondary)] block mt-1">{service.description}</span>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
+                    <div className="nav-menu">
+                        <div className="services-dropdown">
+                            <button onClick={toggleServicesMenu} className="dropdown-toggle">
+                                Servicios <CloseIcon size={18} />
+                            </button>
+                            {isServicesOpen && (
+                                <div className="dropdown-menu">
+                                    {SERVICE_CATEGORIES.map((category, catIndex) => (
+                                        <div key={catIndex} className="category-group">
+                                            {SERVICE_CATEGORIES.length > 1 && <h4 className="category-title">{category.name}</h4>} 
+                                            <div className="category-links">
+                                                {category.links.map(link => (
+                                                    // 🚨 CHEQUEO CRÍTICO: link && para prevenir el error 'href'
+                                                    link && (
+                                                        <Link 
+                                                            key={link.key} 
+                                                            href={link.href} 
+                                                            className="dropdown-link" 
+                                                            onClick={() => setIsServicesOpen(false)}
+                                                        >
+                                                            <link.icon size={20} />
+                                                            <div>
+                                                                <span className="link-name">{link.name}</span>
+                                                                <p className="link-description">{link.description}</p>
+                                                            </div>
+                                                        </Link>
+                                                    )
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        
+                        <Link href="/precios" className="nav-link">Precios</Link>
+                        <button onClick={onLoginClick} className="btn btn-secondary">
+                            Iniciar Sesión
+                        </button>
                     </div>
-                  </div>
-                ))}
-              </div>
+
+                    <div className="mobile-menu-toggle">
+                        <button onClick={onLoginClick} className="btn btn-secondary">
+                            <Sun size={20} />
+                        </button>
+                    </div>
+
+                </nav>
             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-10">  {/* Precios e Iniciar Sesión a la derecha */}
-        <Link href="/pricing" className="nav-link text-lg font-medium">
-          Precios
-        </Link>
-
-        <button className="btn btn-primary text-lg px-8 py-3" onClick={() => onLoginClick('login')}>
-          Iniciar Sesión
-        </button>
-      </div>
-    </header>
-  );
+        </header>
+    );
 };
 
-// FOOTER (sin cambios, ya estaba bien)
-export const Footer = () => (
-  <footer className="footer-main">
-    <div className="app-container">
-      <div className="footer-content">
-        <div className="footer-section">
-          <div className="logo">
-            <Link href="/" className="flex items-center gap-4">
-              <Sun size={30} className="text-[var(--primary-color)]" />
-              <span className="logo-text text-3xl">OptiCommerce</span>
-            </Link>
-          </div>
-          <small className="block mt-8 text-[var(--text-color-secondary)]">
-            © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
-          </small>
-          <small className="block mt-4 text-[var(--text-color-secondary)]">
-            Desarrollado por Juan José Guerrero.
-          </small>
+// FOOTER (Chequeo similar para el Footer)
+const Footer = () => (
+    <footer className="footer-main">
+        <div className="app-container">
+            <div className="footer-content">
+                <div className="footer-section footer-brand">
+                    <Link href="/" className="logo">
+                        OptiCommerce <Zap size={24} color="#FFFFFF" />
+                    </Link>
+                    <p>Optimización web profesional para Core Web Vitals.</p>
+                </div>
+                
+                <div className="footer-section">
+                    <h4>Servicios</h4>
+                    <ul>
+                        {SERVICE_LINKS.map(link => (
+                            // 🚨 CHEQUEO SIMILAR PARA EL FOOTER
+                            link && <li key={link.key}><Link href={link.href}>{link.name}</Link></li>
+                        ))}
+                    </ul>
+                </div>
+                
+                <div className="footer-section">
+                    <h4>Empresa</h4>
+                    <ul>
+                        <li><Link href="/precios">Precios</Link></li>
+                        <li><a href="mailto:soporte@opticomerce.com">Contacto</a></li>
+                        <li><Link href="/legal">Términos y Condiciones</Link></li>
+                    </ul>
+                </div>
+            </div>
+            <div className="footer-bottom">
+                <p>&copy; {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.</p>
+                <div className="social-links">
+                    {/* Iconos de redes sociales */}
+                </div>
+            </div>
         </div>
-
-        <div className="footer-section">
-          <h4 className="font-bold mb-4">Nuestros Servicios</h4>
-          <div className="flex flex-col gap-3">
-            {SERVICE_CATEGORIES.flatMap(cat => cat.services).map((service) => (
-              <Link key={service.href} href={service.href} className="footer-link text-base">
-                {service.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="footer-section">
-          <h4 className="font-bold mb-4">Información Legal</h4>
-          <div className="flex flex-col gap-3">
-            <Link href="/terminos" className="footer-link text-base">Términos y Condiciones</Link>
-            <Link href="/privacidad" className="footer-link text-base">Política de Privacidad</Link>
-            <Link href="/reembolso" className="footer-link text-base">Política de Reembolso</Link>
-            <Link href="/cookies" className="footer-link text-base">Política de Cookies</Link>
-          </div>
-        </div>
-
-        <div className="footer-section">
-          <h4 className="font-bold mb-4">Empresa</h4>
-          <div className="flex flex-col gap-3">
-            <Link href="/about" className="footer-link text-base">Sobre Nosotros</Link>
-            <Link href="/contact" className="footer-link text-base">Contacto</Link>
-            <Link href="/faq" className="footer-link text-base">Preguntas Frecuentes (FAQ)</Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
+    </footer>
 );
 
-// LANDING PAGE: Header full-width + contenido centrado
-export default function LandingPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalView, setModalView] = useState('login');
 
-  const handleOpenModal = (view) => {
-    setModalView(view);
-    setIsModalOpen(true);
-  };
+export default function Home({ initialService = 'image' }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalView, setModalView] = useState('login'); 
 
-  const handleFreeLimitReached = () => {
-    handleOpenModal('register');
-  };
+    const handleLimitReached = () => {
+        setModalView('register');
+        setIsModalOpen(true);
+    };
 
-  return (
-    <>
-      {/* Header full-width */}
-      <Header onLoginClick={handleOpenModal} />
+    const handleLoginClick = () => {
+        setModalView('login');
+        setIsModalOpen(true);
+    };
+    
+    // Obtiene la clave del servicio de la URL actual para el FileDropzone
+    const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+    const currentLink = SERVICE_LINKS.find(link => link.href === currentPath) || SERVICE_LINKS[0];
+    const currentServiceKey = currentLink.key;
 
-      {/* Contenido principal centrado en 1200px */}
-      <div className="app-container">
-        <main>
-          <section className="section-hero">
-            <div className="hero-left">
-              <h1 className="hero-title">
-                Optimización de Imágenes para eCommerce Ecológica y Eficiente
-              </h1>
-              <p className="hero-subtitle">
-                Reduce el peso de tus imágenes de producto hasta un 70% sin perder calidad.
-              </p>
+    return (
+        <>
+            <Header onLoginClick={handleLoginClick} />
 
-              <div className="benefit-list">
-                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Prueba gratuita de 5 optimizaciones.</p>
-                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Compatible con WEBP, JPEG y PNG.</p>
-                <p><CheckCircle size={20} className="inline mr-3 text-[var(--primary-color)]" /> Compresión sin pérdida de calidad.</p>
-              </div>
+            <div className="main-content-wrapper">
+                <main className="app-container">
 
-              <button className="btn btn-primary btn-large mt-10" onClick={() => handleOpenModal('register')}>
-                Comenzar a Optimizar Gratis
-              </button>
+                    {/* SECCIÓN PRINCIPAL DE OPTIMIZACIÓN */}
+                    <section className="section-hero">
+                        <div className="hero-left">
+                            <h1 className="hero-title">Acelera tu Tienda Shopify con <span className="highlight">Optimización Inteligente</span></h1>
+                            <p className="hero-subtitle">OptiCommerce reduce el tamaño de tus archivos web automáticamente para mejorar tus Core Web Vitals y posicionamiento SEO.</p>
+                            <Link href="#optimization-section" className="btn btn-primary btn-cta">
+                                Empezar Gratis <Zap size={20} style={{ marginLeft: '5px' }} />
+                            </Link>
+                        </div>
+                        <div className="hero-right">
+                            <img 
+                                src="/images/hero-image-placeholder.webp" 
+                                alt="Dashboard de optimización web" 
+                                className="hero-image"
+                            />
+                        </div>
+                    </section>
+                    
+                    <a id="optimization-section"></a> 
+
+                    <FileDropzone 
+                        isAuthenticated={false} 
+                        onLimitReached={handleLimitReached} 
+                        // 🚨 Usamos la clave del servicio obtenida de la URL, o 'image' por defecto
+                        defaultService={currentServiceKey} 
+                    />
+
+                    {/* SECCIÓN HOW IT WORKS */}
+                    <section className="section-box section-steps">
+                        <h2 className="section-title">¿Cómo funciona?</h2>
+                        <div className="steps-grid">
+                            <div className="step-card">
+                                <div className="step-number">1</div>
+                                <p><strong>Selecciona tu Servicio.</strong> Escoge entre Optimizador WebP, Minificador CSS/JS o Limpiador de Metadatos.</p>
+                            </div>
+                            <div className="step-card">
+                                <div className="step-number">2</div>
+                                <p><strong>Sube tus Archivos.</strong> Arrastra y suelta tus imágenes o código. Aceptamos múltiples archivos a la vez.</p>
+                            </div>
+                            <div className="step-card">
+                                <div className="step-number">3</div>
+                                <p><strong>Optimización Automática.</strong> Nuestro motor procesa tus archivos en segundos.</p>
+                            </div>
+                            <div className="step-card">
+                                <div className="step-number">4</div>
+                                <p><strong>Descarga Instantánea.</strong> Descarga tus archivos optimizados y listos para subir a tu web.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* SECCIÓN FEATURES */}
+                    <section className="section-box">
+                        <h2 className="section-title">¿Por qué OptiCommerce es la mejor opción?</h2>
+                        <div className="features-grid">
+                        <FeatureCard icon={Shield} title="Seguridad de Datos" description="Tus datos y archivos están protegidos con encriptación HTTPS. Total tranquilidad para tu negocio." color="#008080" />
+                        <FeatureCard icon={TrendingUp} title="Rendimiento Web Superior" description="Aumenta tu puntuación de PageSpeed y reduce tu tasa de rebote gracias a la velocidad de carga." color="#10B981" />
+                        <FeatureCard icon={Leaf} title="Conciencia Ecológica" description="Archivos más pequeños significan menos consumo de energía en transferencia de datos. Optimización sostenible." color="#40B5AD" />
+                        <FeatureCard icon={DollarSign} title="Ahorro en Hosting" description="Menos ancho de banda utilizado por tus visitantes se traduce en menores costos mensuales de alojamiento." color="#1A202C" />
+                        </div>
+                    </section>
+                </main>
+
+                <Footer />
             </div>
 
-            <div className="hero-right">
-              <FileDropzone
-                isAuthenticated={false}
-                onLimitReached={handleFreeLimitReached}
-                userCredits={5}
-                defaultService="image"
-              />
-            </div>
-          </section>
-
-          {/* === SECCIÓN PASOS === */}
-          <section className="section-box">
-            <h2 className="section-title">¿Cómo funciona OptiCommerce?</h2>
-            <div className="steps-grid">
-              <div className="step-item">
-                <div className="step-number">1</div>
-                <p><strong>Prueba Gratuita.</strong> Sube tu primera imagen ahora, no requiere registro (Máximo 5).</p>
-              </div>
-              <div className="step-item">
-                <div className="step-number">2</div>
-                <p><strong>Sube tu Imagen.</strong> Arrastra el archivo de tu producto (PNG o JPEG) a la zona de carga.</p>
-              </div>
-              <div className="step-item">
-                <div className="step-number">3</div>
-                <p><strong>Optimiza y Ahorra.</strong> Nuestro motor de IA comprime y convierte a formatos modernos de forma automática.</p>
-              </div>
-              <div className="step-item">
-                <div className="step-number">4</div>
-                <p><strong>Regístrate para Continuar.</strong> Al alcanzar el límite, te pediremos registrarte o comprar un plan.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* === SECCIÓN FEATURES === */}
-          <section className="section-box">
-            <h2 className="section-title">¿Por qué OptiCommerce es la mejor opción?</h2>
-            <div className="features-grid">
-              <FeatureCard icon={Shield} title="Seguridad de Datos" description="Tus datos y archivos están protegidos con encriptación HTTPS. Total tranquilidad para tu negocio." color="#008080" />
-              <FeatureCard icon={TrendingUp} title="Rendimiento Web Superior" description="Aumenta tu puntuación de PageSpeed y reduce tu tasa de rebote gracias a la velocidad de carga." color="#10B981" />
-              <FeatureCard icon={Leaf} title="Conciencia Ecológica" description="Archivos más pequeños significan menos consumo de energía en transferencia de datos. Optimización sostenible." color="#40B5AD" />
-              <FeatureCard icon={DollarSign} title="Ahorro en Hosting" description="Menos ancho de banda utilizado por tus visitantes se traduce en menores costos mensuales de alojamiento." color="#1A202C" />
-            </div>
-          </section>
-        </main>
-
-        <Footer />
-      </div>
-
-      <AuthModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        initialView={modalView}
-      />
-    </>
-  );
+            <AuthModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                initialView={modalView}
+            />
+        </>
+    );
 }

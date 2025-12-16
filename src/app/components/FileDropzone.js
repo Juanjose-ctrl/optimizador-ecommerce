@@ -1,12 +1,12 @@
-// src/app/components/FileDropzone.js (VERSIÓN CORREGIDA CON DROPDOWN DE SERVICIOS)
+// src/app/components/FileDropzone.js (VERSIÓN CON DROPDOWN DE SERVICIOS)
 
 'use client'; 
 
-import { useState, useRef, useEffect, useMemo } from 'react'; // 🚨 Agregado useMemo
-import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download, ChevronDown, ChevronUp, Image, Code, FileText } from 'lucide-react'; // 🚨 Agregados ChevronDown, ChevronUp, Image, Code, FileText
+import { useState, useRef, useEffect, useMemo } from 'react'; 
+import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download, ChevronDown, ChevronUp, Image, Code, FileText } from 'lucide-react'; 
 import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
 
-// 🚨 IMPORTAMOS LOS LINKS DE SERVICIO
+// 🚨 IMPORTAMOS LOS LINKS DE SERVICIO EXPORTADOS DE page.js
 import { SERVICE_LINKS } from '../page';
 
 
@@ -15,12 +15,12 @@ const FREE_CREDITS_KEY = 'freeCreditsRemaining';
 
 // 🚨 CONFIGURACIÓN DE SERVICIOS Y ENDPOINTS 🚨
 const SERVICE_CONFIG = {
-    // Servicio 1: Optimización de Imagen (el que ya tenías)
+    // Servicio 1: Optimización de Imagen
     image: {
         endpoint: '/optimize-batch',
         endpoint_free: '/optimize-batch-free',
         accept: ALLOWED_MIME_TYPES, // ['image/jpeg', 'image/png']
-        name: 'Optimizador WebP', // Nombre ajustado para el dropdown
+        name: 'Optimizador WebP', 
     },
     // Servicio 2: Minificación de Código (CSS/JS)
     minify: {
@@ -74,11 +74,10 @@ const initializeFreeCredits = () => {
 };
 
 
-// 🚨 MODIFICACIÓN EN PROPS: Aceptar defaultService
+// 🚨 MODIFICACIÓN EN PROPS: Aceptar defaultService (la clave: 'image', 'minify', etc.)
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5, defaultService = 'image' }) { 
     
     // --- ESTADOS ---
-    // 🚨 CORRECCIÓN 1: Inicializar el estado con defaultService
     const [selectedService, setSelectedService] = useState(defaultService);
     // 🚨 NUEVO ESTADO para el dropdown
     const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
@@ -92,15 +91,17 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     const [isOptimizing, setIsOptimizing] = useState(false);
     const [optimizationResults, setOptimizationResults] = useState([]);
 
-    // 🚨 CORRECCIÓN 2: Sincronizar el estado del servicio al cambiar la prop (navegación Next.js)
+    // 🚨 Sincronizar el estado del servicio al cambiar la prop (es vital para el funcionamiento)
     useEffect(() => {
-        if (selectedService !== defaultService) {
+        // Solo actualizamos si la prop es diferente del estado actual
+        if (selectedService !== defaultService) { 
             setSelectedService(defaultService);
+            // Limpiamos cola y resultados al cambiar de servicio para evitar bugs
             setFiles([]);
             setFileError('');
             setOptimizationResults([]);
         }
-    }, [defaultService]); // Se ejecuta cada vez que la prop 'defaultService' cambia.
+    }, [defaultService]); 
 
 
     // 3. Lógica de Carga de Créditos en el Cliente
@@ -118,7 +119,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     }, [isAuthenticated, userCredits]);
 
 
-    // 🚨 NUEVA LÓGICA DE SERVICIO
+    // 🚨 LÓGICA DE DROPDOWN Y NAVEGACIÓN
     const currentServiceLink = useMemo(() => {
         // Busca el objeto completo del link para usar su icono y descripción
         return SERVICE_LINKS.find(s => s.key === selectedService) || SERVICE_LINKS[0];
@@ -342,7 +343,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     return (
         <section className="optimization-section">
             <div className="section-header">
-                {/* 🚨 REEMPLAZO DEL BLOQUE DE PESTAÑAS POR EL DROPDOWN */}
+                {/* 🚨 DROPDOWN DE SELECCIÓN DE SERVICIO */}
                 <div className="service-dropdown-container">
                     <button 
                         className="service-dropdown-btn"
@@ -368,7 +369,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                                     <button 
                                         key={service.key} 
                                         className={`service-option ${isActive ? 'active' : ''}`}
-                                        // 🚨 Llama a handleServiceChange para navegar
+                                        // 🚨 Llama a handleServiceChange para navegar (window.location.href)
                                         onClick={() => handleServiceChange(service.key, service.href)}
                                         disabled={isActive}
                                     >
@@ -385,7 +386,6 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                 </div>
                 {limitMessage}
             </div>
-            {/* 🚨 Bloque de pestañas anterior eliminado */}
             
             {/* ZONA DE DROPZONE */}
             <div 
