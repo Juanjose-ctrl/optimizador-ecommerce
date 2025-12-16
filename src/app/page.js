@@ -42,12 +42,13 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// HEADER: Mega Menú + Logo con gradiente original
+// HEADER: Mega Menú centrado y visible al 100%
 const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
     <header className="header-main">
+      {/* Logo a la izquierda */}
       <div className="logo">
         <Link href="/" className="flex items-center gap-4">
           <Sun size={36} className="text-[var(--primary-color)]" />
@@ -55,13 +56,14 @@ const Header = ({ onLoginClick }) => {
         </Link>
       </div>
 
-      <div className="flex items-center gap-12">
+      {/* Centro: Mega Menú centrado */}
+      <div className="flex-1 flex justify-center">
         <div 
           className="services-mega-menu-container relative"
           onMouseEnter={() => setIsServicesOpen(true)}
           onMouseLeave={() => setIsServicesOpen(false)}
         >
-          <div className="services-fixed-box">
+          <div className="services-fixed-box cursor-pointer">
             <Menu size={20} className="mr-2" />
             <span className="font-semibold text-lg">Nuestros Servicios</span>
           </div>
@@ -99,7 +101,10 @@ const Header = ({ onLoginClick }) => {
             </div>
           )}
         </div>
+      </div>
 
+      {/* Derecha: Precios e Iniciar Sesión */}
+      <div className="flex items-center gap-8">
         <Link href="/pricing" className="nav-link text-lg font-medium">
           Precios
         </Link>
