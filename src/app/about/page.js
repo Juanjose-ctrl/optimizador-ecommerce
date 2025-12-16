@@ -92,9 +92,7 @@ export default function AboutPage() {
                 <p>
                   Como desarrollador principal, Juan José Guerrero creó OptiCommerce con una visión simple: hacer que los sitios web fueran más rápidos. Entendiendo los desafíos de las tiendas en línea con imágenes pesadas, dedicó su experiencia en optimización de backend para construir una solución que fuera potente, fácil de usar y accesible para todos.
                 </p>
-                <p>
-                  Con más de 5 años de experiencia en desarrollo web y e-commerce, Juan José ha trabajado con decenas de empresas ayudándolas a mejorar su rendimiento online. OptiCommerce es el resultado de esa experiencia convertida en una herramienta poderosa para todos.
-                </p>
+                
                 <div style={{ marginTop: '30px' }}>
                   <Link 
                     href="/contact" 
