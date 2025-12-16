@@ -1,4 +1,4 @@
-// src/app/page.js - VERSIÓN FINAL CORREGIDA Y FUNCIONAL
+// src/app/page.js - VERSIÓN FINAL CORREGIDA Y FUNCIONAll
 
 'use client';
 import { useState } from 'react';
