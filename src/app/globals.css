@@ -2090,3 +2090,43 @@ nav {
         padding: 18px 20px;
     }
 }
+
+/* ========================================================================
+   23. CORRECCIÓN DE ÍCONOS FALTANTES (CONTACT PAGE)
+   ======================================================================== */
+
+/* Asegura la alineación vertical del ícono y el texto en Contacto */
+.contact-detail {
+    align-items: center; 
+    /* Esta línea es crucial para que el ícono quede bien centrado verticalmente */
+}
+
+/* Crea el recuadro de color utilizando el emoji del data-icon */
+.contact-detail::before {
+    /* 1. Muestra el emoji que ya tienes en tu JSX */
+    content: attr(data-icon); 
+    
+    /* 2. Aplica el estilo de caja de color */
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: var(--radius-medium);
+    width: 50px; 
+    height: 50px;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease;
+    
+    /* 3. Estilo del contenido (el emoji) */
+    font-size: 24px; /* Tamaño del emoji */
+    line-height: 1;
+    color: white; /* El emoji/texto debe ser blanco dentro del recuadro */
+    margin-right: 15px; /* Espacio entre el ícono y el texto de contacto */
+}
+
+/* Efecto hover */
+.contact-detail:hover::before {
+    transform: rotate(-5deg) scale(1.05);
+    box-shadow: var(--shadow-md);
+}
