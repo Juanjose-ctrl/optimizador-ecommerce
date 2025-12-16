@@ -48,7 +48,7 @@ const Footer = () => (
             <div className="footer-links">
                 <Link href="/privacidad">Política de Privacidad</Link>
                 <Link href="/terminos">Términos de Servicio</Link>
-                <Link href="/contacto">Contacto</Link>
+                <Link href="/contact">Contacto</Link>
             </div>
             <p className="footer-copy">© {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.</p>
         </div>

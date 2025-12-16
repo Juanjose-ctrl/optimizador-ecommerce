@@ -1,109 +1,127 @@
+// src/app/about/page.js - VERSIÓN FINAL PROFESIONAL Y ELEGANTE
+
 'use client';
 import Link from 'next/link';
-import { Sun, Target, Zap, TrendingUp, Code } from 'lucide-react'; 
+import { Sun, Target, Zap, TrendingUp, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 
-// Componentes replicados (Header y Footer)
-const Header = () => ( 
-    <div className="app-container">
-        <header className="header-main">
-            <div className="logo">
-                <Sun size={24} color="var(--accent-color)" style={{ marginRight: '8px' }} />
-                <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--primary-color)' }}>
-                    OptiCommerce
-                </h2>
-            </div>
-            <nav>
-                <Link href="/" className="btn btn-secondary">
-                    Volver a Inicio
-                </Link>
-            </nav>
-        </header>
-    </div>
-);
-
-const Footer = () => (
-    <footer className="footer-main">
-        <div className="app-container footer-content">
-            <div className="footer-links">
-                <Link href="/privacidad">Política de Privacidad</Link>
-                <Link href="/terminos">Términos de Servicio</Link>
-                <Link href="/contact">Contacto</Link>
-            </div>
-            <p className="footer-copy">© {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-);
-
-// Componente de Misión/Visión
-const PhilosophyCard = ({ icon: Icon, title, content }) => (
-    <div className="philosophy-card">
-        <Icon size={40} color="var(--accent-color)" style={{ marginBottom: '15px' }} />
-        <h3 className="card-title">{title}</h3>
-        <p className="card-content">{content}</p>
-    </div>
-);
-
 export default function AboutPage() {
-    return (
-        <>
-            <Header />
-            <main className="app-container" style={{ padding: '80px 0' }}>
-                
-                <h1 className="main-pricing-title title-about">Sobre OptiCommerce</h1>
-                <p className="main-pricing-subtitle subtitle-about">Nuestra misión es potenciar tu negocio con imágenes más rápidas y de mayor calidad.</p>
+  return (
+    <>
+      {/* HEADER MINIMALISTA Y PROFESIONAL */}
+      <header className="header-main">
+        <div className="app-container flex items-center justify-between py-6">
+          <div className="logo">
+            <Link href="/" className="flex items-center gap-4">
+              <Sun size={36} className="text-[var(--primary-color)]" />
+              <span className="logo-text text-4xl">OptiCommerce</span>
+            </Link>
+          </div>
 
-                {/* SECCIÓN 1: Misión y Visión */}
-                <section className="section-philosophy">
-                    <h2 className="section-title title-centered">Nuestra Filosofía</h2>
-                    <div className="philosophy-grid">
-                        <PhilosophyCard 
-                            icon={Target} 
-                            title="Misión" 
-                            content="Ofrecer la herramienta de optimización de imágenes más eficiente y rentable del mercado para el e-commerce hispano." 
-                        />
-                        <PhilosophyCard 
-                            icon={TrendingUp} 
-                            title="Visión" 
-                            content="Convertirnos en el estándar para la mejora del rendimiento web, expandiendo nuestros servicios a compresión de video y más." 
-                        />
-                        <PhilosophyCard 
-                            icon={Zap} 
-                            title="Velocidad" 
-                            content="Creemos que cada milisegundo cuenta. Nuestra tecnología de optimización está diseñada para la máxima rapidez." 
-                        />
-                    </div>
-                </section>
+          <Link 
+            href="/" 
+            className="flex items-center gap-2 text-[var(--text-color-primary)] font-medium hover:text-[var(--accent-color)] transition"
+          >
+            <ArrowLeft size={20} />
+            Volver al Inicio
+          </Link>
+        </div>
+      </header>
 
-                {/* SECCIÓN 2: El Fundador */}
-                <section className="section-founder">
-                    <h2 className="section-title title-centered">Conoce al Fundador</h2>
-                    <div className="founder-bio">
-                        {/* Podrías reemplazar este div con una etiqueta <img> si tienes una foto */}
-                        <div className="founder-image-placeholder">
-    <Image
-        // 🚨 2. RUTA ABSOLUTA: /images/ es relativo a la carpeta /public
-        src="/images/juan-jose.jpg" 
-        alt="Foto del fundador, Juan José Guerrero Vásquez"
-        width={300}    // Debe coincidir con el ancho del CSS
-        height={300}   // Debe coincidir con el alto del CSS
-        className="founder-image" // Para aplicar tus estilos (ej: border-radius: 50%)
-    />
-                        </div>
-                        <div className="founder-text">
-                            <h3>Juan José Guerrero Vásquez</h3>
-                            <p>
-                          Como desarrollador principal, Juan José Guerrero creó OptiCommerce con una visión simple: hacer que los sitios web fueran más rápidos. Entendiendo los desafíos de las tiendas en línea con imágenes pesadas, dedicó su experiencia en optimización de backend para construir una solución que fuera potente, fácil de usar y accesible para todos.
-                            </p>
-                            <Link href="/contact" className="btn btn-primary">
-                                Contacta a Juan José
-                            </Link>
-                        </div>
-                    </div>
-                </section>
+      {/* CONTENIDO PRINCIPAL */}
+      <main className="min-h-screen bg-[var(--bg-page)] py-20">
+        <div className="app-container max-w-6xl mx-auto">
+          {/* Título principal */}
+          <div className="text-center mb-20">
+            <h1 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] bg-clip-text text-transparent">
+              Sobre OptiCommerce
+            </h1>
+            <p className="text-xl md:text-2xl text-[var(--text-color-secondary)] max-w-4xl mx-auto">
+              Nuestra misión es potenciar tu negocio con imágenes más rápidas y de mayor calidad.
+            </p>
+          </div>
 
-            </main>
-            <Footer />
-        </>
-    );
+          {/* SECCIÓN 1: Filosofía (Misión, Visión, Valores) */}
+          <section className="mb-32">
+            <h2 className="text-4xl font-bold text-center text-[var(--primary-color)] mb-16">
+              Nuestra Filosofía
+            </h2>
+            <div className="grid md:grid-cols-3 gap-12">
+              <div className="text-center bg-[var(--bg-card)] rounded-3xl p-10 shadow-xl border border-[var(--border-color)] transition-all hover:shadow-2xl hover:-translate-y-4">
+                <Target size={60} className="text-[var(--accent-color)] mx-auto mb-6" />
+                <h3 className="text-2xl font-bold text-[var(--primary-color)] mb-4">Misión</h3>
+                <p className="text-lg text-[var(--text-color-primary)] leading-relaxed">
+                  Ofrecer la herramienta de optimización de imágenes más eficiente y rentable del mercado para el e-commerce hispano.
+                </p>
+              </div>
+
+              <div className="text-center bg-[var(--bg-card)] rounded-3xl p-10 shadow-xl border border-[var(--border-color)] transition-all hover:shadow-2xl hover:-translate-y-4">
+                <TrendingUp size={60} className="text-[var(--accent-color)] mx-auto mb-6" />
+                <h3 className="text-2xl font-bold text-[var(--primary-color)] mb-4">Visión</h3>
+                <p className="text-lg text-[var(--text-color-primary)] leading-relaxed">
+                  Convertirnos en el estándar para la mejora del rendimiento web, expandiendo nuestros servicios a compresión de video y más.
+                </p>
+              </div>
+
+              <div className="text-center bg-[var(--bg-card)] rounded-3xl p-10 shadow-xl border border-[var(--border-color)] transition-all hover:shadow-2xl hover:-translate-y-4">
+                <Zap size={60} className="text-[var(--accent-color)] mx-auto mb-6" />
+                <h3 className="text-2xl font-bold text-[var(--primary-color)] mb-4">Velocidad</h3>
+                <p className="text-lg text-[var(--text-color-primary)] leading-relaxed">
+                  Creemos que cada milisegundo cuenta. Nuestra tecnología de optimización está diseñada para la máxima rapidez.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* SECCIÓN 2: El Fundador - Foto bonita y texto profesional */}
+          <section className="mb-32">
+            <h2 className="text-4xl font-bold text-center text-[var(--primary-color)] mb-16">
+              Conoce al Fundador
+            </h2>
+            <div className="grid md:grid-cols-2 gap-16 items-center max-w-5xl mx-auto">
+              {/* Foto del fundador - redonda, con sombra y hover elegante */}
+              <div className="relative group">
+                <div className="rounded-full overflow-hidden shadow-2xl border-8 border-[var(--bg-card)] mx-auto w-80 h-80 md:w-96 md:h-96">
+                  <Image
+                    src="/images/juan-jose.jpg"
+                    alt="Juan José Guerrero Vásquez - Fundador de OptiCommerce"
+                    width={400}
+                    height={400}
+                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-t from-[var(--primary-color)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+              </div>
+
+              {/* Texto del fundador */}
+              <div className="space-y-8">
+                <h3 className="text-4xl font-bold text-[var(--primary-color)]">Juan José Guerrero Vásquez</h3>
+                <p className="text-xl leading-relaxed text-[var(--text-color-primary)]">
+                  Como desarrollador principal, Juan José Guerrero creó OptiCommerce con una visión simple: hacer que los sitios web fueran más rápidos. Entendiendo los desafíos de las tiendas en línea con imágenes pesadas, dedicó su experiencia en optimización de backend para construir una solución que fuera potente, fácil de usar y accesible para todos.
+                </p>
+                <div>
+                  <Link 
+                    href="/contact" 
+                    className="inline-flex items-center gap-3 btn btn-primary text-lg px-8 py-4"
+                  >
+                    Contacta a Juan José
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      {/* FOOTER MINIMALISTA */}
+      <footer className="footer-main py-12 border-t border-[var(--border-color)] mt-20">
+        <div className="app-container text-center">
+          <p className="text-[var(--text-color-secondary)]">
+            © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados. 
+            Desarrollado por Juan José Guerrero.
+          </p>
+        </div>
+      </footer>
+    </>
+  );
 }
