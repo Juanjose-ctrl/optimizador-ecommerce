@@ -18,7 +18,7 @@ const SERVICE_CATEGORIES = [
     icon: Zap,
     color: "var(--accent-color)",
     services: [
-      { name: "Optimizador WebP/Imágenes", href: "/", icon: Image, description: "Comprime imágenes de producto para Core Web Vitals (WebP, JPEG, PNG).", isPrimary: true },
+      { name: "Optimizador WebP/Imágenes", href: "/limpiar-metadatos-imagen", icon: Image, description: "Comprime imágenes de producto para Core Web Vitals (WebP, JPEG, PNG).", isPrimary: true },
       { name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios, comentarios y bytes innecesarios.", isPrimary: false },
     ]
   },
@@ -222,7 +222,7 @@ export default function LandingPage() {
 
           {/* === SECCIÓN PASOS === */}
           <section className="section-box">
-            <h2 className="section-title">¿Cómo funciona OptiCommerce?</h2>
+            <h2 className="section-title">¿Cómo funciona nuestro optimizador?</h2>
             <div className="steps-grid">
               <div className="step-item">
                 <div className="step-number">1</div>
