@@ -12,7 +12,7 @@ import {
   Image, Code, FileText, Menu, Zap
 } from 'lucide-react';
 
-const SERVICE_CATEGORIES = [
+export const SERVICE_CATEGORIES = [
   {
     category: "Optimización de Archivos",
     icon: Zap,
