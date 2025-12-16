@@ -65,7 +65,7 @@ export const Header = ({ onLoginClick }) => {
           <div
             className="nav-dropdown"
             onMouseEnter={() => setIsServicesOpen(true)}
-            onMouseLeave={() => setIsServicesOpen(false)}
+            onMouseLeave={() => setTimeout(() => setIsServicesOpen(false), 300)} // ← AÑADIDO: delay de 300ms
             style={{ position: 'relative' }}
           >
             <button 

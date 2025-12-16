@@ -353,9 +353,9 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
                             {/* Icono del servicio actual */}
                             <currentServiceLink.icon size={24} className="icon-color" />
                             {/* Título del servicio actual */}
-                            <h2 className="service-name-title">
+                            <span className="service-name-title">
                                 {currentServiceConfig.name} {isAuthenticated}
-                            </h2>
+                            </span>
                         </div>
                         <DropdownIcon size={20} className="dropdown-arrow" />
                     </button>

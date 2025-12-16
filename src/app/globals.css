@@ -683,7 +683,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 1rem 1.5rem;
+    padding: 0.9rem 1.2rem; /* REDUCIDO de 1rem 1.5rem */
     background: linear-gradient(135deg, rgba(0, 128, 128, 0.05), rgba(0, 128, 128, 0.02));
     border: 2px solid var(--primary-color);
     border-radius: 12px;
@@ -692,6 +692,7 @@ nav {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 128, 128, 0.1);
+    gap: 12px; /* añadido para mejor espaciado */
 }
 
 .service-dropdown-btn:hover {
@@ -701,7 +702,7 @@ nav {
 }
 
 .service-name-title {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--text-color-primary);
     margin: 0;
@@ -798,7 +799,7 @@ nav {
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: var(--bg-page);
+    background: linear-gradient(135deg, rgba(0, 128, 128, 0.03), rgba(64, 181, 173, 0.02)); /* NUEVO */
     margin: 1.5rem 0;
 }
 
@@ -810,7 +811,7 @@ nav {
 
 .dropzone-area.drag-active {
     border-color: var(--primary-color);
-    background: rgba(0, 128, 128, 0.05);
+    background: linear-gradient(135deg, rgba(0, 128, 128, 0.08), rgba(64, 181, 173, 0.05)); /* MEJORADO */
     box-shadow: 0 0 0 4px rgba(0, 128, 128, 0.05);
 }
 
