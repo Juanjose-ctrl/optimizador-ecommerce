@@ -222,7 +222,7 @@ export default function LandingPage() {
 
           {/* === SECCIÓN PASOS === */}
           <section className="section-box">
-            <h2 className="section-title">¿Cómo funciona nuestro optimizador?</h2>
+            <h2 className="section-title">¿Cómo funciona OptiCommerce?</h2>
             <div className="steps-grid">
               <div className="step-item">
                 <div className="step-number">1</div>
@@ -265,3 +265,4 @@ export default function LandingPage() {
       />
     </>
   );
+}
