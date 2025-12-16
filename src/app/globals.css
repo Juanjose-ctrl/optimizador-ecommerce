@@ -2326,3 +2326,9 @@ a:hover {
     color: var(--text-color-secondary);
     margin-top: 2px;
 }
+
+/* Esto puede ser en tu archivo global.css o equivalente */
+body {
+    /* Evita que el contenido desborde horizontalmente y fuerce el scroll */
+    overflow-x: hidden; 
+}
