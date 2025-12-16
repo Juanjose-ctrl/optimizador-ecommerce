@@ -1555,60 +1555,6 @@ a:hover {
     }
 }
 
-@media (max-width: 768px) {
-    .app-container,
-    .main-content-wrapper {
-        padding: 0 20px;
-    }
-
-    .header-main {
-        padding: 16px 0;
-    }
-
-    .section-hero {
-        grid-template-columns: 1fr;        /* ← Solo aquí se pasa a una columna */
-        gap: 40px;
-        padding: 60px 0 40px;
-        text-align: center;
-    }
-
-    .hero-left,
-    .hero-right {
-        max-width: 100%;
-    }
-
-    .hero-title {
-        font-size: 2.5rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-
-    h1 {
-        font-size: 2.5rem;
-    }
-
-    h2 {
-        font-size: 1.75rem;
-    }
-
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .steps-grid,
-    .features-grid,
-    .pricing-grid,
-    .plans-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .footer-content {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (max-width: 480px) {
     .hero-title {
         font-size: 2rem;
@@ -1628,40 +1574,69 @@ a:hover {
     }
 }
 
-@media (max-width: 768px) {
-    .hero-title {
-        font-size: 2rem;
+/* ========================================================================
+   26. RESPONSIVE DESIGN - VERSIÓN FINAL CORREGIDA (UNA SOLA MEDIA QUERY POR BREAKPOINT)
+   ======================================================================== */
+
+@media (max-width: 1024px) {
+    .section-hero {
+        gap: 60px;
+        padding: 70px 0;
     }
 
-    .main-pricing-title {
-        font-size: 2rem;
-   
+    .hero-title {
+        font-size: 3rem;
     }
-      .section-hero {
-        grid-template-columns: 1fr;        /* Una sola columna en móvil */
-        gap: 40px;
+}
+
+@media (max-width: 768px) {
+    .app-container,
+    .main-content-wrapper {
+        padding: 0 20px;
+    }
+
+    .header-main {
+        padding: 16px 0;
+    }
+
+    /* Aquí SÍ forzamos una columna solo en móvil/tablet pequeña */
+    .section-hero {
+        display: grid;
+        grid-template-columns: 1fr;     /* Una sola columna */
+        gap: 50px;
         padding: 60px 0 40px;
         text-align: center;
     }
 
+    .hero-left,
+    .hero-right {
+        max-width: 100%;
+    }
 
-    h1 {
-        font-size: 2.5rem;
+    /* Centrado perfecto del dropzone en móvil */
+    .hero-right {
+        display: flex;
+        justify-content: center;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;   /* Ajusta a 2rem si quieres más pequeño */
+    }
+
+    .hero-subtitle {
+        font-size: 1.15rem;
+    }
+
+    h1, .section-title {
+        font-size: 2.2rem;
     }
 
     h2 {
-        font-size: 1.75rem;
-    }
-
-    .section-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     .steps-grid,
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-
+    .features-grid,
     .pricing-grid,
     .plans-grid {
         grid-template-columns: 1fr;
@@ -1669,54 +1644,24 @@ a:hover {
 
     .footer-content {
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-
-    .section-box {
-        padding: 60px 30px;
-    }
-
-    .dashboard-header {
-        padding: 0 20px;
-    }
-
-    .main-content-wrapper {
-        padding: 0 20px;
     }
 }
 
-@media (max-width: 768px) {
-    .app-container {
-        padding: 0 16px;
-    }
-
-    .header-main {
-        padding: 16px 0;
-    }
-
+@media (max-width: 480px) {
     .hero-title {
-        font-size: 1.75rem;
+        font-size: 2rem;
     }
 
     .section-hero {
-        padding: 60px 0 40px;
-    }
-
-    .section-box {
-        padding: 40px 20px;
-    }
-
-    .btn {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-
-    .btn-large {
-        padding: 12px 24px;
-        font-size: 15px;
+        padding: 50px 0 30px;
+        gap: 40px;
     }
 
     .footer-content {
         grid-template-columns: 1fr;
+    }
+
+    .btn-large {
+        width: 100%;
     }
 }
