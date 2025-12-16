@@ -1,4 +1,4 @@
-// src/app/page.js - VERSIÓN FINAL: Mega Menú bonito + Layout perfecto
+// src/app/page.js - VERSIÓN FINAL: Header full-width + Botón mega menú perfecto
 
 'use client';
 import { useState } from 'react';
@@ -9,7 +9,7 @@ import AuthModal from './components/AuthModal';
 
 import {
   CheckCircle, Sun, Shield, TrendingUp, Leaf, DollarSign,
-  ChevronDown, ChevronUp, Image, Code, FileText, Menu, Zap
+  Image, Code, FileText, Menu, Zap
 } from 'lucide-react';
 
 const SERVICE_CATEGORIES = [
@@ -42,12 +42,13 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
+// HEADER: full-width + botón mega menú bonito y estable
 const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
-    <header className="header-main">
-      <div className="flex items-center gap-8">  {/* Logo + botón juntos a la izquierda */}
+    <header className="header-main">  {/* CSS ya hace full-width */}
+      <div className="flex items-center gap-10">  {/* Logo + botón a la izquierda */}
         <div className="logo">
           <Link href="/" className="flex items-center gap-4">
             <Sun size={36} className="text-[var(--primary-color)]" />
@@ -61,8 +62,8 @@ const Header = ({ onLoginClick }) => {
           onMouseLeave={() => setIsServicesOpen(false)}
         >
           <div className="services-fixed-box cursor-pointer">
-            <Menu size={18} className="mr-2" />
-            <span className="font-semibold">Nuestros Servicios</span>
+            <Menu size={20} className="mr-3" />
+            <span className="font-semibold text-lg">Nuestros Servicios</span>
           </div>
 
           {isServicesOpen && (
@@ -71,7 +72,7 @@ const Header = ({ onLoginClick }) => {
                 {SERVICE_CATEGORIES.map((categoryData, index) => (
                   <div key={index} className="mega-menu-category">
                     <h4 className="category-title flex items-center gap-3 font-bold text-lg mb-5 pb-3 border-b-2" style={{ color: categoryData.color }}>
-                      <categoryData.icon size={22} />
+                      <categoryData.icon size={24} />
                       {categoryData.category}
                     </h4>
                     <div className="category-links">
@@ -83,9 +84,9 @@ const Header = ({ onLoginClick }) => {
                           onClick={() => setIsServicesOpen(false)}
                         >
                           <div className="flex items-start gap-4">
-                            <service.icon size={20} className="text-[var(--primary-color)] mt-1 flex-shrink-0" />
+                            <service.icon size={22} className="text-[var(--primary-color)] mt-1 flex-shrink-0" />
                             <div>
-                              <strong className="block font-semibold">{service.name}</strong>
+                              <strong className="block font-semibold text-base">{service.name}</strong>
                               <span className="text-sm text-[var(--text-color-secondary)] block mt-1">{service.description}</span>
                             </div>
                           </div>
@@ -100,7 +101,7 @@ const Header = ({ onLoginClick }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-8">  {/* Precios e Iniciar Sesión a la derecha */}
+      <div className="flex items-center gap-10">  {/* Precios e Iniciar Sesión a la derecha */}
         <Link href="/pricing" className="nav-link text-lg font-medium">
           Precios
         </Link>
@@ -113,7 +114,7 @@ const Header = ({ onLoginClick }) => {
   );
 };
 
-// FOOTER: líneas separadas
+// FOOTER (sin cambios, ya estaba bien)
 export const Footer = () => (
   <footer className="footer-main">
     <div className="app-container">
@@ -167,7 +168,7 @@ export const Footer = () => (
   </footer>
 );
 
-// LANDING PAGE
+// LANDING PAGE: Header full-width + contenido centrado
 export default function LandingPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalView, setModalView] = useState('login');
@@ -183,9 +184,11 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="app-container">
-        <Header onLoginClick={handleOpenModal} />
+      {/* Header full-width */}
+      <Header onLoginClick={handleOpenModal} />
 
+      {/* Contenido principal centrado en 1200px */}
+      <div className="app-container">
         <main>
           <section className="section-hero">
             <div className="hero-left">
