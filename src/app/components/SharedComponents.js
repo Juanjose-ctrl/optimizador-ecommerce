@@ -62,18 +62,14 @@ export const Header = ({ onLoginClick }) => {
         </div>
 
         <nav>
-          <div
-            className="nav-dropdown"
-            onMouseEnter={() => setIsServicesOpen(true)}
-            onMouseLeave={() => setTimeout(() => setIsServicesOpen(false), 300)} // ← AÑADIDO: delay de 300ms
-            style={{ position: 'relative' }}
-          >
-            <button 
-              className="nav-link" 
-              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-            >
-              Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-            </button>
+          <div 
+  className="nav-dropdown"
+  onMouseEnter={() => setIsServicesOpen(true)}
+  onMouseLeave={() => setIsServicesOpen(false)}
+>
+  <button className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+  </button>
 
             {isServicesOpen && (
               <div className="nav-dropdown-menu">
