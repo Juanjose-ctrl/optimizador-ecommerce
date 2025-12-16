@@ -1544,7 +1544,7 @@ a:hover {
 /* ========================================================================
    26. RESPONSIVE DESIGN
    ======================================================================== */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     .app-container,
     .main-content-wrapper {
         padding: 0 20px;
