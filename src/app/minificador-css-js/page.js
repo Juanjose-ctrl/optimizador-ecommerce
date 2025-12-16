@@ -67,7 +67,6 @@ export default function MinifyPage() {
                                 supportedMimeTypes={['text/css', 'text/javascript', 'application/javascript']}
                             />
                             <p className="text-center text-sm text-[var(--text-color-secondary)] mt-4">
-                                Arrastra o sube hasta 10 archivos (.css o .js).
                             </p>
                         </div>
                     </section>

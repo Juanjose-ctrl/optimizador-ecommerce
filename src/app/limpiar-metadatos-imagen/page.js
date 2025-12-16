@@ -67,8 +67,7 @@ export default function MetadataCleanerPage() {
                                 supportedMimeTypes={['image/jpeg', 'image/png', 'image/webp']}
                             />
                             <p className="text-center text-sm text-[var(--text-color-secondary)] mt-4">
-                                Arrastra o sube imágenes (JPEG, PNG, WEBP).
-                            </p>
+                    </p>
                         </div>
                     </section>
 
