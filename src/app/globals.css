@@ -346,8 +346,8 @@ a:hover {
 }
 
 .hero-title {
-    font-size: 3.2rem;
-    line-height: 1.1;
+    font-size: 3rem;
+    line-height: 1.15;
     margin-bottom: 24px;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     -webkit-background-clip: text;
