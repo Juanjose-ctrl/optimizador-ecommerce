@@ -12,25 +12,12 @@ import {
   Image, Code, FileText, Menu, Zap
 } from 'lucide-react';
 
-export const SERVICE_CATEGORIES = [
-  {
-    category: "Optimización de Archivos",
-    icon: Zap,
-    color: "var(--accent-color)",
-    services: [
-      { name: "Optimizador WebP/Imágenes", href: "/", icon: Image, description: "Comprime imágenes de producto para Core Web Vitals (WebP, JPEG, PNG).", isPrimary: true },
-      { name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios, comentarios y bytes innecesarios.", isPrimary: false },
-    ]
-  },
-  {
-    category: "Seguridad y Privacidad",
-    icon: Shield,
-    color: "var(--primary-color)",
-    services: [
-      { name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos EXIF y ocultos.", isPrimary: false },
-    ]
-  },
+export const SERVICE_LINKS = [
+  { key: "image", name: "Optimizador WebP/Imágenes", href: "/", icon: Image, description: "Comprime imágenes para Core Web Vitals.", isPrimary: true },
+  { key: "minify", name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código eliminando espacios y comentarios.", isPrimary: false },
+  { key: "metadata", name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", isPrimary: false },
 ];
+
 
 export const FeatureCard = ({ icon: Icon, title, description, color }) => (
   <div className="feature-card">

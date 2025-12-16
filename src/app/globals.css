@@ -2207,3 +2207,122 @@ a:hover {
 .mega-menu-link:hover {
     background-color: var(--bg-hover);
 }
+
+/* ========================================================================
+   13. DROPZONE SERVICES DROPDOWN STYLES (Nuevo Componente de Navegación)
+   ======================================================================== */
+
+.service-dropdown-container {
+    position: relative;
+    z-index: 50; /* Asegura que el dropdown esté sobre otros elementos */
+    /* Lo centramos si el contenedor principal lo permite */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px; 
+}
+
+.service-dropdown-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 450px; /* Ancho deseado para el control */
+    padding: 14px 24px;
+    background-color: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-large);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    outline: none; /* Mejor experiencia de foco */
+}
+
+.service-dropdown-btn:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(0, 128, 128, 0.1); /* Usando un color asociado a primary */
+}
+
+.service-dropdown-btn .flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.service-dropdown-btn .icon-color {
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.service-dropdown-btn .service-name-title {
+    /* Quitamos el estilo H2 general para dejar solo el estilo de texto */
+    font-size: 1.25rem; 
+    font-weight: 700;
+    color: var(--text-color-primary);
+    margin: 0; /* Asegura que no tenga márgenes extras de H2 */
+}
+
+.service-dropdown-menu {
+    position: absolute;
+    top: 100%; /* Justo debajo del botón */
+    left: 50%; /* Centrado */
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--radius-large) var(--radius-large);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+}
+
+.service-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.1s;
+}
+
+.service-option:hover {
+    background-color: var(--bg-hover);
+}
+
+.service-option.active {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    pointer-events: none; /* No permite hacer clic si ya está activo */
+}
+
+.service-option.active .font-medium,
+.service-option.active .description-text {
+    color: var(--text-color-light) !important;
+}
+
+.service-option.active svg {
+    color: var(--text-color-light) !important;
+}
+
+.service-option svg {
+    color: var(--primary-color);
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.service-option .font-medium {
+    font-weight: 600;
+    color: var(--text-color-primary);
+    display: block;
+    line-height: 1.2;
+}
+
+.service-option .description-text {
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    margin-top: 2px;
+}

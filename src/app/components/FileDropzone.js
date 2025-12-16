@@ -1,24 +1,26 @@
-// src/app/components/FileDropzone.js (VERSIÓN CORREGIDA Y OPTIMIZADA)
+// src/app/components/FileDropzone.js (VERSIÓN CORREGIDA CON DROPDOWN DE SERVICIOS)
 
 'use client'; 
 
-import { useState, useRef, useEffect } from 'react'; 
-import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download } from 'lucide-react'; 
-// Importa las configuraciones necesarias (asumo que están en un path accesible)
-import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api'; 
+import { useState, useRef, useEffect, useMemo } from 'react'; // 🚨 Agregado useMemo
+import { UploadCloud, FileImage, Trash2, XCircle, Zap, Download, ChevronDown, ChevronUp, Image, Code, FileText } from 'lucide-react'; // 🚨 Agregados ChevronDown, ChevronUp, Image, Code, FileText
+import { API_URL, MAX_FILE_SIZE_MB, MAX_FREE_OPTIMIZATIONS, ALLOWED_MIME_TYPES } from '../../config/api';
+
+// 🚨 IMPORTAMOS LOS LINKS DE SERVICIO
+import { SERVICE_LINKS } from '../page';
 
 
 // CONSTANTE PARA LOCALSTORAGE
 const FREE_CREDITS_KEY = 'freeCreditsRemaining';
 
-// 🚨 CONFIGURACIÓN DE SERVICIOS Y ENDPOINTS 🚨 (Necesaria, no la movemos)
+// 🚨 CONFIGURACIÓN DE SERVICIOS Y ENDPOINTS 🚨
 const SERVICE_CONFIG = {
     // Servicio 1: Optimización de Imagen (el que ya tenías)
     image: {
         endpoint: '/optimize-batch',
         endpoint_free: '/optimize-batch-free',
         accept: ALLOWED_MIME_TYPES, // ['image/jpeg', 'image/png']
-        name: 'Optimizador WebP/Imágenes', // Renombre más descriptivo
+        name: 'Optimizador WebP', // Nombre ajustado para el dropdown
     },
     // Servicio 2: Minificación de Código (CSS/JS)
     minify: {
@@ -32,11 +34,11 @@ const SERVICE_CONFIG = {
         endpoint: '/process-metadata', 
         endpoint_free: '/process-metadata-free',
         accept: ALLOWED_MIME_TYPES, 
-        name: 'Limpiador de Metadatos',
+        name: 'Limpiador de Metadatos (EXIF)',
     },
 };
 
-// ... (getAuthHeaders y initializeFreeCredits - sin cambios)
+// Función auxiliar para obtener el token de autenticación
 const getAuthHeaders = () => {
     if (typeof window !== 'undefined') {
         const accessToken = localStorage.getItem('accessToken');
@@ -49,6 +51,7 @@ const getAuthHeaders = () => {
     return {};
 };
 
+// Función para inicializar o leer los créditos gratuitos desde localStorage.
 const initializeFreeCredits = () => {
     if (typeof window !== 'undefined') {
         const storedCredits = localStorage.getItem(FREE_CREDITS_KEY);
@@ -71,12 +74,15 @@ const initializeFreeCredits = () => {
 };
 
 
-// 🚨 MODIFICACIÓN AQUÍ: Aceptar defaultService como prop
+// 🚨 MODIFICACIÓN EN PROPS: Aceptar defaultService
 export default function FileDropzone({ isAuthenticated, onLimitReached, userCredits = 5, defaultService = 'image' }) { 
     
     // --- ESTADOS ---
     // 🚨 CORRECCIÓN 1: Inicializar el estado con defaultService
     const [selectedService, setSelectedService] = useState(defaultService);
+    // 🚨 NUEVO ESTADO para el dropdown
+    const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
+    
     const [creditsRemaining, setCreditsRemaining] = useState(isAuthenticated ? userCredits : 0);
     const [isClient, setIsClient] = useState(false); 
     const [isDragActive, setIsDragActive] = useState(false);
@@ -86,8 +92,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     const [isOptimizing, setIsOptimizing] = useState(false);
     const [optimizationResults, setOptimizationResults] = useState([]);
 
-    // 🚨 CORRECCIÓN 2: Usar useEffect para sincronizar el servicio si la prop cambia (navegación programática).
-    // Y para limpiar los estados cuando el servicio se actualiza.
+    // 🚨 CORRECCIÓN 2: Sincronizar el estado del servicio al cambiar la prop (navegación Next.js)
     useEffect(() => {
         if (selectedService !== defaultService) {
             setSelectedService(defaultService);
@@ -96,6 +101,7 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
             setOptimizationResults([]);
         }
     }, [defaultService]); // Se ejecuta cada vez que la prop 'defaultService' cambia.
+
 
     // 3. Lógica de Carga de Créditos en el Cliente
     useEffect(() => {
@@ -112,7 +118,27 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     }, [isAuthenticated, userCredits]);
 
 
-    // 🚨 FUNCIÓN CRÍTICA: La validación ahora depende del servicio (sin cambios necesarios aquí, ya usa selectedService)
+    // 🚨 NUEVA LÓGICA DE SERVICIO
+    const currentServiceLink = useMemo(() => {
+        // Busca el objeto completo del link para usar su icono y descripción
+        return SERVICE_LINKS.find(s => s.key === selectedService) || SERVICE_LINKS[0];
+    }, [selectedService]);
+
+    const handleServiceChange = (key, href) => {
+        if (key !== selectedService) {
+            // 🚨 FUNCIÓN CRÍTICA: Redirección al seleccionar un servicio diferente
+            window.location.href = href; 
+        }
+        setIsServiceDropdownOpen(false);
+    };
+
+    const handleToggleDropdown = () => {
+        setIsServiceDropdownOpen(prev => !prev);
+    };
+    
+    const DropdownIcon = isServiceDropdownOpen ? ChevronUp : ChevronDown;
+    
+    // 🚨 FUNCIÓN CRÍTICA: La validación ahora depende del servicio
     const validateFile = (file) => {
         const config = SERVICE_CONFIG[selectedService];
         const maxFileSize = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -127,79 +153,85 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
         return null;
     };
     
-    // ... (handleFiles, handleDrag, handleDrop, handleSelectFiles, removeFile, formatFileSize, downloadImage - sin cambios)
-    const handleFiles = (newFiles) => {
-        setFileError('');
-        let validFiles = [];
-        let hasError = false;
+    // 🚨 FUNCIÓN CRÍTICA: Manejo de la cola de archivos
+    const handleFiles = (newFiles) => {
+        setFileError('');
+        let validFiles = [];
+        let hasError = false;
 
-        for (const file of newFiles) {
-            const validationError = validateFile(file);
-            if (validationError) {
-                setFileError(validationError);
-                hasError = true;
-                break; 
-            }
-            if (!files.some(f => f.name === file.name && f.size === file.size)) {
-                validFiles.push(file);
-            }
-        }
+        for (const file of newFiles) {
+            const validationError = validateFile(file);
+            if (validationError) {
+                setFileError(validationError);
+                hasError = true;
+                break; 
+            }
+            if (!files.some(f => f.name === file.name && f.size === file.size)) {
+                validFiles.push(file);
+            }
+        }
 
-        if (!hasError) {
-            setFiles(prevFiles => [...prevFiles, ...validFiles].slice(0, 10)); // Límite a 10 archivos
-        }
-    };
+        if (!hasError) {
+            setFiles(prevFiles => [...prevFiles, ...validFiles].slice(0, 10)); // Límite a 10 archivos
+        }
+    };
 
-    const handleDrag = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.type === "dragenter" || e.type === "dragover") {
-            setIsDragActive(true);
-        } else if (e.type === "dragleave") {
-            setIsDragActive(false);
-        }
-    };
+    // 🚨 FUNCIÓN CRÍTICA: Manejo del Drag & Drop (DragEnter, DragLeave, DragOver)
+    const handleDrag = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === "dragenter" || e.type === "dragover") {
+            setIsDragActive(true);
+        } else if (e.type === "dragleave") {
+            setIsDragActive(false);
+        }
+    };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragActive(false);
+    // 🚨 FUNCIÓN CRÍTICA: Manejo del Drop
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragActive(false);
 
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            handleFiles(e.dataTransfer.files);
-            e.dataTransfer.clearData();
-        }
-    };
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            handleFiles(e.dataTransfer.files);
+            e.dataTransfer.clearData();
+        }
+    };
 
-    const handleSelectFiles = (e) => {
-        if (e.target.files && e.target.files.length > 0) {
-            handleFiles(e.target.files);
-        }
-    };
+    // 🚨 FUNCIÓN CRÍTICA: Manejo de la selección por clic
+    const handleSelectFiles = (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            handleFiles(e.target.files);
+        }
+    };
 
-    const removeFile = (fileName) => {
-        setFiles(prevFiles => prevFiles.filter(file => file.name !== fileName));
-        setFileError('');
-    };
+    // 🚨 FUNCIÓN CRÍTICA: Remover archivo
+    const removeFile = (fileName) => {
+        setFiles(prevFiles => prevFiles.filter(file => file.name !== fileName));
+        setFileError('');
+    };
 
-    const formatFileSize = (bytes) => {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    };
-    
-    const downloadImage = (downloadUrl, filename) => {
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-    
-    // --- LÓGICA DE OPTIMIZACIÓN (Sin cambios necesarios aquí) ---
+    // 🚨 FUNCIÓN CRÍTICA: Formatear tamaño de archivo
+    const formatFileSize = (bytes) => {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
+    
+    // 🚨 FUNCIÓN CRÍTICA: Descarga de la imagen
+    const downloadImage = (downloadUrl, filename) => {
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    // --- LÓGICA DE OPTIMIZACIÓN (Mantenida) ---
     const handleOptimize = async () => {
         if (files.length === 0 || isOptimizing || creditsRemaining === null) return; 
         
@@ -310,14 +342,50 @@ export default function FileDropzone({ isAuthenticated, onLimitReached, userCred
     return (
         <section className="optimization-section">
             <div className="section-header">
-                <h2>
-                    <UploadCloud size={24} style={{ marginRight: '10px' }} /> 
-                    {currentServiceConfig.name} {isAuthenticated ? "" : "Gratis"}
-                </h2>
+                {/* 🚨 REEMPLAZO DEL BLOQUE DE PESTAÑAS POR EL DROPDOWN */}
+                <div className="service-dropdown-container">
+                    <button 
+                        className="service-dropdown-btn"
+                        onClick={handleToggleDropdown}
+                    >
+                        <div className="flex items-center gap-3">
+                            {/* Icono del servicio actual */}
+                            <currentServiceLink.icon size={24} className="icon-color" />
+                            {/* Título del servicio actual */}
+                            <h2 className="service-name-title">
+                                {currentServiceConfig.name} {isAuthenticated ? "" : "Gratis"}
+                            </h2>
+                        </div>
+                        <DropdownIcon size={20} className="dropdown-arrow" />
+                    </button>
+
+                    {isServiceDropdownOpen && (
+                        // Menú Desplegable
+                        <div className="service-dropdown-menu">
+                            {SERVICE_LINKS.map(service => {
+                                const isActive = service.key === selectedService;
+                                return (
+                                    <button 
+                                        key={service.key} 
+                                        className={`service-option ${isActive ? 'active' : ''}`}
+                                        // 🚨 Llama a handleServiceChange para navegar
+                                        onClick={() => handleServiceChange(service.key, service.href)}
+                                        disabled={isActive}
+                                    >
+                                        <service.icon size={20} className="flex-shrink-0" />
+                                        <div>
+                                            <span className="font-medium">{service.name}</span>
+                                            <p className="description-text">{service.description}</p>
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
                 {limitMessage}
             </div>
-
-            {/* 🚨 CAMBIO 3: ELIMINAMOS LAS PESTAÑAS DE SERVICIO INTERNAS */}
+            {/* 🚨 Bloque de pestañas anterior eliminado */}
             
             {/* ZONA DE DROPZONE */}
             <div 
