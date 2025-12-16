@@ -1703,12 +1703,11 @@ nav {
 /* Corrección de la Filosofía: Forzar tres columnas iguales */
 .philosophy-grid {
     display: grid;
-    /* 🚨 CAMBIO CRUCIAL: Forzar 3 columnas iguales en escritorio */
+    /* 🚨 CAMBIO CRUCIAL: Forzar 3 columnas iguales */
     grid-template-columns: repeat(3, 1fr); 
     gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px; /* Añadimos padding si es necesario */
+    max-width: 1200px; /* Mantener tu max-width */
+    margin: 0 auto; /* Asegurar centrado */
 }
 /* Mantenemos el resto del CSS de .philosophy-card */
 .philosophy-card {
@@ -1962,6 +1961,9 @@ nav {
     .app-container,
     .main-content-wrapper {
         padding: 0 20px;
+    }
+    .philosophy-grid {
+        grid-template-columns: 1fr; /* Una columna para móvil */
     }
 
     .header-main .app-container {
