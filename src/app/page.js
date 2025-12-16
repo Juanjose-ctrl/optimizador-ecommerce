@@ -18,6 +18,13 @@ export const SERVICE_LINKS = [
   { key: "metadata", name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Protege tu privacidad y reduce el peso al eliminar datos ocultos.", isPrimary: false },
 ];
 
+export const SERVICE_CATEGORIES = [
+  {
+    name: "Herramientas de Optimización Web",
+    links: SERVICE_LINKS,
+  }
+];
+
 
 export const FeatureCard = ({ icon: Icon, title, description, color }) => (
   <div className="feature-card">
