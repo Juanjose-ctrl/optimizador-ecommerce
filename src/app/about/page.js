@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Sun, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
-import { Header, Footer } from '../components/SharedComponents';
+import { Header, Footer } from '../../components/SharedComponents';
 
 
 export default function AboutPage() {
