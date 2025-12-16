@@ -35,7 +35,8 @@ export const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
-    <header className="header-main">
+    // 🚨 MODIFICACIÓN CLAVE AQUÍ: Añadimos 'flex justify-between items-center'
+    <header className="header-main flex justify-between items-center"> 
       <div className="logo">
         <Link href="/" className="flex items-center gap-3">
           <Sun size={36} className="text-[var(--primary-color)]" />
