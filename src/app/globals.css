@@ -1541,41 +1541,7 @@ a:hover {
     opacity: 0.9;
 }
 /* ========================================================================
-   26. RESPONSIVE DESIGN - VERSIÓN CORREGIDA Y CONSOLIDADA
-   ======================================================================== */
-
-@media (max-width: 1024px) {
-    .section-hero {
-        gap: 60px;
-        padding: 60px 0;
-    }
-
-    .hero-title {
-        font-size: 3rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-title {
-        font-size: 2rem;
-    }
-
-    .section-hero {
-        padding: 40px 0 30px;
-    }
-
-    .btn {
-        padding: 12px 20px;
-        font-size: 15px;
-    }
-
-    .btn-large {
-        width: 100%;
-    }
-}
-
-/* ========================================================================
-   26. RESPONSIVE DESIGN - VERSIÓN FINAL CORREGIDA (UNA SOLA MEDIA QUERY POR BREAKPOINT)
+   26. RESPONSIVE DESIGN - VERSIÓN FINAL LIMPIA Y SIN DUPLICADOS
    ======================================================================== */
 
 @media (max-width: 1024px) {
@@ -1585,7 +1551,7 @@ a:hover {
     }
 
     .hero-title {
-        font-size: 3rem;
+        font-size: 3.2rem;
     }
 }
 
@@ -1599,10 +1565,8 @@ a:hover {
         padding: 16px 0;
     }
 
-    /* Aquí SÍ forzamos una columna solo en móvil/tablet pequeña */
     .section-hero {
-        display: grid;
-        grid-template-columns: 1fr;     /* Una sola columna */
+        grid-template-columns: 1fr;     /* Solo en móvil: una columna */
         gap: 50px;
         padding: 60px 0 40px;
         text-align: center;
@@ -1611,16 +1575,16 @@ a:hover {
     .hero-left,
     .hero-right {
         max-width: 100%;
+        text-align: center;
     }
 
-    /* Centrado perfecto del dropzone en móvil */
     .hero-right {
         display: flex;
         justify-content: center;
     }
 
     .hero-title {
-        font-size: 2.5rem;   /* Ajusta a 2rem si quieres más pequeño */
+        font-size: 2.8rem;
     }
 
     .hero-subtitle {
@@ -1649,7 +1613,7 @@ a:hover {
 
 @media (max-width: 480px) {
     .hero-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
 
     .section-hero {
@@ -1663,5 +1627,9 @@ a:hover {
 
     .btn-large {
         width: 100%;
+    }
+
+    .benefit-list p {
+        justify-content: center;
     }
 }
