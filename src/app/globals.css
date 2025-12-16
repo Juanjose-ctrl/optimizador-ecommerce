@@ -1349,137 +1349,371 @@ a:hover {
     font-size: 0.9rem;
     margin-top: 48px;
 }
-
 /* ========================================================================
    23. PAGINAS ESPECIALES (Contact, About, FAQ)
    ======================================================================== */
+
+/* === TÍTULOS PRINCIPALES === */
 .title-contact,
 .title-about,
 .title-faq {
-    font-size: 3rem;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
     font-weight: 800;
     text-align: center;
-    color: var(--text-color-primary);
-    margin-bottom: 10px;
-    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+    letter-spacing: -1.5px;
+    animation: fadeInUp 0.6s ease-out;
 }
 
 .subtitle-contact,
 .subtitle-about,
 .subtitle-faq {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     text-align: center;
     color: var(--text-color-secondary);
-    max-width: 800px;
-    margin: 0 auto 50px auto;
+    max-width: 700px;
+    margin: 0 auto 60px auto;
+    line-height: 1.6;
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
 }
 
-.section-title-faq {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-color-primary);
-    margin-top: 30px;
-    margin-bottom: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Contact Grid */
+/* === CONTACT GRID MODERNO === */
 .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    max-width: 1100px;
+    gap: 40px;
+    max-width: 1200px;
     margin: 0 auto;
-    background: var(--bg-card);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 50px;
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-page) 100%);
+    border-radius: 24px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
+.contact-grid::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+    opacity: 0.03;
+    pointer-events: none;
+}
+
+/* === FORMULARIO DE CONTACTO === */
 .contact-form {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.contact-form h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color-primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.contact-form h3::before {
+    content: '✉';
+    font-size: 2rem;
+    filter: grayscale(1);
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 16px 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--bg-page);
+    color: var(--text-color-primary);
+    transition: all 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb, 59, 130, 246), 0.1);
+    transform: translateY(-2px);
+}
+
+.contact-form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.contact-form button {
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(var(--primary-color-rgb, 59, 130, 246), 0.3);
+}
+
+.contact-form button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(var(--primary-color-rgb, 59, 130, 246), 0.4);
+}
+
+.contact-form button:active {
+    transform: translateY(-1px);
+}
+
+/* === INFORMACIÓN DE CONTACTO === */
+.contact-info {
+    position: relative;
+    z-index: 1;
+}
+
+.contact-info h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color-primary);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.contact-info h3::before {
+    content: '📍';
+    font-size: 2rem;
 }
 
 .contact-detail {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    background: var(--bg-page);
+    border-radius: 12px;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.contact-detail:hover {
+    transform: translateX(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-left-color: var(--accent-color);
+}
+
+.contact-detail::before {
+    content: attr(data-icon);
+    font-size: 1.8rem;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.contact-detail[data-icon="📧"]::before { content: '📧'; }
+.contact-detail[data-icon="📱"]::before { content: '📱'; }
+.contact-detail[data-icon="🌐"]::before { content: '🌐'; }
+.contact-detail[data-icon="📍"]::before { content: '📍'; }
+
+.contact-detail span {
     font-size: 1.05rem;
     color: var(--text-color-primary);
+    font-weight: 500;
 }
 
 .contact-detail a {
     color: var(--primary-color);
     text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
 }
 
-/* Philosophy Section */
+.contact-detail a:hover {
+    color: var(--accent-color);
+}
+
+/* === PHILOSOPHY SECTION === */
 .section-philosophy {
-    padding: 40px 0;
+    padding: 80px 0;
 }
 
 .philosophy-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
-    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .philosophy-card {
-    padding: 30px;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 40px 30px;
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.philosophy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 0;
+}
+
+.philosophy-card:hover::before {
+    opacity: 0.05;
 }
 
 .philosophy-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10px);
+    border-color: var(--primary-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* Founder Section */
+.philosophy-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.philosophy-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--text-color-primary);
+}
+
+.philosophy-card h3::before {
+    content: attr(data-icon);
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 15px;
+    filter: grayscale(0.3);
+    transition: filter 0.3s;
+}
+
+.philosophy-card:hover h3::before {
+    filter: grayscale(0);
+}
+
+/* === FOUNDER SECTION === */
 .section-founder {
-    padding: 80px 0;
+    padding: 100px 0;
+    background: linear-gradient(to bottom, transparent, var(--bg-page));
 }
 
 .founder-bio {
     display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 50px;
+    grid-template-columns: 350px 1fr;
+    gap: 60px;
     align-items: center;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 50px;
+    background: var(--bg-card);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
 }
 
 .founder-image-placeholder {
-    width: 300px;
-    height: 300px;
-    border-radius: 16px;
+    width: 350px;
+    height: 350px;
+    border-radius: 24px;
     overflow: hidden;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.founder-image-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    opacity: 0.15;
+    mix-blend-mode: overlay;
 }
 
 .founder-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 16px;
+    transition: transform 0.5s ease;
+}
+
+.founder-image-placeholder:hover .founder-image {
+    transform: scale(1.05);
 }
 
 .founder-text h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: var(--text-color-primary);
 }
 
-/* FAQ Section */
+.founder-text h4 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin: 0 0 25px 0;
+}
+
+.founder-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-color-secondary);
+    margin-bottom: 20px;
+}
+
+/* === FAQ SECTION === */
 .section-faq {
-    background-color: #f8f8f8;
-    padding: 40px 20px;
-    border-radius: 12px;
-    margin-top: 50px;
+    background: linear-gradient(135deg, var(--bg-page) 0%, var(--bg-card) 100%);
+    padding: 60px 20px;
+    border-radius: 24px;
+    margin-top: 80px;
 }
 
 .faq-sections-container {
@@ -1489,20 +1723,48 @@ a:hover {
 }
 
 .faq-section-group {
-    margin-bottom: 40px;
+    margin-bottom: 50px;
 }
 
 .section-title-faq {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color-primary);
     justify-content: flex-start;
-    border-bottom: 2px solid var(--accent-color);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    position: relative;
 }
 
+.section-title-faq::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 2px;
+}
+
+/* === ACCORDION ITEMS === */
 .accordion-item {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 10px;
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.accordion-item:hover {
+    border-color: var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.accordion-item.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 30px rgba(var(--primary-color-rgb, 59, 130, 246), 0.15);
 }
 
 .accordion-button {
@@ -1510,40 +1772,147 @@ a:hover {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    background: var(--bg-card);
-    padding: 18px 20px;
+    background: transparent;
+    padding: 22px 28px;
     border: none;
     text-align: left;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
+    color: var(--text-color-primary);
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.accordion-button::before {
+    content: '❓';
+    margin-right: 15px;
+    font-size: 1.3rem;
+    opacity: 0.7;
 }
 
 .accordion-button:hover {
-    background: var(--bg-page);
-}
-
-.accordion-content {
-    padding: 10px 20px 20px 20px;
-    background: var(--bg-page);
-    border-top: 1px solid var(--border-color);
+    color: var(--primary-color);
 }
 
 .accordion-icon {
-    transition: transform 0.3s;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
 }
 
 .accordion-icon.open {
     transform: rotate(180deg);
 }
 
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s;
+    padding: 0 28px;
+    background: var(--bg-page);
+}
+
+.accordion-item.active .accordion-content {
+    max-height: 500px;
+    padding: 20px 28px 28px 28px;
+    border-top: 1px solid var(--border-color);
+}
+
+.accordion-content p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-color-secondary);
+    margin: 0;
+}
+
+/* === FAQ CTA === */
 .faq-cta-bottom {
     text-align: center;
-    margin-top: 50px;
-    padding: 30px;
-    background: var(--bg-page);
+    margin-top: 60px;
+    padding: 50px 40px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 24px;
+    color: white;
+    box-shadow: 0 15px 40px rgba(var(--primary-color-rgb, 59, 130, 246), 0.3);
+}
+
+.faq-cta-bottom h3 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.faq-cta-bottom p {
+    font-size: 1.15rem;
+    margin-bottom: 25px;
+    opacity: 0.95;
+}
+
+.faq-cta-bottom button {
+    padding: 16px 40px;
+    background: white;
+    color: var(--primary-color);
+    border: none;
     border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.faq-cta-bottom button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 968px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        padding: 40px 30px;
+    }
+    
+    .philosophy-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .founder-bio {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+    }
+    
+    .founder-image-placeholder {
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .title-contact,
+    .title-about,
+    .title-faq {
+        font-size: 2.2rem;
+    }
+    
+    .contact-grid {
+        padding: 30px 20px;
+    }
+    
+    .accordion-button {
+        font-size: 1rem;
+        padding: 18px 20px;
+    }
 }
 
 /* ========================================================================
