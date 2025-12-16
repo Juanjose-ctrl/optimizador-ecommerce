@@ -42,30 +42,27 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// HEADER: Mega Menú centrado y visible al 100%
 const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   return (
     <header className="header-main">
-      {/* Logo a la izquierda */}
-      <div className="logo">
-        <Link href="/" className="flex items-center gap-4">
-          <Sun size={36} className="text-[var(--primary-color)]" />
-          <span className="logo-text text-4xl">OptiCommerce</span>
-        </Link>
-      </div>
+      <div className="flex items-center gap-8">  {/* Logo + botón juntos a la izquierda */}
+        <div className="logo">
+          <Link href="/" className="flex items-center gap-4">
+            <Sun size={36} className="text-[var(--primary-color)]" />
+            <span className="logo-text text-4xl">OptiCommerce</span>
+          </Link>
+        </div>
 
-      {/* Centro: Mega Menú centrado */}
-      <div className="flex-1 flex justify-center">
         <div 
           className="services-mega-menu-container relative"
           onMouseEnter={() => setIsServicesOpen(true)}
           onMouseLeave={() => setIsServicesOpen(false)}
         >
           <div className="services-fixed-box cursor-pointer">
-            <Menu size={20} className="mr-2" />
-            <span className="font-semibold text-lg">Nuestros Servicios</span>
+            <Menu size={18} className="mr-2" />
+            <span className="font-semibold">Nuestros Servicios</span>
           </div>
 
           {isServicesOpen && (
@@ -73,8 +70,8 @@ const Header = ({ onLoginClick }) => {
               <div className="mega-menu-grid">
                 {SERVICE_CATEGORIES.map((categoryData, index) => (
                   <div key={index} className="mega-menu-category">
-                    <h4 className="category-title flex items-center gap-3 font-bold text-lg mb-5 pb-3 border-b-2" style={{ color: categoryData.color, borderColor: 'var(--border-color)' }}>
-                      <categoryData.icon size={24} />
+                    <h4 className="category-title flex items-center gap-3 font-bold text-lg mb-5 pb-3 border-b-2" style={{ color: categoryData.color }}>
+                      <categoryData.icon size={22} />
                       {categoryData.category}
                     </h4>
                     <div className="category-links">
@@ -86,9 +83,9 @@ const Header = ({ onLoginClick }) => {
                           onClick={() => setIsServicesOpen(false)}
                         >
                           <div className="flex items-start gap-4">
-                            <service.icon size={22} className="text-[var(--primary-color)] mt-1 flex-shrink-0" />
+                            <service.icon size={20} className="text-[var(--primary-color)] mt-1 flex-shrink-0" />
                             <div>
-                              <strong className="block font-semibold text-base">{service.name}</strong>
+                              <strong className="block font-semibold">{service.name}</strong>
                               <span className="text-sm text-[var(--text-color-secondary)] block mt-1">{service.description}</span>
                             </div>
                           </div>
@@ -103,8 +100,7 @@ const Header = ({ onLoginClick }) => {
         </div>
       </div>
 
-      {/* Derecha: Precios e Iniciar Sesión */}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-8">  {/* Precios e Iniciar Sesión a la derecha */}
         <Link href="/pricing" className="nav-link text-lg font-medium">
           Precios
         </Link>

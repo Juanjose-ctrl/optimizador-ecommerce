@@ -1638,55 +1638,47 @@ a:hover {
     font-size: 3rem !important;
     line-height: 1.2;
 }
-/* =========================================================================
-   8. ESTILOS PARA MEGA MENÚ (VERSIÓN FINAL: Centrado perfecto, sin cortes)
-   ========================================================================= */
 
 .services-mega-menu-container {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centra el botón en su espacio */
-    width: 100%; /* Ocupa el espacio disponible para centering */
 }
 
 .services-fixed-box {
     display: flex;
     align-items: center;
-    padding: 14px 28px;
+    padding: 10px 20px;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--text-color-primary);
     background-color: var(--bg-card);
     border: 2px solid var(--border-color);
-    border-radius: var(--radius-large);
+    border-radius: var(--radius-medium);
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: var(--shadow-sm);
-    white-space: nowrap;
 }
 
 .services-mega-menu-container:hover .services-fixed-box {
     border-color: var(--accent-color);
     background-color: var(--bg-hover);
     box-shadow: var(--shadow-md);
-    transform: translateY(-3px);
 }
 
-/* Dropdown: ancho completo del header, centrado automáticamente */
+/* Dropdown más pequeño y alineado a la izquierda del botón */
 .mega-menu-dropdown {
     position: absolute;
-    top: calc(100% + 8px); /* Pequeño gap debajo del botón */
+    top: calc(100% + 8px);
     left: 0;
-    right: 0;
+    width: 800px; /* Más pequeño que antes, para que quepa perfecto */
     background-color: var(--bg-card);
+    border-radius: var(--radius-large);
     border-top: 4px solid var(--accent-color);
-    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-lg);
     z-index: 999;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
     transform: translateY(-10px);
 }
 
@@ -1697,57 +1689,44 @@ a:hover {
     transform: translateY(0);
 }
 
-/* Grid centrado y seguro */
 .mega-menu-grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 30px;
+    padding: 30px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 50px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
 }
 
 .mega-menu-category {
     background: var(--bg-page);
-    padding: 30px;
+    padding: 20px;
     border-radius: var(--radius-large);
     box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-}
-
-.mega-menu-category:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-md);
 }
 
 .category-title {
     display: flex;
     align-items: center;
-    gap: 14px;
-    font-size: 1.4rem;
+    gap: 12px;
+    font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 28px;
-    padding-bottom: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
     border-bottom: 2px solid var(--border-color);
 }
 
 .category-links {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
 }
 
 .mega-menu-link {
     display: block;
-    padding: 16px 20px;
-    border-radius: var(--radius-medium);
-    transition: all 0.3s ease;
-    color: var(--text-color-primary);
-    text-decoration: none;
+    padding: 12px;
+    border-radius: var(--radius-small);
+    transition: background 0.2s;
 }
 
 .mega-menu-link:hover {
     background-color: var(--bg-hover);
-    transform: translateX(6px);
-    padding-left: 26px; /* Indent suave en hover */
 }
