@@ -1,9 +1,9 @@
-// src/app/faq/page.js - VERSIÓN FINAL PROFESIONAL Y ELEGANTE
+// src/app/faq/page.js - MODERNIZADA CON NUEVO CSS
 
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Sun, ArrowLeft, HelpCircle, Image, DollarSign, Zap, ChevronDown } from 'lucide-react';
+import { Sun, ArrowLeft, HelpCircle } from 'lucide-react';
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -11,7 +11,7 @@ export default function FAQPage() {
   const faqs = [
     {
       category: 'Optimización de Imágenes',
-      icon: Image,
+      icon: '🖼️',
       questions: [
         { q: "¿Qué formatos de imagen soporta OptiCommerce?", a: "Soportamos los formatos más comunes, incluyendo JPEG, PNG y WebP. Nuestro sistema automáticamente elige el mejor método de compresión para cada uno." },
         { q: "¿La optimización afecta la calidad visual de mis imágenes?", a: "No. Utilizamos algoritmos de compresión sin pérdidas (lossless) y con pérdidas inteligentes (lossy) para reducir el peso del archivo con un impacto visual casi nulo." },
@@ -20,7 +20,7 @@ export default function FAQPage() {
     },
     {
       category: 'Planes y Créditos',
-      icon: DollarSign,
+      icon: '💰',
       questions: [
         { q: "¿Cómo se define un 'crédito'?", a: "Un crédito equivale a una imagen optimizada. Si subes 10 imágenes, consumes 10 créditos, independientemente del formato o el ahorro de tamaño." },
         { q: "¿Qué pasa si me quedo sin créditos?", a: "Tu cuenta seguirá activa, pero la optimización se detendrá. Puedes comprar un plan superior o esperar al siguiente ciclo de renovación mensual." },
@@ -29,7 +29,7 @@ export default function FAQPage() {
     },
     {
       category: 'Integración y API',
-      icon: Zap,
+      icon: '⚡',
       questions: [
         { q: "¿Necesito conocimientos de código para usar la API?", a: "Para usar la API, sí. Sin embargo, nuestra interfaz web de arrastrar y soltar (drag & drop) te permite optimizar sin necesidad de codificar. La API está reservada para integraciones avanzadas." },
         { q: "¿Qué tan rápido es el tiempo de respuesta de la API?", a: "Nuestra infraestructura está optimizada para el e-commerce, con tiempos de respuesta muy bajos, típicamente procesando imágenes en menos de 500ms." },
@@ -37,9 +37,13 @@ export default function FAQPage() {
     }
   ];
 
+  const toggleAccordion = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
     <>
-      {/* HEADER COHERENTE */}
+      {/* HEADER */}
       <header className="header-main">
         <div className="app-container flex items-center justify-between py-6">
           <div className="logo">
@@ -62,81 +66,75 @@ export default function FAQPage() {
       {/* CONTENIDO PRINCIPAL */}
       <main className="min-h-screen bg-[var(--bg-page)] py-20">
         <div className="app-container max-w-5xl mx-auto">
+          {/* TÍTULOS */}
           <div className="text-center mb-20">
-            <h1 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] bg-clip-text text-transparent">
-              Preguntas Frecuentes (FAQ)
+            <h1 className="title-faq">
+              Preguntas Frecuentes
             </h1>
-            <p className="text-xl md:text-2xl text-[var(--text-color-secondary)] max-w-3xl mx-auto">
+            <p className="subtitle-faq">
               Respuestas rápidas a las dudas más comunes sobre OptiCommerce.
             </p>
           </div>
 
-          {/* SECCIONES DE FAQ CON ACORDEÓN ELEGANTE */}
-          <div className="space-y-16">
-            {faqs.map((section, sectionIndex) => (
-              <section key={sectionIndex} className="bg-[var(--bg-card)] rounded-3xl shadow-xl p-10 md:p-12 border border-[var(--border-color)]">
-                <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-10 flex items-center gap-4">
-                  <section.icon size={36} className="text-[var(--accent-color)]" />
-                  {section.category}
-                </h2>
+          {/* SECCIÓN FAQ */}
+          <div className="section-faq">
+            <div className="faq-sections-container">
+              {faqs.map((section, sectionIndex) => (
+                <div key={sectionIndex} className="faq-section-group">
+                  <h2 className="section-title-faq">
+                    <span style={{ marginRight: '12px', fontSize: '2rem' }}>{section.icon}</span>
+                    {section.category}
+                  </h2>
 
-                <div className="space-y-4">
-                  {section.questions.map((item, itemIndex) => {
-                    const combinedIndex = `${sectionIndex}-${itemIndex}`;
-                    const isOpen = openIndex === combinedIndex;
+                  <div>
+                    {section.questions.map((item, itemIndex) => {
+                      const combinedIndex = `${sectionIndex}-${itemIndex}`;
+                      const isOpen = openIndex === combinedIndex;
 
-                    return (
-                      <div 
-                        key={combinedIndex} 
-                        className="bg-[var(--bg-page)] rounded-2xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg"
-                      >
-                        <button 
-                          className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-[var(--bg-hover)] transition"
-                          onClick={() => setOpenIndex(isOpen ? null : combinedIndex)}
+                      return (
+                        <div 
+                          key={combinedIndex} 
+                          className={`accordion-item ${isOpen ? 'active' : ''}`}
                         >
-                          <span className="text-xl font-semibold text-[var(--text-color-primary)] pr-4">
-                            {item.q}
-                          </span>
-                          <ChevronDown 
-                            size={28} 
-                            className={`text-[var(--accent-color)] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
-                          />
-                        </button>
+                          <button 
+                            className="accordion-button"
+                            onClick={() => toggleAccordion(combinedIndex)}
+                          >
+                            <span>{item.q}</span>
+                            <div className={`accordion-icon ${isOpen ? 'open' : ''}`}>
+                              ▼
+                            </div>
+                          </button>
 
-                        {isOpen && (
-                          <div className="px-8 pb-8 pt-4 border-t border-[var(--border-color)]">
-                            <p className="text-lg text-[var(--text-color-primary)] leading-relaxed">
-                              {item.a}
-                            </p>
+                          <div className="accordion-content">
+                            <p>{item.a}</p>
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </section>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* CTA FINAL */}
-          <div className="text-center mt-20 py-16 bg-[var(--bg-card)] rounded-3xl shadow-xl border border-[var(--border-color)]">
-            <HelpCircle size={60} className="text-[var(--accent-color)] mx-auto mb-6" />
-            <p className="text-2xl font-bold text-[var(--text-color-primary)] mb-6">
-              ¿No encuentras tu respuesta? ¡Estamos para ayudarte!
-            </p>
-            <Link href="/contact" className="btn btn-primary text-xl px-10 py-5">
-              Contáctanos
-            </Link>
+            {/* CTA FINAL */}
+            <div className="faq-cta-bottom">
+              <HelpCircle size={60} style={{ margin: '0 auto 20px', display: 'block' }} />
+              <h3>¿No encuentras tu respuesta?</h3>
+              <p>¡Estamos para ayudarte!</p>
+              <Link href="/contact">
+                <button>Contáctanos</button>
+              </Link>
+            </div>
           </div>
         </div>
       </main>
 
-      {/* FOOTER MINIMALISTA */}
-      <footer className="footer-main py-12 border-t border-[var(--border-color)] mt-20">
+      {/* FOOTER */}
+      <footer className="bg-[var(--bg-card)] border-t border-[var(--border-color)] py-12">
         <div className="app-container text-center">
           <p className="text-[var(--text-color-secondary)]">
-            © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados. 
-            Desarrollado por Juan José Guerrero.
+            © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
           </p>
         </div>
       </footer>

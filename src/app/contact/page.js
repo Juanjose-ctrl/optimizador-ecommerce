@@ -149,17 +149,17 @@ export default function ContactPage() {
 
               <div className="contact-detail" data-icon="📱">
                 <span>
-                  Teléfono: <a href="tel:+573001234567">+57 300 123 4567</a>
+                  Teléfono: <a href="tel:+573164227055">+57 3164227055</a>
                 </span>
               </div>
 
               <div className="contact-detail" data-icon="📍">
-                <span>Ubicación: Santa Marta, Colombia</span>
+                <span>Ubicación: Cali, Colombia</span>
               </div>
 
               <div className="contact-detail" data-icon="🌐">
                 <span>
-                  Web: <a href="https://opticommerce.com" target="_blank" rel="noopener noreferrer">www.opticommerce.com</a>
+                  Web: <a href="https://optimizador-ecommerce.vercel.app/" target="_blank" rel="noopener noreferrer">www.opticommerce.com</a>
                 </span>
               </div>
             </div>
