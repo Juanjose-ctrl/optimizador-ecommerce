@@ -6,7 +6,8 @@ import Link from 'next/link';
 
 import FileDropzone from './components/FileDropzone';
 import AuthModal from './components/AuthModal';
-
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
 
 import {
   CheckCircle, Sun, Shield, TrendingUp, Leaf, DollarSign,
@@ -41,132 +42,6 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
     <h3 className="card-title">{title}</h3>
     <p className="card-description">{description}</p>
   </div>
-);
-
-// HEADER: full-width + botón mega menú bonito y estable
-const Header = ({ onLoginClick }) => {
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
-
-  return (
-    <header className="header-main">  {/* CSS ya hace full-width */}
-      <div className="flex items-center gap-10">  {/* Logo + botón a la izquierda */}
-        <div className="logo">
-          <Link href="/" className="flex items-center gap-4">
-            <Sun size={36} className="text-[var(--primary-color)]" />
-            <span className="logo-text text-4xl">OptiCommerce</span>
-          </Link>
-        </div>
-
-        <div 
-          className="services-mega-menu-container relative"
-          onMouseEnter={() => setIsServicesOpen(true)}
-          onMouseLeave={() => setIsServicesOpen(false)}
-        >
-          <div className="services-fixed-box cursor-pointer">
-            <Menu size={20} className="mr-3" />
-            <span className="font-semibold text-lg">Nuestros Servicios</span>
-          </div>
-
-          {isServicesOpen && (
-            <div className="mega-menu-dropdown is-open">
-              <div className="mega-menu-grid">
-                {SERVICE_CATEGORIES.map((categoryData, index) => (
-                  <div key={index} className="mega-menu-category">
-                    <h4 className="category-title flex items-center gap-3 font-bold text-lg mb-5 pb-3 border-b-2" style={{ color: categoryData.color }}>
-                      <categoryData.icon size={24} />
-                      {categoryData.category}
-                    </h4>
-                    <div className="category-links">
-                      {categoryData.services.map((service) => (
-                        <Link 
-                          key={service.href} 
-                          href={service.href} 
-                          className="mega-menu-link block"
-                          onClick={() => setIsServicesOpen(false)}
-                        >
-                          <div className="flex items-start gap-4">
-                            <service.icon size={22} className="text-[var(--primary-color)] mt-1 flex-shrink-0" />
-                            <div>
-                              <strong className="block font-semibold text-base">{service.name}</strong>
-                              <span className="text-sm text-[var(--text-color-secondary)] block mt-1">{service.description}</span>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-10">  {/* Precios e Iniciar Sesión a la derecha */}
-        <Link href="/pricing" className="nav-link text-lg font-medium">
-          Precios
-        </Link>
-
-        <button className="btn btn-primary text-lg px-8 py-3" onClick={() => onLoginClick('login')}>
-          Iniciar Sesión
-        </button>
-      </div>
-    </header>
-  );
-};
-
-// FOOTER (sin cambios, ya estaba bien)
-export const Footer = () => (
-  <footer className="footer-main">
-    <div className="app-container">
-      <div className="footer-content">
-        <div className="footer-section">
-          <div className="logo">
-            <Link href="/" className="flex items-center gap-4">
-              <Sun size={30} className="text-[var(--primary-color)]" />
-              <span className="logo-text text-3xl">OptiCommerce</span>
-            </Link>
-          </div>
-          <small className="block mt-8 text-[var(--text-color-secondary)]">
-            © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
-          </small>
-          <small className="block mt-4 text-[var(--text-color-secondary)]">
-            Desarrollado por Juan José Guerrero.
-          </small>
-        </div>
-
-        <div className="footer-section">
-          <h4 className="font-bold mb-4">Nuestros Servicios</h4>
-          <div className="flex flex-col gap-3">
-            {SERVICE_CATEGORIES.flatMap(cat => cat.services).map((service) => (
-              <Link key={service.href} href={service.href} className="footer-link text-base">
-                {service.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="footer-section">
-          <h4 className="font-bold mb-4">Información Legal</h4>
-          <div className="flex flex-col gap-3">
-            <Link href="/terminos" className="footer-link text-base">Términos y Condiciones</Link>
-            <Link href="/privacidad" className="footer-link text-base">Política de Privacidad</Link>
-            <Link href="/reembolso" className="footer-link text-base">Política de Reembolso</Link>
-            <Link href="/cookies" className="footer-link text-base">Política de Cookies</Link>
-          </div>
-        </div>
-
-        <div className="footer-section">
-          <h4 className="font-bold mb-4">Empresa</h4>
-          <div className="flex flex-col gap-3">
-            <Link href="/about" className="footer-link text-base">Sobre Nosotros</Link>
-            <Link href="/contact" className="footer-link text-base">Contacto</Link>
-            <Link href="/faq" className="footer-link text-base">Preguntas Frecuentes (FAQ)</Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
 );
 
 // LANDING PAGE: Header full-width + contenido centrado
