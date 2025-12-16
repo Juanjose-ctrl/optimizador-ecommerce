@@ -5,7 +5,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { 
-  Sun, ChevronDown, ChevronUp, Image, Code, FileText 
+  Sun, ChevronDown, ChevronUp, Image, Code, FileText, Zap, Shield 
 } from 'lucide-react';
 
 // --- 1. SERVICE_LINKS (AGREGAMOS LA PROPIEDAD 'key' PARA EL DROPDOWN) ---
@@ -47,7 +47,7 @@ export const FeatureCard = ({ icon: Icon, title, description, color }) => (
   </div>
 );
 
-// --- 3. Header (CORREGIDO - SIN HOVER EN TODO EL HEADER) ---
+// --- 3. Header ---
 export const Header = ({ onLoginClick }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
@@ -62,37 +62,84 @@ export const Header = ({ onLoginClick }) => {
         </div>
 
         <nav>
-          <div 
-  className="nav-dropdown"
-  onMouseEnter={() => setIsServicesOpen(true)}
-  onMouseLeave={() => setIsServicesOpen(false)}
->
-  <button className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-  </button>
+          {/* MEGA MENÚ DE SERVICIOS AGRUPADO */}
+          <div className="services-mega-menu-container" style={{ position: 'relative' }}>
+            <div
+              onMouseEnter={() => setIsServicesOpen(true)}
+              onMouseLeave={() => setIsServicesOpen(false)}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: '-40px',
+                right: '-40px',
+                paddingBottom: '500px', // Zona invisible grande para que no se cierre el menú
+              }}
+              className="pointer-events-none"
+            >
+              {/* Botón principal */}
+              <button
+                className="services-fixed-box pointer-events-auto"
+                style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+              >
+                Nuestros Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              </button>
 
-            {isServicesOpen && (
-              <div className="nav-dropdown-menu">
-                {SERVICE_LINKS.map((service) => (
-                  <Link
-                    key={service.href}
-                    href={service.href}
-                    style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
-                  >
-                    <service.icon size={28} style={{ color: 'var(--primary-color)' }} />
-                    <div>
-                      <strong style={{ display: 'block', fontWeight: 600, fontSize: '1.05rem' }}>
-                        {service.name}
-                      </strong>
-                      <p style={{ fontSize: '0.9rem', color: 'var(--text-color-secondary)', margin: 0 }}>
-                        {service.description}
-                      </p>
+              {/* Mega menú desplegable */}
+              {isServicesOpen && (
+                <div className="mega-menu-dropdown is-open pointer-events-auto">
+                  <div className="mega-menu-grid">
+                    {/* Categoría 1: Optimización de Archivos */}
+                    <div className="mega-menu-category">
+                      <div className="category-title">
+                        <Zap size={24} className="icon-color" />
+                        Optimización de Archivos
+                      </div>
+                      <div className="category-links">
+                        <Link href="/" className="mega-menu-link">
+                          <Image size={20} className="icon-color" />
+                          <div>
+                            Optimizador WebP/Imágenes
+                            <span style={{ fontSize: '0.9rem', color: 'var(--text-color-secondary)', display: 'block', marginTop: '4px' }}>
+                              Comprime imágenes de producto para Core Web Vitals (WebP, JPEG, PNG).
+                            </span>
+                          </div>
+                        </Link>
+                        <Link href="/minificador-css-js" className="mega-menu-link">
+                          <Code size={20} className="icon-color" />
+                          <div>
+                            Minificador CSS/JS
+                            <span style={{ fontSize: '0.9rem', color: 'var(--text-color-secondary)', display: 'block', marginTop: '4px' }}>
+                              Acelera tu código eliminando espacios, comentarios y bytes innecesarios.
+                            </span>
+                          </div>
+                        </Link>
+                      </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            )}
+
+                    {/* Categoría 2: Seguridad y Privacidad */}
+                    <div className="mega-menu-category">
+                      <div className="category-title">
+                        <Shield size={24} className="icon-color" />
+                        Seguridad y Privacidad
+                      </div>
+                      <div className="category-links">
+                        <Link href="/limpiar-metadatos-imagen" className="mega-menu-link">
+                          <FileText size={20} className="icon-color" />
+                          <div>
+                            Limpiador de Metadatos
+                            <span style={{ fontSize: '0.9rem', color: 'var(--text-color-secondary)', display: 'block', marginTop: '4px' }}>
+                              Protege tu privacidad y reduce el peso al eliminar datos EXIF y ocultos.
+                            </span>
+                          </div>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
+          {/* FIN MEGA MENÚ */}
 
           <Link href="/pricing" className="nav-link">
             Precios
