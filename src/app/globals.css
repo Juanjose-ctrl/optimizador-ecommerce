@@ -2380,3 +2380,51 @@ nav {
     padding: 0; /* Ya lo tiene el contenedor padre */
     margin: 0;
 }
+
+/* =======================================================
+   4. ESTILOS ESPECÍFICOS: GENERADOR UTM
+   ======================================================= */
+
+/* Contenedor del grupo de entrada */
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Etiqueta del input */
+.input-label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-color-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Indicador de campo obligatorio */
+.input-label.required:after {
+    content: '*';
+    color: var(--primary-color);
+    margin-left: 4px;
+}
+
+/* Estilo del campo de entrada de texto */
+.input-field {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: var(--bg-page); /* Color de fondo de la página */
+    color: var(--text-color-primary);
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2);
+    background-color: var(--bg-card); /* Ligeramente diferente al hacer foco */
+}
+
+.input-field::placeholder {
+    color: var(--text-color-secondary);
+    opacity: 0.6;
+}

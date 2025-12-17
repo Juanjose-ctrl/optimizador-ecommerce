@@ -6,10 +6,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { 
   Sun, ChevronDown, ChevronUp, Image, Code, FileText, 
-  Zap, Shield, Palette, TrendingUp, Leaf, DollarSign // Añadimos iconos necesarios para categorías y FeatureCard
+  Zap, Shield, Palette, TrendingUp, Leaf, DollarSign, link2 // Añadimos iconos necesarios para categorías y FeatureCard
 } from 'lucide-react';
 
 // --- 1. SERVICE_CATEGORIES (Nueva estructura de Mega Menú) ---
+// --- 1. SERVICE_CATEGORIES (Estructura Corregida) ---
 export const SERVICE_CATEGORIES = [
   {
     title: "Optimización de Archivos",
@@ -46,18 +47,29 @@ export const SERVICE_CATEGORIES = [
     icon: Palette, 
     services: [
       { 
-      name: "Generador de Favicon", 
-      href: "/generador-favicon", 
-      icon: Image, 
-      description: "Crea un paquete completo de favicons optimizados para tu sitio."
-    },
-    { 
-      name: "Optimizador de Paleta", 
-      href: "/optimizador-paleta", 
-      icon: Palette, 
-      description: "Extrae colores clave de tu marca con IA y obtén una paleta HEX."
-    },
-      // Puedes añadir más utilidades aquí más adelante
+        name: "Generador de Favicon", 
+        href: "/generador-favicon", 
+        icon: Image, 
+        description: "Crea un paquete completo de favicons optimizados para tu sitio."
+      },
+      { 
+        name: "Optimizador de Paleta", 
+        href: "/optimizador-paleta", 
+        icon: Palette, 
+        description: "Extrae colores clave de tu marca con IA y obtén una paleta HEX."
+      },
+    ]
+  },
+  {
+    title: "Marketing y Analítica",
+    icon: TrendingUp, 
+    services: [
+      { 
+        name: "Generador de Enlaces UTM", 
+        href: "/generador-utm", 
+        icon: Link2, 
+        description: "Crea enlaces rastreables para tus campañas de Google Analytics."
+      },
     ]
   },
 ];
