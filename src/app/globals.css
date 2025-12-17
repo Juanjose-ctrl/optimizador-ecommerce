@@ -1833,6 +1833,53 @@ nav {
 }
 
 /* ========================================================================
+   BARRA CTA FINAL DE FAQ
+   ======================================================================== */
+.faq-cta-bottom {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    padding: 60px 40px;
+    border-radius: var(--radius-large);
+    text-align: center;
+    margin-top: 60px;
+    color: white;
+    box-shadow: var(--shadow-lg);
+}
+
+.faq-cta-bottom h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.faq-cta-bottom p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px;
+}
+
+.faq-cta-bottom button {
+    background: white;
+    color: var(--primary-color);
+    border: none;
+    padding: 16px 40px;
+    border-radius: var(--radius-medium);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.faq-cta-bottom button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.faq-cta-bottom svg {
+    color: white;
+}
+/* ========================================================================
    24. PAGINAS DE POLITICA
    ======================================================================== */
 .policy-content h1,
