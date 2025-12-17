@@ -1700,61 +1700,6 @@ nav {
     box-shadow: var(--shadow-md);
 }
 
-.philosophy-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.philosophy-card {
-    padding: 40px 30px;
-    background: var(--bg-card);
-    border: 2px solid transparent;
-    border-radius: 20px;
-    text-align: center;
-    transition: all 0.4s ease;
-}
-
-.philosophy-card:hover {
-    transform: translateY(-10px);
-    border-color: var(--primary-color);
-    box-shadow: var(--shadow-lg);
-}
-
-.founder-bio {
-    display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 60px;
-    align-items: start;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 50px;
-    background: var(--bg-card);
-    border-radius: 24px;
-    box-shadow: var(--shadow-lg);
-}
-
-.founder-image-placeholder {
-    width: 350px;
-    height: 350px;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-}
-
-.founder-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.founder-image-placeholder:hover .founder-image {
-    transform: scale(1.05);
-}
-
 .faq-sections-container {
     max-width: 900px;
     margin: 0 auto;
@@ -2089,15 +2034,7 @@ nav {
         padding: 40px 30px;
     }
 
-    .founder-bio {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 40px;
-    }
-
-    .founder-image-placeholder {
-        margin: 0 auto;
-    }
+    
 }
 
 @media (max-width: 480px) {
@@ -2179,41 +2116,216 @@ nav {
 }
 
 /* ========================================================================
-   24. CORRECCIÓN DE ÍCONOS FALTANTES (ABOUT PAGE - FILOSOFÍA)
+   ABOUT PAGE - DISEÑO PROFESIONAL Y MODERNO
    ======================================================================== */
 
-/* 1. Asegura que el contenedor del título esté en modo columna para separar el ícono del texto */
+/* Sección Filosofía */
+.section-philosophy {
+    margin-bottom: 100px;
+}
+
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.philosophy-card {
+    position: relative;
+    padding: 50px 35px;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+/* Efecto de fondo al hover */
+.philosophy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
+
+.philosophy-card:hover::before {
+    opacity: 0.05;
+}
+
+.philosophy-card:hover {
+    transform: translateY(-12px);
+    border-color: var(--primary-color);
+    box-shadow: 0 20px 40px rgba(0, 128, 128, 0.15);
+}
+
 .philosophy-card h3 {
-    display: flex; 
-    flex-direction: column; /* Coloca el ícono arriba y el texto abajo */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-color);
-    margin-bottom: 15px;
-    text-align: center; /* Centra el texto del título */
+    margin-bottom: 20px;
 }
 
-/* 2. Crea y estiliza el ícono/emoji a partir del data-icon */
 .philosophy-card h3::before {
-    content: attr(data-icon); /* Usa el emoji del atributo (🎯, 📈, ⚡) */
-    
-    /* Estilos visuales del ícono */
-    font-size: 3rem; /* ¡Lo hacemos más grande! */
-    line-height: 1; 
-    font-weight: normal; /* Asegura que el emoji no herede negritas del h3 */
-    color: var(--accent-color); 
-    margin-bottom: 10px; /* Separación del título */
-    
-    /* Efecto sutil para que resalte */
-    filter: drop-shadow(0 0 5px rgba(0, 128, 128, 0.3));
-    
-    /* Esto es clave: hacemos que sea un elemento de bloque para que ocupe su propio espacio */
-    display: block; 
+    content: attr(data-icon);
+    font-size: 4rem;
+    line-height: 1;
+    margin-bottom: 15px;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(0, 128, 128, 0.2));
+    transition: transform 0.4s ease;
 }
 
-/* Aseguramos que el texto dentro del h3 no tenga margen superior */
-.philosophy-card h3 > * {
-    margin-top: 0;
+.philosophy-card:hover h3::before {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.philosophy-card p {
+    position: relative;
+    z-index: 1;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-color-secondary);
+}
+
+/* Sección Fundador */
+.section-founder {
+    margin-top: 100px;
+}
+
+.founder-bio {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 70px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px;
+    background: var(--bg-card);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+}
+
+.founder-image-placeholder {
+    width: 400px;
+    height: 400px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+/* Efecto overlay en la imagen */
+.founder-image-placeholder::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 128, 128, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.founder-image-placeholder:hover::after {
+    opacity: 1;
+}
+
+.founder-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.founder-image-placeholder:hover .founder-image {
+    transform: scale(1.08);
+}
+
+.founder-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.founder-text h3 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.founder-text h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.founder-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-color-secondary);
+    margin-bottom: 30px;
+}
+
+/* Responsive para About */
+@media (max-width: 1024px) {
+    .founder-bio {
+        grid-template-columns: 350px 1fr;
+        gap: 50px;
+        padding: 50px;
+    }
+    
+    .founder-image-placeholder {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .philosophy-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .founder-bio {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+        padding: 40px 30px;
+    }
+    
+    .founder-image-placeholder {
+        margin: 0 auto;
+        width: 300px;
+        height: 300px;
+    }
+    
+    .founder-text h3 {
+        font-size: 1.8rem;
+    }
+    
+    .founder-text h4 {
+        font-size: 1.1rem;
+    }
 }
