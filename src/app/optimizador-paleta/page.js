@@ -4,7 +4,6 @@
 import { Palette, Layers, Copy, UploadCloud, CheckCircle, Download, UploadCloud as UploadIcon } from 'lucide-react';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-// 🚨 RUTA CORREGIDA
 import { Header, Footer } from '../components/SharedComponents'; 
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://fastapi-image-optimizer-1.onrender.com';
@@ -60,7 +59,6 @@ export default function PaletteOptimizer() {
         return browserId;
     };
 
-    // FIX para el doble clic: función que dispara el clic del input real
     const triggerFileSelect = () => {
         fileInputRef.current?.click();
     };
@@ -68,7 +66,6 @@ export default function PaletteOptimizer() {
     const handleUpload = async (e) => {
         const selectedFile = e.target.files[0];
         
-        // Limpiar el valor del input para asegurar que onChange se dispara al subir el mismo archivo
         e.target.value = null; 
 
         if (selectedFile && selectedFile.type.startsWith('image/')) {
@@ -154,18 +151,21 @@ export default function PaletteOptimizer() {
                             {/* Dropzone/Selector, ahora dispara la función FIX */}
                             <div 
                                 className="dropzone border-2 border-dashed border-[var(--border-color)] hover:border-[var(--accent-color)] transition-all cursor-pointer rounded-lg p-6 h-auto min-h-64 flex flex-col justify-center items-center text-center"
-                                onClick={triggerFileSelect} // <-- Usamos la función FIX
+                                onClick={triggerFileSelect} 
                             >
                                 {previewUrl ? (
-                                    <div className="relative w-full h-64">
+                                    // 🚀 FIX APLICADO AQUÍ
+                                    <div className="relative w-full max-w-[256px] max-h-[256px] flex justify-center items-center">
                                         <Image
                                             src={previewUrl}
                                             alt="Imagen de marca cargada"
-                                            fill
+                                            width={256} // Tamaño fijo para la previsualización
+                                            height={256} // Tamaño fijo para la previsualización
                                             className="object-contain p-2 rounded-lg"
                                         />
                                     </div>
                                 ) : (
+                                    // CÓDIGO RESTANTE SIN CAMBIOS...
                                     <>
                                         <UploadIcon size={48} className="text-[var(--primary-color)] mb-4" />
                                         <p className="font-semibold text-lg text-[var(--text-color-primary)]">
@@ -182,7 +182,7 @@ export default function PaletteOptimizer() {
                             <input 
                                 type="file" 
                                 id="palette-upload" 
-                                ref={fileInputRef} // <-- Referencia al input
+                                ref={fileInputRef} 
                                 accept="image/*" 
                                 onChange={handleUpload} 
                                 className="hidden" 
