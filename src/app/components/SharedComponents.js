@@ -6,58 +6,34 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { 
   Sun, ChevronDown, ChevronUp, Image, Code, FileText, 
-  Zap, Shield, Palette, TrendingUp, Leaf, DollarSign, link2 // Añadimos iconos necesarios para categorías y FeatureCard
+  Zap, Shield, Palette, TrendingUp, Leaf, DollarSign, 
+  link2 // Añadimos iconos necesarios para categorías y FeatureCard
 } from 'lucide-react';
 
 // --- 1. SERVICE_CATEGORIES (Nueva estructura de Mega Menú) ---
-// --- 1. SERVICE_CATEGORIES (Estructura Corregida) ---
+
 export const SERVICE_CATEGORIES = [
   {
     title: "Optimización de Archivos",
     icon: Zap, 
     services: [
-      { 
-        name: "Optimizador WebP/Imágenes", 
-        href: "/", 
-        icon: Image, 
-        description: "Comprime imágenes de producto para Core Web Vitals (WebP, JPEG, PNG)."
-      },
-      { 
-        name: "Minificador CSS/JS", 
-        href: "/minificador-css-js", 
-        icon: Code, 
-        description: "Acelera tu código eliminando espacios, comentarios y bytes innecesarios."
-      },
+      { name: "Optimizador WebP/Imágenes", href: "/", icon: Image, description: "Comprime imágenes." },
+      { name: "Minificador CSS/JS", href: "/minificador-css-js", icon: Code, description: "Acelera tu código." },
     ]
   },
   {
     title: "Seguridad y Privacidad",
     icon: Shield, 
     services: [
-      { 
-        name: "Limpiador de Metadatos", 
-        href: "/limpiar-metadatos-imagen", 
-        icon: FileText, 
-        description: "Protege tu privacidad y reduce el peso al eliminar datos EXIF y ocultos."
-      },
+      { name: "Limpiador de Metadatos", href: "/limpiar-metadatos-imagen", icon: FileText, description: "Elimina datos EXIF." },
     ]
   },
   {
     title: "Marca y Utilidades",
     icon: Palette, 
     services: [
-      { 
-        name: "Generador de Favicon", 
-        href: "/generador-favicon", 
-        icon: Image, 
-        description: "Crea un paquete completo de favicons optimizados para tu sitio."
-      },
-      { 
-        name: "Optimizador de Paleta", 
-        href: "/optimizador-paleta", 
-        icon: Palette, 
-        description: "Extrae colores clave de tu marca con IA y obtén una paleta HEX."
-      },
+      { name: "Generador de Favicon", href: "/generador-favicon", icon: Image, description: "Crea paquetes de favicons." },
+      { name: "Optimizador de Paleta", href: "/optimizador-paleta", icon: Palette, description: "Extrae colores HEX." },
     ]
   },
   {
@@ -67,11 +43,11 @@ export const SERVICE_CATEGORIES = [
       { 
         name: "Generador de Enlaces UTM", 
         href: "/generador-utm", 
-        icon: Link2, 
-        description: "Crea enlaces rastreables para tus campañas de Google Analytics."
+        icon: Link2, // Ahora que está importado arriba, ya no dará error
+        description: "Crea enlaces para Google Analytics." 
       },
     ]
-  },
+  }
 ];
 
 
