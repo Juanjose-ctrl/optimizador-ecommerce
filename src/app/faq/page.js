@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Sun, ArrowLeft, HelpCircle } from 'lucide-react';
+import { Header, Footer } from '../components/SharedComponents';
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -41,27 +42,10 @@ export default function FAQPage() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  return (
+   return (
     <>
-      {/* HEADER */}
-      <header className="header-main">
-        <div className="app-container flex items-center justify-between py-6">
-          <div className="logo">
-            <Link href="/" className="flex items-center gap-4">
-              <Sun size={36} className="text-[var(--primary-color)]" />
-              <span className="logo-text text-4xl">OptiCommerce</span>
-            </Link>
-          </div>
-
-          <Link 
-            href="/" 
-            className="flex items-center gap-2 text-[var(--text-color-primary)] font-medium hover:text-[var(--accent-color)] transition"
-          >
-            <ArrowLeft size={20} />
-            Volver al Inicio
-          </Link>
-        </div>
-      </header>
+      {/* REEMPLAZA TODO EL <header> POR ESTO: */}
+      <Header />
 
       {/* CONTENIDO PRINCIPAL */}
       <main className="min-h-screen bg-[var(--bg-page)] py-20">
@@ -130,14 +114,7 @@ export default function FAQPage() {
         </div>
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-[var(--bg-card)] border-t border-[var(--border-color)] py-12">
-        <div className="app-container text-center">
-          <p className="text-[var(--text-color-secondary)]">
-            © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }
