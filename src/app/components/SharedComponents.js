@@ -1,24 +1,75 @@
 // src/components/SharedComponents.js
-import Link from 'next/link';
-import { Sun, ArrowLeft, Menu, X, Image as ImageIcon, Palette } from 'lucide-react';
-import { useState } from 'react'; // Necesitas useState para el menú plegable/móvil
+'use client'; // Necesario para Header ya que usa useState y onLoginClick
 
-// Asegúrate de que tu componente Header sea 'use client' si usa hooks o props como onLoginClick
-// Si SharedComponents.js no tiene 'use client' y Header usa hooks, deberás mover 'use client' a este archivo.
+import Link from 'next/link';
+// Asegúrate de que todos los íconos necesarios estén importados aquí
+import { 
+    Sun, ArrowLeft, Menu, X, 
+    Image as ImageIcon, Palette, 
+    Zap, Layers, Trash2, Code 
+} from 'lucide-react'; 
+import { useState } from 'react';
+
+// ===============================================
+// 1. CONSTANTES DE SERVICIO (EXPORTADAS)
+// Estas son necesarias para la página principal (page.js)
+// ===============================================
+
+export const SERVICE_LINKS = [
+    // Diseño y Marca (Diseño)
+    { href: '/favicon', label: 'Generador de Favicon', description: 'Crea íconos optimizados para todos los dispositivos.', icon: ImageIcon, category: 'Diseño' },
+    { href: '/colors', label: 'Optimizador de Paleta', description: 'Extrae colores clave y genera una paleta web funcional.', icon: Palette, category: 'Diseño' },
+    
+    // Rendimiento y SEO (Rendimiento)
+    { href: '/minificador-css-js', label: 'Minificador CSS/JS', description: 'Reduce el tamaño de tus scripts y hojas de estilo.', icon: Code, category: 'Rendimiento' },
+    { href: '/limpiar-metadatos-imagen', label: 'Limpiador de Metadatos', description: 'Elimina datos innecesarios de tus imágenes para mayor privacidad y velocidad.', icon: Trash2, category: 'Rendimiento' },
+];
+
+export const SERVICE_CATEGORIES = [
+    { name: 'Diseño y Marca', icon: Layers },
+    { name: 'Rendimiento y SEO', icon: Zap },
+];
+
+// ===============================================
+// 2. COMPONENTE FEATURE CARD (EXPORTADO)
+// Se utiliza en la Landing Page (page.js)
+// ===============================================
+
+export function FeatureCard({ href, title, description, icon: Icon }) {
+    return (
+        <Link href={href} className="feature-card-link">
+            <div className="feature-card bg-[var(--bg-card)] p-6 rounded-xl shadow-md transition hover:shadow-lg hover:border-[var(--accent-color)] border border-[var(--border-color)]">
+                {/* Usamos el componente Icon que se pasa como prop */}
+                <Icon size={32} className="text-[var(--primary-color)] mb-4" /> 
+                <h3 className="text-xl font-bold text-[var(--text-color-primary)] mb-2">{title}</h3>
+                <p className="text-[var(--text-color-secondary)]">{description}</p>
+            </div>
+        </Link>
+    );
+}
+
+// ===============================================
+// 3. COMPONENTE HEADER (Tu código actualizado)
+// ===============================================
 
 export function Header({ showBackButton = true, onLoginClick }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const navLinks = [
-        { href: "/favicon", label: "Generador de Favicon", icon: ImageIcon }, // Nuevo enlace
-        { href: "/colors", label: "Optimizador de Paleta", icon: Palette }, // Nuevo enlace
+    // Usamos SERVICE_LINKS para tener todos los enlaces centralizados
+    // Nota: Aquí solo usamos los enlaces generales, no por categoría.
+    const navLinks = SERVICE_LINKS.map(link => ({
+        href: link.href, 
+        label: link.label, 
+        icon: link.icon
+    })).concat([
         { href: "/about", label: "Sobre Nosotros" },
         { href: "/contact", label: "Contacto" },
-    ];
+    ]);
 
     return (
         <header className="header-main">
             <div className="app-container flex items-center justify-between py-6">
+                {/* ... (Contenido del Logo y Enlaces de Escritorio) ... */}
                 <div className="logo">
                     <Link href="/" className="flex items-center gap-4">
                         <Sun size={36} className="text-[var(--primary-color)]" />
@@ -89,11 +140,13 @@ export function Header({ showBackButton = true, onLoginClick }) {
     );
 }
 
-// (El componente Footer permanece sin cambios, justo debajo de Header)
+// ===============================================
+// 4. COMPONENTE FOOTER
+// ===============================================
+
 export function Footer() {
     return (
         <footer className="bg-[var(--bg-card)] border-t border-[var(--border-color)] py-12">
-            {/* ... Contenido del Footer ... */}
             <div className="app-container text-center">
                 <p className="text-[var(--text-color-secondary)] text-lg">
                     © {new Date().getFullYear()} OptiCommerce. Optimiza tu eCommerce con IA.
