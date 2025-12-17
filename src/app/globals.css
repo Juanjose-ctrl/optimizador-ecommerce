@@ -2126,7 +2126,7 @@ nav {
 
 .philosophy-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* FORZAR 3 columnas exactas */
     gap: 40px;
     max-width: 1200px;
     margin: 0 auto;
@@ -2261,7 +2261,8 @@ nav {
 .founder-text {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* CAMBIADO de center */
+    padding-top: 0; /* Asegura que empiece desde arriba */
 }
 
 .founder-text h3 {
@@ -2302,10 +2303,17 @@ nav {
     }
 }
 
+@media (max-width: 1024px) {
+    .philosophy-grid {
+        grid-template-columns: repeat(3, 1fr); /* Mantener 3 */
+        gap: 30px;
+    }
+}
+
 @media (max-width: 768px) {
     .philosophy-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
+        grid-template-columns: 1fr; /* Solo en móvil pasa a 1 columna */
+        gap: 25px;
     }
     
     .founder-bio {

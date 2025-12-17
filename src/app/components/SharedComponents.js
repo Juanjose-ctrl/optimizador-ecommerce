@@ -46,11 +46,17 @@ export const SERVICE_CATEGORIES = [
     icon: Palette, 
     services: [
       { 
-        name: "Herramientas de Diseño", 
-        href: "/design", 
-        icon: Palette, 
-        description: "Favicon, Paleta de colores y utilidades de marca."
-      },
+      name: "Generador de Favicon", 
+      href: "/generador-favicon", 
+      icon: Image, 
+      description: "Crea un paquete completo de favicons optimizados para tu sitio."
+    },
+    { 
+      name: "Optimizador de Paleta", 
+      href: "/optimizador-paleta", 
+      icon: Palette, 
+      description: "Extrae colores clave de tu marca con IA y obtén una paleta HEX."
+    },
       // Puedes añadir más utilidades aquí más adelante
     ]
   },
