@@ -11,6 +11,7 @@ import { useState } from 'react';
 
 // ===============================================
 // 1. CONSTANTES DE SERVICIO (EXPORTADAS)
+// NO contienen ninguna lógica dependiente.
 // ===============================================
 
 export const SERVICE_LINKS = [
@@ -45,26 +46,21 @@ export function FeatureCard({ href, title, description, icon: Icon }) {
 }
 
 // ===============================================
-// 3. DEFINICIÓN DE ENLACES PARA EL HEADER (CORREGIDO)
-// Lo definimos aquí para evitar el error 'map is undefined'
-// ===============================================
-
-const fullNavLinks = SERVICE_LINKS.map(link => ({
-    href: link.href, 
-    label: link.label, 
-    icon: link.icon
-})).concat([
-    { href: "/about", label: "Sobre Nosotros" },
-    { href: "/contact", label: "Contacto" },
-]);
-
-
-// ===============================================
-// 4. COMPONENTE HEADER
+// 3. COMPONENTE HEADER (Lógica de enlaces dentro)
 // ===============================================
 
 export function Header({ showBackButton = true, onLoginClick }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    // Mover la lógica de 'map' DENTRO del componente para su ejecución en tiempo de cliente.
+    const fullNavLinks = SERVICE_LINKS.map(link => ({
+        href: link.href, 
+        label: link.label, 
+        icon: link.icon
+    })).concat([
+        { href: "/about", label: "Sobre Nosotros" },
+        { href: "/contact", label: "Contacto" },
+    ]);
 
     return (
         <header className="header-main">
@@ -78,7 +74,7 @@ export function Header({ showBackButton = true, onLoginClick }) {
 
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-8">
-                    {/* Usamos la variable predefinida fullNavLinks */}
+                    {/* Usamos la variable local fullNavLinks */}
                     {fullNavLinks.map((item, index) => (
                         <Link key={index} href={item.href} className="nav-link text-lg font-medium text-[var(--text-color-primary)] hover:text-[var(--accent-color)] transition">
                             {item.label}
@@ -141,7 +137,7 @@ export function Header({ showBackButton = true, onLoginClick }) {
 }
 
 // ===============================================
-// 5. COMPONENTE FOOTER
+// 4. COMPONENTE FOOTER
 // ===============================================
 
 export function Footer() {
