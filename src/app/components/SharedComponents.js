@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { 
   Sun, ChevronDown, ChevronUp, Image, Code, FileText, 
   Zap, Shield, Palette, TrendingUp, Leaf, DollarSign, 
-  link2 // Añadimos iconos necesarios para categorías y FeatureCard
+  Link2, Trash2 // Añadimos iconos necesarios para categorías y FeatureCard
 } from 'lucide-react';
 
 // --- 1. SERVICE_CATEGORIES (Nueva estructura de Mega Menú) ---
