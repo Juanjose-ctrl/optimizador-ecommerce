@@ -2351,4 +2351,32 @@ nav {
     }
 }
 
-/* prueba
+/* =======================================================
+   2. ESTILOS ESPECÍFICOS: OPTIMIZADOR DE PALETA
+   ======================================================= */
+
+.color-card {
+    /* Asegura que el contenido esté bien espaciado si los colores tienen nombres largos */
+    display: flex;
+    flex-direction: column;
+}
+
+/* El muestrario de color, solo para referencia si necesitas ajustar el tamaño */
+.color-card .color-sample {
+    width: 100%;
+    min-height: 4rem; /* h-16 */
+}
+
+/* =======================================================
+   3. ESTILOS ESPECÍFICOS: GENERADOR DE FAVICON
+   ======================================================= */
+
+/* Bloque del Snippet de Código HTML */
+/* Aunque usamos bg-gray-800 y text-white de Tailwind, esta regla asegura el scroll y el tipo de fuente */
+.bg-gray-800 pre {
+    white-space: pre-wrap; /* Permite saltos de línea suaves */
+    word-break: break-all;
+    font-size: 0.875rem; /* text-sm */
+    padding: 0; /* Ya lo tiene el contenedor padre */
+    margin: 0;
+}
