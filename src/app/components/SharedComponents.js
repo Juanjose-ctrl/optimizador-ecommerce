@@ -1,153 +1,232 @@
-// src/components/SharedComponents.js
-'use client'; // Necesario para Header ya que usa hooks
+// src/app/components/SharedComponents.js
 
+'use client'; 
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { 
-    Sun, ArrowLeft, Menu, X, 
-    Image as ImageIcon, Palette, 
-    Zap, Layers, Trash2, Code 
-} from 'lucide-react'; 
-import { useState } from 'react';
+  Sun, ChevronDown, ChevronUp, Image, Code, FileText, 
+  Zap, Shield, Palette, TrendingUp, Leaf, DollarSign // Añadimos iconos necesarios para categorías y FeatureCard
+} from 'lucide-react';
 
-// ===============================================
-// 1. CONSTANTES DE SERVICIO (EXPORTADAS)
-// NO contienen ninguna lógica dependiente.
-// ===============================================
-
-export const SERVICE_LINKS = [
-    // Diseño y Marca
-    { href: '/favicon', label: 'Generador de Favicon', description: 'Crea íconos optimizados para todos los dispositivos.', icon: ImageIcon, category: 'Diseño' },
-    { href: '/colors', label: 'Optimizador de Paleta', description: 'Extrae colores clave y genera una paleta web funcional.', icon: Palette, category: 'Diseño' },
-    
-    // Rendimiento y SEO
-    { href: '/minificador-css-js', label: 'Minificador CSS/JS', description: 'Reduce el tamaño de tus scripts y hojas de estilo.', icon: Code, category: 'Rendimiento' },
-    { href: '/limpiar-metadatos-imagen', label: 'Limpiador de Metadatos', description: 'Elimina datos innecesarios de tus imágenes para mayor privacidad y velocidad.', icon: Trash2, category: 'Rendimiento' },
-];
-
+// --- 1. SERVICE_CATEGORIES (Nueva estructura de Mega Menú) ---
 export const SERVICE_CATEGORIES = [
-    { name: 'Diseño y Marca', icon: Layers },
-    { name: 'Rendimiento y SEO', icon: Zap },
+  {
+    title: "Optimización de Archivos",
+    icon: Zap, 
+    services: [
+      { 
+        name: "Optimizador WebP/Imágenes", 
+        href: "/", 
+        icon: Image, 
+        description: "Comprime imágenes de producto para Core Web Vitals (WebP, JPEG, PNG)."
+      },
+      { 
+        name: "Minificador CSS/JS", 
+        href: "/minificador-css-js", 
+        icon: Code, 
+        description: "Acelera tu código eliminando espacios, comentarios y bytes innecesarios."
+      },
+    ]
+  },
+  {
+    title: "Seguridad y Privacidad",
+    icon: Shield, 
+    services: [
+      { 
+        name: "Limpiador de Metadatos", 
+        href: "/limpiar-metadatos-imagen", 
+        icon: FileText, 
+        description: "Protege tu privacidad y reduce el peso al eliminar datos EXIF y ocultos."
+      },
+    ]
+  },
+  {
+    title: "Marca y Utilidades",
+    icon: Palette, 
+    services: [
+      { 
+        name: "Herramientas de Diseño", 
+        href: "/design", 
+        icon: Palette, 
+        description: "Favicon, Paleta de colores y utilidades de marca."
+      },
+      // Puedes añadir más utilidades aquí más adelante
+    ]
+  },
 ];
 
-// ===============================================
-// 2. COMPONENTE FEATURE CARD (EXPORTADO)
-// ===============================================
 
-export function FeatureCard({ href, title, description, icon: Icon }) {
-    return (
-        <Link href={href} className="feature-card-link">
-            <div className="feature-card bg-[var(--bg-card)] p-6 rounded-xl shadow-md transition hover:shadow-lg hover:border-[var(--accent-color)] border border-[var(--border-color)]">
-                <Icon size={32} className="text-[var(--primary-color)] mb-4" /> 
-                <h3 className="text-xl font-bold text-[var(--text-color-primary)] mb-2">{title}</h3>
-                <p className="text-[var(--text-color-secondary)]">{description}</p>
-            </div>
-        </Link>
-    );
-}
+// --- 2. FeatureCard (Se mantiene igual, solo se asegura la exportación) ---
+export const FeatureCard = ({ icon: Icon, title, description, color }) => (
+  <div className="feature-card">
+    <div className="icon-wrapper" style={{ backgroundColor: color }}>
+      <Icon size={32} color="white" />
+    </div>
+    <h3 className="card-title">{title}</h3>
+    <p className="card-description">{description}</p>
+  </div>
+);
 
-// ===============================================
-// 3. COMPONENTE HEADER (Lógica de enlaces dentro)
-// ===============================================
+// --- 3. Header (CORREGIDO: Alineación Flex y Mega Menú restaurado) ---
+export const Header = ({ onLoginClick }) => {
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
 
-export function Header({ showBackButton = true, onLoginClick }) {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+  return (
+    <header className="header-main">
+      {/* 🚨 CORRECCIÓN CLAVE: app-container con Flexbox para alinear logo y nav */}
+      <div className="app-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        
+        {/* Lado Izquierdo: Logo */}
+        <div className="logo">
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Sun size={36} style={{ color: 'var(--primary-color)' }} />
+            <span className="logo-text">OptiCommerce</span>
+          </Link>
+        </div>
 
-    // Mover la lógica de 'map' DENTRO del componente para su ejecución en tiempo de cliente.
-    const fullNavLinks = SERVICE_LINKS.map(link => ({
-        href: link.href, 
-        label: link.label, 
-        icon: link.icon
-    })).concat([
-        { href: "/about", label: "Sobre Nosotros" },
-        { href: "/contact", label: "Contacto" },
-    ]);
+        {/* Lado Derecho: Navegación y Botón */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+          
+          {/* Menú Desplegable (Mega Menú) */}
+          <div 
+            className="nav-dropdown"
+            onMouseEnter={() => setIsServicesOpen(true)}
+            onMouseLeave={() => setIsServicesOpen(false)}
+          >
+            <button className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              Servicios {isServicesOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </button>
 
-    return (
-        <header className="header-main">
-            <div className="app-container flex items-center justify-between py-6">
-                <div className="logo">
-                    <Link href="/" className="flex items-center gap-4">
-                        <Sun size={36} className="text-[var(--primary-color)]" />
-                        <span className="logo-text text-4xl">OptiCommerce</span>
-                    </Link>
-                </div>
-
-                {/* Desktop Navigation */}
-                <nav className="hidden md:flex items-center gap-8">
-                    {/* Usamos la variable local fullNavLinks */}
-                    {fullNavLinks.map((item, index) => (
-                        <Link key={index} href={item.href} className="nav-link text-lg font-medium text-[var(--text-color-primary)] hover:text-[var(--accent-color)] transition">
-                            {item.label}
-                        </Link>
-                    ))}
-                    <button 
-                        onClick={() => onLoginClick('login')} 
-                        className="btn btn-primary ml-4 px-6 py-2 text-lg"
-                    >
-                        Acceder
-                    </button>
-                </nav>
-
-                {/* Botón de Volver (Solo si es necesario) */}
-                {showBackButton && (
-                    <Link 
-                        href="/" 
-                        className="hidden lg:flex items-center gap-2 text-[var(--text-color-primary)] font-medium hover:text-[var(--accent-color)] transition"
-                    >
-                        <ArrowLeft size={20} />
-                        Volver al Inicio
-                    </Link>
-                )}
-
-                {/* Mobile Menu Button */}
-                <button 
-                    className="md:hidden text-[var(--text-color-primary)]" 
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                >
-                    {isMenuOpen ? <X size={32} /> : <Menu size={32} />}
-                </button>
-            </div>
-
-            {/* Mobile Menu Plegable */}
-            {isMenuOpen && (
-                <div className="mobile-menu bg-[var(--bg-card)] md:hidden border-t border-[var(--border-color)] p-4 shadow-xl absolute w-full z-10">
-                    <nav className="flex flex-col gap-4">
-                        {fullNavLinks.map((item, index) => (
-                            <Link 
-                                key={index} 
-                                href={item.href} 
-                                className="mobile-nav-link p-3 rounded-lg text-lg font-semibold text-[var(--text-color-primary)] hover:bg-[var(--bg-hover)] transition flex items-center gap-3"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                {item.icon && <item.icon size={20} className="text-[var(--accent-color)]" />}
-                                {item.label}
-                            </Link>
-                        ))}
-                        <button 
-                            onClick={() => { onLoginClick('login'); setIsMenuOpen(false); }} 
-                            className="btn btn-primary mt-4 px-6 py-3 text-lg"
+            {isServicesOpen && (
+              <div className="nav-dropdown-menu" style={{ 
+                display: 'grid', 
+                gridTemplateColumns: `repeat(${SERVICE_CATEGORIES.length}, 1fr)`,
+                gap: '24px', 
+                minWidth: '700px'
+              }}>
+                
+                {/* ITERAR SOBRE CATEGORÍAS */}
+                {SERVICE_CATEGORIES.map((category) => (
+                  <div key={category.title} className="category-column">
+                    {/* Título de la Categoría */}
+                    <h5 style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      fontWeight: 700, 
+                      color: 'var(--primary-color)',
+                      padding: '8px 0',
+                      borderBottom: '1px solid var(--border-color)',
+                      marginBottom: '10px'
+                    }}>
+                      <category.icon size={20} />
+                      {category.title}
+                    </h5>
+                    
+                    {/* Iterar sobre los Servicios de la Categoría */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {category.services.map((service) => (
+                        <Link
+                          key={service.href}
+                          href={service.href}
+                          className="mega-menu-item" 
+                          style={{ 
+                            display: 'flex', 
+                            alignItems: 'flex-start', 
+                            gap: '16px', 
+                            padding: '10px', 
+                            borderRadius: '4px',
+                            transition: 'background-color 0.2s'
+                          }}
                         >
-                            Acceder
-                        </button>
-                    </nav>
-                </div>
+                          <service.icon size={24} style={{ color: 'var(--primary-color)', flexShrink: 0 }} />
+                          <div>
+                            <strong style={{ display: 'block', fontWeight: 600, fontSize: '1rem' }}>
+                              {service.name}
+                            </strong>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-color-secondary)', margin: 0 }}>
+                              {service.description}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
-        </header>
-    );
-}
+          </div>
 
-// ===============================================
-// 4. COMPONENTE FOOTER
-// ===============================================
+          <Link href="/pricing" className="nav-link">
+            Precios
+          </Link>
 
-export function Footer() {
-    return (
-        <footer className="bg-[var(--bg-card)] border-t border-[var(--border-color)] py-12">
-            <div className="app-container text-center">
-                <p className="text-[var(--text-color-secondary)] text-lg">
-                    © {new Date().getFullYear()} OptiCommerce. Optimiza tu eCommerce con IA.
-                </p>
-            </div>
-        </footer>
-    );
-}
+          <button className="btn btn-primary" onClick={() => onLoginClick('login')}>
+            Iniciar Sesión
+          </button>
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+// --- 4. Footer (Corregido para iterar sobre Categorías) ---
+export const Footer = () => (
+  <footer className="footer-main">
+    <div className="app-container">
+      <div className="footer-content">
+        <div className="footer-section">
+          <div className="logo">
+            <Link href="/" className="flex items-center gap-3">
+              <Sun size={28} className="text-[var(--primary-color)]" />
+              <span className="logo-text text-3xl">OptiCommerce</span>
+            </Link>
+          </div>
+          <small className="block mt-8 text-[var(--text-color-secondary)]">
+            © {new Date().getFullYear()} OptiCommerce. Todos los derechos reservados.
+          </small>
+          <small className="block mt-4 text-[var(--text-color-secondary)]">
+            Desarrollado por Juan José Guerrero.
+          </small>
+        </div>
+
+        {/* 🚨 Corrección aquí: Iterar sobre SERVICE_CATEGORIES */}
+        <div className="footer-section">
+          <h4>Nuestros Servicios</h4>
+          <div className="flex flex-col gap-3 mt-4">
+            {SERVICE_CATEGORIES.map((category) => ( 
+              <div key={category.title}>
+                <p className="font-semibold text-white mt-2 mb-1">{category.title}</p>
+                {category.services.map((service) => (
+                  <Link key={service.href} href={service.href} className="footer-link">
+                    {service.name}
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="footer-section">
+          <h4>Información Legal</h4>
+          <div className="flex flex-col gap-3 mt-4">
+            <Link href="/terminos" className="footer-link">Términos y Condiciones</Link>
+            <Link href="/privacidad" className="footer-link">Política de Privacidad</Link>
+            <Link href="/reembolso" className="footer-link">Política de Reembolso</Link>
+            <Link href="/cookies" className="footer-link">Política de Cookies</Link>
+          </div>
+        </div>
+
+        <div className="footer-section">
+          <h4>Empresa</h4>
+          <div className="flex flex-col gap-3 mt-4">
+            <Link href="/about" className="footer-link">Sobre Nosotros</Link>
+            <Link href="/contact" className="footer-link">Contacto</Link>
+            <Link href="/faq" className="footer-link">Preguntas Frecuentes (FAQ)</Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+);
