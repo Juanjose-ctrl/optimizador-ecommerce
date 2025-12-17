@@ -2534,3 +2534,26 @@ pre {
     background: var(--bg-hover);
     padding: 6px;
 }
+
+/* ---------- PREVIEW FAVICON *CORRECTA* ---------- */
+.favicon-preview-wrapper {
+    width: 100%;
+    max-width: 300px;
+    max-height: 300px;
+    padding: 8px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-hover);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.favicon-preview-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+}

@@ -228,19 +228,18 @@ export default function FaviconGenerator() {
                             </>
                         ) : (
                             <>
-                                <div className="w-32 h-32 rounded-lg border-2 border-dashed border-[var(--border-color)] flex items-center justify-center overflow-hidden mb-4">
-                                    {previewUrl ? (
-                                        <Image
-                                            src={previewUrl}
-                                            alt="Previsualización del Favicon"
-                                            width={128}
-                                            height={128}
-                                            className="object-contain w-full h-full"
-                                        />
-                                    ) : (
-                                        <ImageIcon size={48} className="text-[var(--text-color-secondary)] opacity-50" />
-                                    )}
-                                </div>
+                                <div className="favicon-preview-wrapper">
+    {previewUrl ? (
+        <img
+            src={previewUrl}
+            alt="Previsualización del Favicon"
+            className="favicon-preview-image"
+        />
+    ) : (
+        <ImageIcon size={48} className="text-[var(--text-color-secondary)] opacity-50" />
+    )}
+</div>
+
                                 <p className="text-lg text-[var(--text-color-secondary)]">Sube tu imagen para iniciar la generación.</p>
                             </>
                         )}
