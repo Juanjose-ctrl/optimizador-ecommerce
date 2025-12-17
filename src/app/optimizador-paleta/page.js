@@ -1,35 +1,32 @@
-// src/components/PaletteOptimizer.js
-
 'use client';
-import { Palette, Layers, Copy, UploadCloud } from 'lucide-react';
+import { Palette, Layers, Copy, UploadCloud, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 
-// Colores de ejemplo (Paleta extraída profesional)
-const mockPalette = [
-    { name: 'Primary (Marca)', hex: '#008080', description: 'Color dominante de tu identidad visual.' },
-    { name: 'Accent (Botones)', hex: '#10B981', description: 'Ideal para CTAs y elementos interactivos.' },
-    { name: 'Surface (Fondo)', hex: '#F0F3F7', description: 'Color claro recomendado para fondos de sección.' },
-    { name: 'Text Dark', hex: '#1D2A3A', description: 'Color para el texto principal de alta legibilidad.' },
-];
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://fastapi-image-optimizer-1.onrender.com';
 
 function ColorCard({ color }) {
     const copyToClipboard = () => {
         navigator.clipboard.writeText(color.hex);
-        // Simulación de notificación de copiado
-        alert(`Copiado: ${color.hex}`); 
+        alert(`Copiado: ${color.hex}`);
     };
 
     return (
         <div className="color-card hover:shadow-xl transition flex-grow p-5">
             <div 
                 className="color-sample h-16 rounded-md mb-3" 
-                style={{ backgroundColor: color.hex, border: `2px solid ${color.hex === '#F0F3F7' ? 'var(--border-color)' : 'transparent'}` }}
+                style={{ 
+                    backgroundColor: color.hex, 
+                    border: `2px solid ${color.hex === '#F0F3F7' ? 'var(--border-color)' : 'transparent'}` 
+                }}
             ></div>
             <p className="text-sm font-semibold text-[var(--text-color-primary)] mt-1">{color.name}</p>
             <div className="flex items-center gap-2 mt-1">
                 <span className="text-lg font-mono text-[var(--primary-color)]">{color.hex}</span>
-                <button onClick={copyToClipboard} className="text-[var(--text-color-secondary)] hover:text-[var(--accent-color)] transition p-1 rounded-full">
+                <button 
+                    onClick={copyToClipboard} 
+                    className="text-[var(--text-color-secondary)] hover:text-[var(--accent-color)] transition p-1 rounded-full"
+                >
                     <Copy size={16} />
                 </button>
             </div>
@@ -43,21 +40,70 @@ export default function PaletteOptimizer() {
     const [previewUrl, setPreviewUrl] = useState('');
     const [imageLoaded, setImageLoaded] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [error, setError] = useState('');
+    const [file, setFile] = useState(null);
 
-    const handleUpload = (e) => {
-        const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-            setPreviewUrl(URL.createObjectURL(file));
+    const getBrowserId = () => {
+        let browserId = localStorage.getItem('browser_id');
+        if (!browserId) {
+            browserId = `browser_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            localStorage.setItem('browser_id', browserId);
+        }
+        return browserId;
+    };
+
+    const handleUpload = async (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile && selectedFile.type.startsWith('image/')) {
+            setFile(selectedFile);
+            setPreviewUrl(URL.createObjectURL(selectedFile));
             setImageLoaded(true);
             setIsProcessing(true);
-            setPalette([]); // Limpiar paleta anterior
+            setPalette([]);
+            setError('');
             
-            // Simulación: procesamiento de la imagen para extraer colores
-            setTimeout(() => {
-                setPalette(mockPalette);
+            try {
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                formData.append('browser_id', getBrowserId());
+
+                const response = await fetch(`${API_URL}/extract-palette-free`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Error al extraer paleta');
+                }
+
+                const data = await response.json();
+                setPalette(data.palette);
+            } catch (err) {
+                setError(err.message);
+                console.error('Error:', err);
+            } finally {
                 setIsProcessing(false);
-            }, 3000); // 3 segundos para la extracción
+            }
         }
+    };
+
+    const exportPalette = () => {
+        if (palette.length === 0) return;
+        
+        const paletteText = palette.map(color => 
+            `${color.name}: ${color.hex} - ${color.description}`
+        ).join('\n');
+        
+        const blob = new Blob([paletteText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'color-palette.txt';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     return (
@@ -69,6 +115,12 @@ export default function PaletteOptimizer() {
             <p className="text-[var(--text-color-secondary)] mb-10 text-lg max-w-4xl">
                 Sube tu logo, banner o imagen de marca. Nuestra IA extrae los colores clave y te proporciona una paleta optimizada y funcional en formato HEX.
             </p>
+
+            {error && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-300 rounded-lg text-red-700">
+                    <strong>Error:</strong> {error}
+                </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
                 
@@ -126,11 +178,21 @@ export default function PaletteOptimizer() {
                     )}
 
                     {imageLoaded && !isProcessing && palette.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-4">
-                            {palette.map((color, index) => (
-                                <ColorCard key={index} color={color} />
-                            ))}
-                        </div>
+                        <>
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                {palette.map((color, index) => (
+                                    <ColorCard key={index} color={color} />
+                                ))}
+                            </div>
+                            <div className="text-center">
+                                <button 
+                                    onClick={exportPalette}
+                                    className="btn btn-primary px-6 py-3"
+                                >
+                                    Exportar Paleta
+                                </button>
+                            </div>
+                        </>
                     ) : (
                         !isProcessing && (
                             <div className="p-8 bg-[var(--bg-page)] rounded-lg text-center text-[var(--text-color-secondary)] border border-[var(--border-color)]">
