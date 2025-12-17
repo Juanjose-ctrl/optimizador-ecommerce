@@ -73,6 +73,25 @@ body {
     padding: 0 32px;
 }
 
+.section-founder .founder-bio,
+.section-philosophy {
+    margin-left: -32px;
+    margin-right: -32px;
+    padding-left: 32px;
+    padding-right: 32px;
+}
+
+/* O mejor aún, sobreescribe el contenedor en About */
+main .app-container {
+    padding: 0 32px;
+}
+
+.section-founder,
+.section-philosophy {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .main-content-wrapper {
     width: 100%;
     max-width: 1280px;

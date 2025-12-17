@@ -16,7 +16,7 @@ export default function AboutPage() {
 
       {/* CONTENIDO PRINCIPAL */}
       <main className="min-h-screen bg-[var(--bg-page)] py-20">
-        <div className="max-w-6xl mx-auto px-8">
+  <div className="max-w-6xl mx-auto px-8">
           {/* TÍTULOS */}
           <div className="text-center mb-20">
             <h1 className="title-about">
