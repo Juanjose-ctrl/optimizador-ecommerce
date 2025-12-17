@@ -1,6 +1,6 @@
 // src/app/generador-utm/page.js
 'use client';
-import { Link2, Copy, Zap, TrendingUp, CheckCircle } from 'lucide-react';
+import { Link2, Copy, Zap, TrendingUp, CheckCircle, Trash2 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 // Importación corregida a la ruta relativa correcta
 import { Header, Footer } from '../components/SharedComponents'; 
